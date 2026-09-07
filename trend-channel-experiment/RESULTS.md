@@ -109,6 +109,22 @@ equal-weight-B&H rebalancing/diversification bonus (portfolio CAGR 9.57% vs mean
 matched by a 5–20-name rotating book. Tuning: break=0.5 is the sweet spot (0.0 whipsaws out in a day since
 entry sits on the band; 1.0 holds too long); not exiting on gradient is better.
 
+### Entry sweep: window × gradient × width (`channel_entry_sweep.py`)
+
+Swept L∈{100,150,250}, min gradient∈{0.10,0.20,0.30}, min relative width∈{0,0.15,0.25}, ride exit, 5 slots.
+
+- **Gradient (4): non-binding** — identical results across every g_min. An R²≥0.80 rising channel already
+  implies a steep gradient, so a gradient floor changes nothing (redundant with the R² gate).
+- **Width (3): the strong lever** — at L=100, w_min 0→0.15→0.25 lifts CAGR 3.24→4.88→**8.84%** (Sharpe
+  0.26→0.33→0.54).
+- **Window (1): shorter helps at wide channels** — at w_min=0.25, L=100 (+877%) > L=150 (+415%) > L=250 (+283%).
+- **Best: L=100, w_min=0.25 → +877% (CAGR 8.84%, Sharpe 0.54)** vs B&H +1068% (9.57%, 0.65) — the closest yet,
+  still losing on both return and Sharpe.
+
+*Caveat (to be checked):* the best cell has only 117 trades (best-of-27, concentrated), and the width lever
+is suspected to work by **degeneration** — a wide channel with a 0.5×width stop keeps the stop far away, so
+the strategy holds a few volatile names for years, converging *toward* buy-and-hold rather than beating it.
+
 ## Final conclusion
 
 The proposed fixes progressively improved the strategy but none beats buy-and-hold. The **ratchet** (trail
