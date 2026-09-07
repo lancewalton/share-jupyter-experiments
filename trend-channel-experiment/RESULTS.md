@@ -125,14 +125,33 @@ Swept L∈{100,150,250}, min gradient∈{0.10,0.20,0.30}, min relative width∈{
 is suspected to work by **degeneration** — a wide channel with a 0.5×width stop keeps the stop far away, so
 the strategy holds a few volatile names for years, converging *toward* buy-and-hold rather than beating it.
 
+### Degeneration check — the decisive test (`channel_width_check.py`)
+
+Compare the strategy's CAGR to buy-and-hold of **the same names it trades** (L=100, ride 0.5), sweeping width:
+
+| w_min | names | trades | med hold | strat CAGR | B&H of traded names | edge |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.10 | 120 | 574 | 952d | 4.75% | 9.57% | −4.82% |
+| 0.15 | 113 | 395 | 1077d | 4.88% | 9.78% | −4.90% |
+| 0.25 | 64 | 117 | 1072d | 8.84% | 11.38% | −2.54% |
+| 0.35 | 28 | 42 | 1334d | 5.86% | 11.61% | −5.75% |
+
+**The timing edge is negative at every width.** The width lever was pure name-selection: wider channels
+select higher-return names (their B&H CAGR rises to 11.6%), and the impressive 8.84% at w_min=0.25 came from
+names that would have returned 11.38% if simply held — the overlay captured *less*. Even with median holds of
+3–4 years (nearly buy-and-hold already), the strategy loses to holding the same names, because it sits out
+the post-break re-entry gaps.
+
 ## Final conclusion
 
-The proposed fixes progressively improved the strategy but none beats buy-and-hold. The **ratchet** (trail
-below resistance) is worse than selling at the top because a genuine channel reverts at its upper band.
-**Rotation** removes the idle-cash drag (exposure ~85–95%) but the sell-at-top oscillation (~4–5%/yr while
-deployed) is slower than the market drift (~9.6%/yr). The **ride-the-winner** exit largely fixes
-winner-capping (capture 0.04 → ~0.4, CAGR 6.6%) — the best variant — yet still loses because entry is late
-(needs an established channel) and a selective rotating book can't match the equal-weight rebalancing bonus.
+No version of channel timing beats buy-and-hold — not the universe, and not even the specific names it picks.
+The proposed fixes each did real work: **rotation** fixed exposure (~90%), the **ride-the-winner** exit fixed
+winner-capping (capture 0.04 → 0.4), and a **minimum width** filter found the high-return names (best cell
+L=100, w_min=0.25: CAGR 8.84% vs universe 9.57%). But the degeneration check settles it — the channel-timing
+decision itself has **strictly negative edge versus holding the same instruments**, in every configuration
+tried (exit rule, rotation, window, width, gradient), by 2.5–5.8 pp/yr. There is no dip-timing skill to
+harvest; the strategy can only degenerate toward buy-and-hold from below. Buy-and-hold wins on return and
+Sharpe. Experiment closed.
 
 The decomposition pins down *why*: **not** slow instruments (there is zero selection — every name forms
 channels), but **winner-capping** — taking profits at every channel top clips the right tail of big

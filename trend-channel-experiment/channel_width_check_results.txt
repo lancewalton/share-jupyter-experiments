@@ -1,0 +1,17 @@
+Loading 120 names; precomputing L=100 channels...
+120 names. Universe equal-weight B&H CAGR +9.57%
+
+############################################################################################
+# DEGENERATION CHECK: strategy vs B&H of the SAME names it trades (L=100, ride 0.5)
+############################################################################################
+ w_min  names  trades  medHold_d   expo  stratCAGR  tradedBH    edge  Sharpe
+  0.10    120     574        952    93%      4.75%     9.57%  -4.82%    0.36
+  0.15    113     395       1077    94%      4.88%     9.78%  -4.90%    0.33
+  0.25     64     117       1072    85%      8.84%    11.38%  -2.54%    0.54
+  0.35     28      42       1334    69%      5.86%    11.61%  -5.75%    0.40
+  0.45     15      19  (too few)
+  0.60      7       7  (too few)
+
+  edge = strategy CAGR - buy&hold CAGR of the same traded names.
+  If edge -> 0 (or negative) as width rises while names shrink and holds lengthen,
+  the 'improvement' is degeneration into buy-and-hold of volatile names, not timing skill.
