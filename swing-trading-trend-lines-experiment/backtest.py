@@ -11,8 +11,8 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from signals import atr, latest_signal, select_line
-from trendlines import resistance_lines, support_lines
+from signals import atr, latest_signal, line_touch_bounds, select_line
+from trendlines import Line, resistance_lines, support_lines
 
 
 @dataclass(frozen=True)
@@ -32,6 +32,30 @@ class Trade:
     separation: float = 0.0     # |action ray - safety ray| / entry, at the signal bar
     touches: int = 0
     rel_volume: float = float("nan")  # signal-bar volume / trailing 20-bar median
+    # Line-duration study: raw endpoints and touch positions (bar indices) of the
+    # action and safety lines at the breakout, for computing relative durations.
+    signal_bar: int = -1
+    action_a: int = -1
+    action_b: int = -1
+    safety_a: int = -1
+    safety_b: int = -1
+    action_touches: int = 0
+    action_touch_first: int = -1
+    action_touch_last: int = -1
+    safety_touches: int = 0
+    safety_touch_first: int = -1
+    safety_touch_last: int = -1
+
+
+def _line_duration(line: Line, series: np.ndarray, band: np.ndarray,
+                   signal_bar: int) -> tuple[int, int, int, int, int]:
+    """Endpoints (a, b) and touch bounds (count, first, last) of ``line`` against
+    ``series`` over the structure bars [line.a, signal_bar)."""
+    xs = np.arange(line.a, signal_bar)
+    ray = np.exp(line.value_at(xs))
+    n, first, last = line_touch_bounds(series[line.a:signal_bar], ray,
+                                       band[line.a:signal_bar], line.a)
+    return line.a, line.b, n, first, last
 
 
 @dataclass(frozen=True)
@@ -80,6 +104,7 @@ def simulate(df: pd.DataFrame, k: float = 0.5, atr_period: int = 14,
     """
     costs = costs or CostModel()
     a = atr(df, atr_period).to_numpy()
+    band = pd.Series(k * a).bfill().to_numpy()
     opens = df["open"].to_numpy()
     highs = df["high"].to_numpy()
     lows = df["low"].to_numpy()
@@ -129,6 +154,9 @@ def simulate(df: pd.DataFrame, k: float = 0.5, atr_period: int = 14,
             base = np.median(vols[i - 20:i])
             if np.isfinite(base) and base > 0 and np.isfinite(vols[i]):
                 rel_volume = float(vols[i] / base)
+        act_series, saf_series = (highs, lows) if direction == "LONG" else (lows, highs)
+        aa, ab, at_n, at_f, at_l = _line_duration(al, act_series, band, i)
+        sa, sb, st_n, st_f, st_l = _line_duration(sl, saf_series, band, i)
         trades.append(Trade(
             df.index[entry_idx], df.index[exit_idx], direction,
             entry_price, exit_price, days,
@@ -137,6 +165,9 @@ def simulate(df: pd.DataFrame, k: float = 0.5, atr_period: int = 14,
             action_span=al.b - al.a, safety_span=sl.b - sl.a,
             separation=abs(action_ray - safety_ray) / entry_price,
             touches=sig.touches, rel_volume=rel_volume,
+            signal_bar=i, action_a=aa, action_b=ab, safety_a=sa, safety_b=sb,
+            action_touches=at_n, action_touch_first=at_f, action_touch_last=at_l,
+            safety_touches=st_n, safety_touch_first=st_f, safety_touch_last=st_l,
         ))
         i = exit_idx + 1
     return trades

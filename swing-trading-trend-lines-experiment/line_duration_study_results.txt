@@ -1,0 +1,93 @@
+Collecting duration-instrumented trades (20 names)...
+11859 trades. safety-line touch coverage: 100% have >=1 safety touch.
+
+split: in-sample 5929 (to 2013-07-18), out-of-sample 5930 (from 2013-07-18)
+base gross win rate: IS 15.8%  OOS 16.8%
+base gross mean/tr:  IS -0.129%  OOS -0.037%
+
+##############################################################################
+# Spearman: does duration predict PAYOFF (gross) or just WIN? (IS vs OOS)
+##############################################################################
+feature           IS rho(gross)  OOS rho(gross)   IS rho(win)  OOS rho(win)   n_OOS
+rel_span_ab         -0.015(p0.25)    +0.006(p0.64)        -0.043        -0.046   5930
+rel_age_from_a      -0.015(p0.25)    +0.005(p0.68)        -0.043        -0.046   5930
+rel_age_from_b        +nan(p nan)      +nan(p nan)          +nan          +nan   5930
+rel_touch_span      -0.026(p0.26)    -0.004(p0.85)        -0.069        -0.068   2059
+rel_age_since_last    -0.027(p0.04)    -0.022(p0.08)        +0.042        +0.044   5930
+rel_n_touches       -0.024(p0.07)    +0.006(p0.67)        -0.001        -0.007   5930
+age_from_a_A        -0.004(p0.77)    -0.003(p0.82)        -0.040        -0.046   5930
+age_from_a_S        +0.018(p0.16)    -0.009(p0.50)        +0.027        +0.018   5930
+span_ab_A           -0.004(p0.77)    -0.003(p0.82)        -0.040        -0.046   5930
+span_ab_S           +0.018(p0.16)    -0.009(p0.50)        +0.027        +0.018   5930
+n_touches_S         +0.026(p0.04)    -0.009(p0.51)        +0.005        -0.002   5930
+
+##############################################################################
+# OOS decile payoff for the primary (rel_age_from_a) and touch/span relatives
+##############################################################################
+
+OOS payoff by rel_age_from_a decile (1=most negative rel, 10=most positive):
+ dec     n   win%  gross/tr%   net/tr%   medRel
+   1   593   18.2     -0.050    -0.267    -2.28
+   2   745   18.9     -0.000    -0.217     0.81
+   3   499   19.8      0.026    -0.191     1.28
+   4   648   16.2     -0.072    -0.289     1.61
+   5   491   14.9     -0.035    -0.251     1.87
+   6   606   18.3     -0.054    -0.270     2.20
+   7   581   20.0      0.084    -0.133     2.56
+   8   585   15.2     -0.094    -0.310     3.04
+   9   589   12.9     -0.090    -0.306     3.84
+  10   593   13.0     -0.079    -0.295     5.61
+
+OOS payoff by rel_span_ab decile (1=most negative rel, 10=most positive):
+ dec     n   win%  gross/tr%   net/tr%   medRel
+   1   593   18.4     -0.047    -0.263    -2.37
+   2   611   18.7      0.008    -0.208     0.79
+   3   679   18.6     -0.042    -0.259     1.61
+   4   505   18.8      0.019    -0.198     1.95
+   5   577   14.7     -0.068    -0.284     2.30
+   6   633   18.0     -0.034    -0.250     2.64
+   7   553   18.3     -0.019    -0.236     3.09
+   8   603   15.6     -0.021    -0.237     3.58
+   9   585   14.0     -0.082    -0.298     4.39
+  10   591   12.7     -0.078    -0.294     6.11
+
+OOS payoff by rel_touch_span decile (1=most negative rel, 10=most positive):
+ dec     n   win%  gross/tr%   net/tr%   medRel
+   1   207   23.7      0.043    -0.175    -4.31
+   2   212   15.6     -0.081    -0.298    -2.30
+   3   200   17.5     -0.080    -0.296    -1.32
+   4   205   18.0      0.061    -0.155    -0.20
+   5   206   17.0     -0.065    -0.282     1.06
+   6   209   17.2     -0.008    -0.225     1.61
+   7   208   19.2      0.009    -0.206     2.12
+   8   200   12.5     -0.153    -0.369     2.70
+   9   206   16.0     -0.064    -0.281     3.49
+  10   206    9.2     -0.104    -0.319     5.38
+
+OOS payoff by rel_n_touches decile (1=most negative rel, 10=most positive):
+ dec     n   win%  gross/tr%   net/tr%   medRel
+   1  1594   16.8     -0.040    -0.256     0.41
+   2   357   16.8     -0.067    -0.284     0.69
+   3  2715   17.2     -0.027    -0.244     1.10
+   4   840   15.8     -0.037    -0.253     1.39
+   5   424   16.0     -0.065    -0.281     1.61
+
+##############################################################################
+# GATE on rel_age_from_a: keep the top/bottom third, full-sample + stress
+##############################################################################
+
+TOP third (action longer-lived):
+    gross n= 3995  win=14.6%  mean/tr=-0.102%  PF=0.67
+    net10 n= 3995  win=13.0%  mean/tr=-0.318%  PF=0.36
+
+BOTTOM third (action shorter-lived):
+    gross n= 4120  win=18.3%  mean/tr=-0.051%  PF=0.83
+    net10 n= 4120  win=16.3%  mean/tr=-0.268%  PF=0.45
+
+===== STRESS: rel_age_from_a favourable third (best gross)  (n=4120, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr -0.051%  95% CI [-0.092%, -0.014%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.268%  95% CI [-0.307%, -0.231%]  <-- CI excludes 0
+  beta-neutral alpha (gross)      : mean/tr -0.045%  95% CI [-0.094%, -0.000%]  <-- CI excludes 0
+  OOS split @ 2013: pre  net10 n= 1989  win=15.8%  mean/tr=-0.303%  PF=0.43
+                        post net10 n= 2131  win=16.7%  mean/tr=-0.236%  PF=0.48
+  per-ticker compound (net): median -40.3%  %profitable 0%  |  median buy&hold +250.8%

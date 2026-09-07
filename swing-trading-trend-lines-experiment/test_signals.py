@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from signals import atr, count_touches, latest_signal, select_line
+from signals import (atr, count_touches, latest_signal, line_touch_bounds,
+                     select_line, touch_start_indices)
 from trendlines import Line
 
 
@@ -41,6 +42,53 @@ def test_count_touches_treats_one_continuous_run_as_a_single_touch():
     band = np.full(5, 1.0)
 
     assert count_touches(value, ray, band) == 1
+
+
+def test_touch_start_indices_returns_each_episode_start():
+    # Arrange: value returns to the ray three times, leaving the band between.
+    value = np.array([10.0, 10, 5, 10, 10, 5, 10])
+    ray = np.full(7, 10.0)
+    band = np.full(7, 1.0)
+
+    # Act / Assert: rising-edge indices of the three episodes.
+    assert list(touch_start_indices(value, ray, band)) == [0, 3, 6]
+
+
+def test_touch_start_indices_marks_a_continuous_run_once():
+    value = np.array([10.0, 10, 10, 5, 5])
+    ray = np.full(5, 10.0)
+    band = np.full(5, 1.0)
+
+    assert list(touch_start_indices(value, ray, band)) == [0]
+
+
+def test_touch_start_indices_empty_when_never_in_band():
+    value = np.array([5.0, 5, 5])
+    ray = np.full(3, 10.0)
+    band = np.full(3, 1.0)
+
+    assert list(touch_start_indices(value, ray, band)) == []
+
+
+def test_line_touch_bounds_offsets_first_and_last_by_start():
+    # Arrange: episodes at local indices 0, 3, 6 within the slice.
+    value = np.array([10.0, 10, 5, 10, 10, 5, 10])
+    ray = np.full(7, 10.0)
+    band = np.full(7, 1.0)
+
+    # Act: the slice starts at absolute bar 100.
+    n, first, last = line_touch_bounds(value, ray, band, start=100)
+
+    # Assert
+    assert (n, first, last) == (3, 100, 106)
+
+
+def test_line_touch_bounds_no_touches_returns_sentinels():
+    value = np.array([5.0, 5, 5])
+    ray = np.full(3, 10.0)
+    band = np.full(3, 1.0)
+
+    assert line_touch_bounds(value, ray, band, start=50) == (0, -1, -1)
 
 
 def test_select_line_takes_most_recent_line_meeting_min_span():

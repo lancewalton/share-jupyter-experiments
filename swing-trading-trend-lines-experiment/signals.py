@@ -27,16 +27,31 @@ class Signal:
     touches: int
 
 
+def touch_start_indices(value: np.ndarray, ray: np.ndarray, band: np.ndarray) -> np.ndarray:
+    """Indices where a touch episode begins: an in-band bar whose predecessor was
+    out of band (hysteresis — price must leave the band to start a new touch)."""
+    in_band = np.abs(value - ray) <= band
+    starts = in_band & ~np.concatenate(([False], in_band[:-1]))
+    return np.flatnonzero(starts)
+
+
+def line_touch_bounds(value: np.ndarray, ray: np.ndarray, band: np.ndarray,
+                      start: int) -> tuple[int, int, int]:
+    """(episode count, first, last) touch bar for a slice beginning at absolute
+    bar ``start``; first/last are -1 when there are no touches."""
+    idx = touch_start_indices(value, ray, band) + start
+    if len(idx) == 0:
+        return 0, -1, -1
+    return len(idx), int(idx[0]), int(idx[-1])
+
+
 def count_touches(value: np.ndarray, ray: np.ndarray, band: np.ndarray) -> int:
     """Number of distinct episodes where ``value`` sits within ``band`` of ``ray``.
 
     A touch episode is a maximal run of bars inside the band; the price must
     leave the band for a new touch to be counted (hysteresis).
     """
-    in_band = np.abs(value - ray) <= band
-    # Count rising edges: an in-band bar whose predecessor was out of band.
-    starts = in_band & ~np.concatenate(([False], in_band[:-1]))
-    return int(starts.sum())
+    return len(touch_start_indices(value, ray, band))
 
 
 def select_line(lines: list[Line], min_span: int) -> Line | None:

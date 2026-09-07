@@ -185,3 +185,30 @@ magnitude too small to clear costs live.
 **Takeaway:** on daily single-name FTSE, momentum has no edge (even gross) and the vol regime steers it
 the wrong way; mean-reversion has a real, beta-neutral gross edge that compression sharpens — but costs
 erase it. The same programme wall, now seen from both sides.
+
+## Relative action-vs-safety line duration — does it predict a valid entry? (2026-09-07)
+
+New instrumentation records each line's endpoints and touch positions (`signals.line_touch_bounds`, extra
+`Trade` fields; study in `line_duration_study.py`, output `line_duration_study_results.txt`). Tests whether
+the **relative** duration of the action (broken) vs safety (opposite) line predicts win and payoff, over
+five definitions of "duration" (span between defining vertices; age since inception; age since the recent
+vertex; touch-span including later touches; age since last touch), guarded in-sample/out-of-sample.
+
+*Structural note:* the latest hull line always terminates at the most recent bar, so `age_from_b` is
+constant (=1) and `span_ab ≈ age_from_a − 1` — "duration" is carried by where the line **starts** and by
+its **touches**, not its recent endpoint.
+
+**Result — a real hit-rate signal, but payoff-blind (same wall as the geometry study).** Relative duration
+predicts **win probability**, consistently IS/OOS: breaking the *shorter-lived / fewer-touch* action line
+(relative to the safety line) wins more often. The touch-informed definition (`rel_touch_span`, which counts
+later touches — the "extra touch point" subtlety) is the strongest (OOS Spearman vs win −0.068), edging raw
+span/age (−0.046). Direction matches Lance's intuition: breaking a long-established line while the opposite
+line is young reverts more often. **But it does NOT predict payoff** — OOS Spearman vs gross ≈ 0
+(|rho| ≤ 0.02, p > 0.08 for every definition), deciles show no gross trend. Gating to the favourable
+(shorter-action) third lifts win rate to 18% and trims the bleed, yet the book is still significantly
+negative gross (−0.051%/tr, CI [−0.092, −0.014]) and net (−0.268%, CI excludes 0), beta-neutral alpha
+−0.045% (CI just excludes 0), 0/20 names profitable, median compound −40% vs buy-and-hold +251%.
+
+**Takeaway:** the relative-duration idea is *real* — signal validity does differ with the relative age of
+the two lines, and the touch-based definition is best — but like every other geometry feature it sorts
+*whether* a trade wins, not *how much*, so it cannot turn the method net-positive.
