@@ -157,3 +157,31 @@ absent since ~2012. Code: `download_futures.py`, `load_futures.py`, `backtest_fu
 
 **Final position:** no *live*, exploitable edge on either equities or futures. But futures reframe the
 verdict honestly — the idea captured a real premium that has faded, rather than being worthless.
+
+## Regime-gate follow-up — does volatility steer direction? (2026-09-07)
+
+Testing the intraday scalper's "follow breakouts in expansion regimes" idea on 27 years of daily FTSE
+(20 names), as a gate over the cached breakout trades, plus a mean-reversion (fade) counterpart. Causal
+regime = `vol_state` = 20-day / 100-day realised vol (>1 = expansion). Full harness: year-block
+bootstrap, beta-neutral alpha, concentration, pre/post-2013 split, buy-and-hold. Code:
+`regime_gate_ftse.py`, `fade_leg_ftse.py`; output in `*_results.txt`.
+
+**Breakout (follow), gated — decisive negative, and the regime steers the WRONG way.**
+Expansion gross −0.109%/tr vs compression −0.065% — both negative, expansion *worse*. Year-block
+bootstrap gross −0.109% CI [−0.155, −0.070] (significantly negative); beta-neutral alpha −0.077%
+CI [−0.124, −0.034] (not a beta artefact); net-positive names 0/20, years 0/27; pre- and post-2013
+both negative; per-ticker compound median −52% vs buy-and-hold +251%. The intraday positive does **not**
+replicate — it was instrument/timeframe-specific noise.
+
+**Fade (mean-reversion), gated to compression — a real gross edge, killed by costs.**
+z = (close − MA20)/SD20; fade |z| ≥ 2 back to the mean. Compression gross +0.409%/tr (win 59%, PF 1.26)
+vs expansion +0.220% — here the regime steers the **right** way, and the gross edge is significant and
+survives beta-neutralisation (+0.283% alpha, CI [+0.149, +0.417]). But net of spread-bet costs it is
+marginal: +0.062%/tr, bootstrap CI [−0.069, +0.197] crosses zero; net profit concentrated in the top-3
+names/years (>100% of total); net-positive only post-2013 (pre-2013 net −0.048%); per-ticker compound
+median −13.7%, still far below buy-and-hold. A genuine reversion signal, regime-consistent — an order of
+magnitude too small to clear costs live.
+
+**Takeaway:** on daily single-name FTSE, momentum has no edge (even gross) and the vol regime steers it
+the wrong way; mean-reversion has a real, beta-neutral gross edge that compression sharpens — but costs
+erase it. The same programme wall, now seen from both sides.

@@ -100,3 +100,24 @@ direction is not.
   out-of-sample confirmation would buy nothing.
 - Parameters were **pre-registered, not optimised** (deliberately, to avoid
   overfitting a single window).
+
+## Follow-up: futures costs + a volatility-regime gate (`regime_and_costs.py`)
+
+Two post-processing tests over the cached trades (full output in
+`regime_and_costs_out.txt`):
+
+**(3) Futures-level costs.** Re-charging 0.5–1 bp round-trip (index-future
+execution) instead of 5 bps does **not** rescue the fade — it is break-even
+gross and ≤0 the moment any cost applies. The breakout was never a cost problem,
+so cheaper costs only make its gross edge more visible; they don't touch the
+beta and day-concentration that killed it.
+
+**(1) Volatility-regime gate.** A causal regime (`vol_state` = yesterday's true
+range / trailing ATR14) does steer as hypothesised: the breakout earns +0.018R
+in expansion vs −0.013R in compression (at 1 bp); the fade is less-bad in
+compression but never positive. Gating (follow in expansion) produced the
+**first beta-neutral-positive** version here — +0.043R alpha at 0.5 bp — but the
+day-block bootstrap CI crosses zero ([−0.011, +0.095]) and profit sits in the
+top-3 of 45 days. **Promising signal, unproven strategy** — the same wall,
+nudged not broken. (The same technique on daily FTSE fails outright; see the
+swing-trading experiment's regime-gate follow-up.)

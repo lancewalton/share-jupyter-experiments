@@ -1,0 +1,45 @@
+Re-running the breakout to capture direction + hold (20 names)...
+11859 trades; 11792 have a causal vol_state (99% coverage).
+
+####################################################################
+# DISCRIMINATOR: expansion vs compression (does the regime steer?)
+####################################################################
+  gross            | expansion(vs>=1.0) n= 4717  win=15.5%  mean/tr=-0.109%  PF=0.69
+                   | compression(vs<1.0) n= 7075  win=16.8%  mean/tr=-0.065%  PF=0.78
+  net(10bps+5%)    | expansion(vs>=1.0) n= 4717  win=13.9%  mean/tr=-0.325%  PF=0.39
+                   | compression(vs<1.0) n= 7075  win=14.7%  mean/tr=-0.281%  PF=0.40
+
+####################################################################
+# GATED BOOK: keep breakout trades in expansion (sensitivity on thr)
+####################################################################
+  vol_thr=0.8:  gross n= 8350  win=16.1%  mean/tr=-0.093%  PF=0.71
+                net10 n= 8350  win=14.3%  mean/tr=-0.309%  PF=0.39
+                net20 n= 8350  win=12.3%  mean/tr=-0.509%  PF=0.25
+  vol_thr=1.0:  gross n= 4717  win=15.5%  mean/tr=-0.109%  PF=0.69
+                net10 n= 4717  win=13.9%  mean/tr=-0.325%  PF=0.39
+                net20 n= 4717  win=12.0%  mean/tr=-0.525%  PF=0.25
+  vol_thr=1.2:  gross n= 2021  win=14.4%  mean/tr=-0.179%  PF=0.57
+                net10 n= 2021  win=13.0%  mean/tr=-0.396%  PF=0.34
+                net20 n= 2021  win=10.9%  mean/tr=-0.596%  PF=0.23
+
+===== STRESS: GATED expansion (vol_thr=1.0)  (n=4717, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr -0.109%  95% CI [-0.155%, -0.070%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.325%  95% CI [-0.371%, -0.285%]  <-- CI excludes 0
+  beta-neutral alpha (gross)      : mean/tr -0.077%  95% CI [-0.124%, -0.034%]  <-- CI excludes 0
+  concentration (net): names +0/-20, top-3 names 6% of total; years +0/-27, top-3 years 6%
+  OOS split @ 2013: pre  gross n= 2231  win=14.7%  mean/tr=-0.149%  PF=0.63
+                        pre  net10 n= 2231  win=13.2%  mean/tr=-0.365%  PF=0.38
+                        post gross n= 2486  win=16.3%  mean/tr=-0.073%  PF=0.75
+                        post net10 n= 2486  win=14.5%  mean/tr=-0.290%  PF=0.39
+  per-ticker compound (net): median -52.1%  %profitable 0%  |  median buy&hold +250.8%
+
+===== STRESS: FULL breakout book (ungated, for contrast)  (n=11792, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr -0.082%  95% CI [-0.119%, -0.049%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.299%  95% CI [-0.335%, -0.266%]  <-- CI excludes 0
+  beta-neutral alpha (gross)      : mean/tr -0.068%  95% CI [-0.101%, -0.037%]  <-- CI excludes 0
+  concentration (net): names +0/-20, top-3 names 11% of total; years +0/-27, top-3 years 7%
+  OOS split @ 2013: pre  gross n= 5637  win=15.7%  mean/tr=-0.130%  PF=0.64
+                        pre  net10 n= 5637  win=14.0%  mean/tr=-0.347%  PF=0.36
+                        post gross n= 6155  win=16.8%  mean/tr=-0.038%  PF=0.86
+                        post net10 n= 6155  win=14.7%  mean/tr=-0.255%  PF=0.43
+  per-ticker compound (net): median -82.7%  %profitable 0%  |  median buy&hold +250.8%

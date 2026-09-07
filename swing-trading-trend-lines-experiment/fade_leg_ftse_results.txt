@@ -1,0 +1,42 @@
+Building the fade (mean-reversion) book, TH=2.0, gate=compression...
+5589 fade trades; 5589 have a causal vol_state (100% coverage).
+
+####################################################################
+# DISCRIMINATOR: does the fade work better in compression?
+####################################################################
+  gross            | compression(vs<1.0) n= 3392  win=59.1%  mean/tr=+0.409%  PF=1.26
+                   | expansion(vs>=1.0) n= 2197  win=55.2%  mean/tr=+0.220%  PF=1.11
+  net(10bps+5%)    | compression(vs<1.0) n= 3392  win=56.7%  mean/tr=+0.062%  PF=1.04
+                   | expansion(vs>=1.0) n= 2197  win=52.8%  mean/tr=-0.139%  PF=0.94
+
+####################################################################
+# TH sensitivity (compression-gated fade book)
+####################################################################
+  TH=1.5:  gross n= 5384  win=61.3%  mean/tr=+0.342%  PF=1.22
+             net10 n= 5384  win=59.0%  mean/tr=+0.005%  PF=1.00
+  TH=2.0:  gross n= 3392  win=59.1%  mean/tr=+0.409%  PF=1.26
+             net10 n= 3392  win=56.7%  mean/tr=+0.062%  PF=1.04
+  TH=2.5:  gross n= 1340  win=57.8%  mean/tr=+0.528%  PF=1.33
+             net10 n= 1340  win=55.3%  mean/tr=+0.174%  PF=1.10
+
+===== STRESS: FADE compression-gated (TH=2.0, vs<1.0)  (n=3392, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr +0.409%  95% CI [+0.275%, +0.547%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr +0.062%  95% CI [-0.069%, +0.197%]
+  beta-neutral alpha (gross)      : mean/tr +0.283%  95% CI [+0.149%, +0.417%]  <-- CI excludes 0
+  concentration (net): names +10/-10, top-3 names 128% of total; years +15/-12, top-3 years 117%
+  OOS split @ 2013: pre  gross n= 1639  win=58.0%  mean/tr=+0.299%  PF=1.18
+                        pre  net10 n= 1639  win=55.8%  mean/tr=-0.048%  PF=0.97
+                        post gross n= 1753  win=60.2%  mean/tr=+0.511%  PF=1.35
+                        post net10 n= 1753  win=57.5%  mean/tr=+0.165%  PF=1.10
+  per-ticker compound (net): median -13.7%  %profitable 45%  |  median buy&hold +250.8%
+
+===== STRESS: FADE all regimes (TH=2.0, for contrast)  (n=5589, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr +0.335%  95% CI [+0.176%, +0.499%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.017%  95% CI [-0.177%, +0.143%]
+  beta-neutral alpha (gross)      : mean/tr +0.246%  95% CI [+0.100%, +0.412%]  <-- CI excludes 0
+  concentration (net): names +9/-11, top-3 names -449% of total; years +12/-15, top-3 years -509%
+  OOS split @ 2013: pre  gross n= 2661  win=57.6%  mean/tr=+0.398%  PF=1.22
+                        pre  net10 n= 2661  win=55.3%  mean/tr=+0.048%  PF=1.02
+                        post gross n= 2928  win=57.5%  mean/tr=+0.277%  PF=1.16
+                        post net10 n= 2928  win=55.1%  mean/tr=-0.076%  PF=0.96
+  per-ticker compound (net): median -26.9%  %profitable 30%  |  median buy&hold +250.8%
