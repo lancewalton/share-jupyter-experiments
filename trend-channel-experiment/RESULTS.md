@@ -371,3 +371,53 @@ The decomposition pins down *why*: **not** slow instruments (there is zero selec
 channels), but **winner-capping** — taking profits at every channel top clips the right tail of big
 multi-year winners, which is exactly where buy-and-hold's return lives. Buy-and-hold wins on both total
 return and Sharpe. Experiment closed.
+
+---
+
+## Value / quality overlay on the momentum tilt (point-in-time fundamentals)
+
+Adds cross-sectional **value** and **quality** factors to the 12-1 momentum tilt, on the
+survivorship-free top-350 universe, net of tiered costs. Factors are point-in-time (as-of the
+statement `filing_date`, or fiscal-end + 120 days when missing — never used before it was reported):
+
+- **quality** = ½·rank(ROE = net income / book equity) + ½·rank(GP/assets) — both ratios are
+  currency-neutral, so quality covers ~all names.
+- **value** = ½·rank(B/P) + ½·rank(E/P) — needs price and statement in aligned currency, so it is
+  restricted to GBX-quoted GBP/GBX reporters (mega-cap USD reporters are excluded → thinner coverage).
+
+Composite = equal-weight of available component z-scores; long the top quintile, monthly.
+
+**Bug found and fixed first (this invalidated an earlier run).** The point-in-time raster builder used
+`piv.reindex(months, method="ffill")` on a *DataFrame*, which maps each month to the single most-recent
+filing **row** and copies it wholesale — so a month only showed the handful of names that filed on that
+one exact date. Factor coverage read a nonsensical 175/124 names and the overlay looked useless. The fix
+is a per-**column** forward-fill (`reindex(index.union(months)).ffill().reindex(months)`). Coverage then
+rose to 2,175 (quality) / 1,325 (value) of 2,978, and the result reversed. (A second bug — the standalone
+"X only" rows re-ran momentum because `run_multi` ignored the swapped-in signal — was fixed too.)
+
+```
+eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+
+strategy                    CAGR  Sharpe   maxDD
+momentum only            +10.58%    0.72    -47%
+mom + quality            +11.38%    0.80    -47%
+mom + value              +10.85%    0.71    -53%
+mom + value + quality    +12.60%    0.84    -51%
+quality only             +10.77%    0.74    -41%
+value only               +12.86%    0.74    -61%
+```
+
+**Verdict:** value and quality *do* improve the momentum tilt — the opposite of the buggy run's reading.
+
+- **Quality is the natural complement.** `mom + quality` lifts Sharpe 0.72 → 0.80 at the *same*
+  drawdown (−47%). Quality standalone matches momentum's return (10.77%) with the *shallowest* drawdown
+  of the lot (−41%) — a genuinely diversifying, defensive premium.
+- **Value adds return but buys deeper drawdowns.** Value standalone has the highest CAGR (12.86%) but a
+  brutal −61% maxDD; `mom + value` barely beats momentum and worsens the drawdown. Classic value.
+- **The full three-factor book** (mom + value + quality) has the best risk-adjusted return of all
+  (CAGR 12.60%, Sharpe 0.84) but does not cut the drawdown (−51%). If the binding constraint is
+  drawdown, `mom + quality` is the better trade-off; if it is Sharpe, the three-factor book wins.
+
+Caveat: value coverage (1,325) is thinner than quality (2,175) because of the currency restriction, and
+all books share momentum's structural ~−47% drawdown vulnerability. Vol-targeting (previous section) is
+the lever for the drawdown; the factor overlay is the lever for return/Sharpe. They are complementary.

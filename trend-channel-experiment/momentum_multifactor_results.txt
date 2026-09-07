@@ -1,0 +1,15 @@
+Building price panel + point-in-time factor rasters...
+factor coverage (names with a value in 2020): quality 2175, value 1325 of 2978
+
+##################################################################################
+# 12-1 MOMENTUM + VALUE/QUALITY (survivorship-free top-350, net tiered costs)
+##################################################################################
+eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+
+strategy                    CAGR  Sharpe   maxDD
+momentum only            +10.58%    0.72    -47%
+mom + quality            +11.38%    0.80    -47%
+mom + value              +10.85%    0.71    -53%
+mom + value + quality    +12.60%    0.84    -51%
+quality only             +10.77%    0.74    -41%
+value only               +12.86%    0.74    -61%
