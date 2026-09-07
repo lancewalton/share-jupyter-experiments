@@ -208,6 +208,27 @@ whose relative edge is regime-dependent (good in smooth trends, badly negative i
 cross-market, and recovering since 2023 in the UK. Buy-and-hold still wins over the full sample — but the
 mechanism is whipsaw-sensitivity plus a strong benchmark, **not** vol suppression.
 
+### Bonds — the mechanism confirmed by a sign flip (`download_bonds.py`, `bond_selector.py`)
+
+6 bond ETFs (TLT/IEF/SHY/LQD/AGG/TIP, 2002–26; thin, correlated cross-section — indicative). The selector
+loses to bond EW B&H on total return at every gradient (CAGR 0.3–1.15% vs 3.58%) — same drift-forgone
+problem, worse because bonds drift slowly and only ~1 ETF qualifies at a time. **But the diagnostic flips:**
+
+- **corr(rolling edge, bond-market vol) = +0.33 — positive** (equities were −0.39 / −0.45).
+- Rolling edge is negative 2006–2021 but turns **positive in 2022 (+0.6%), 2023 (+3.3%), 2024 (+4.6%)** —
+  exactly the bond crash and aftermath.
+
+This confirms the corrected mechanism and kills vol-suppression: the trend-following exit **helps** when a
+drawdown is a **sustained downtrend** (bonds 2022 — the selector drops bonds as channels break, avoiding the
+crash) and **hurts** when it is a sharp **V-recovery** (equities 2020 — exits at the low, misses the
+snap-back). The edge–vol correlation flips sign with the *shape* of the drawdown — not with a date or a vol
+level. If vol-suppression were the cause, the sign would be the same across assets.
+
+**Breadth conclusion:** the channel-selector loses to buy-and-hold on total return across UK equities, US
+equities, *and* bonds (a part-time long-only filter forgoes the drift). But its trend-following value-add is
+regime-shape-dependent: negative in whipsaw-prone equities, positive in sustained-trend bond drawdowns. Not
+UK-specific, and not vol suppression — drawdown shape.
+
 ## Reframed conclusion
 
 The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*

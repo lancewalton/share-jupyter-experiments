@@ -1,0 +1,38 @@
+Bonds: 6 ETFs, 2002-07-30->2026-09-04. L=250
+Bond EW B&H: CAGR +3.58%  Sharpe 0.60  | pre +6.34%  post +1.52%
+
+################################################################################
+# BOND CHANNEL-SELECTION (hold ETFs in a qualifying rising channel), L=250
+################################################################################
+ g_min  avgHeld    CAGR  Sharpe   pre13  post13  vsUniv
+  0.02      1.2   1.15%    0.37   2.37%   0.24%  loses
+  0.03      1.2   1.03%    0.33   2.19%   0.16%  loses
+  0.05      1.0   0.55%    0.17   1.75%  -0.36%  loses
+  0.10      0.4   0.30%    0.09   1.39%  -0.52%  loses
+
+rolling 3y edge (g_min=0.03): corr(edge, bond-mkt vol) = +0.33
+  year    edge
+  2006   -2.3%
+  2007   -1.8%
+  2008   -4.6%
+  2009   -3.7%
+  2010   -2.8%
+  2011   -3.6%
+  2012   -4.0%
+  2013   -1.7%
+  2014   +0.5%
+  2015   +0.1%
+  2016   -3.4%
+  2017   -3.2%
+  2018   -3.7%
+  2019   -4.6%
+  2020   -7.7%
+  2021   -6.7%
+  2022   +0.6%
+  2023   +3.3%
+  2024   +4.6%
+  2025   -0.8%
+  2026   -0.6%
+
+  (bonds: 2020-22 drawdown was a sustained downtrend, so a trend-following EXIT
+   could help -- watch 2022-2023 edge vs the equity whipsaw case.)
