@@ -90,9 +90,13 @@ def run_multi(M, mret, liq, signal, comps: dict):
     return P[P.index >= BT_START]
 
 
-def main():
-    say("Building price panel + point-in-time factor rasters...")
-    M, mret, liq, signal = build()
+def build_factors(M):
+    """Point-in-time QUALITY and VALUE rasters (month x M.columns) on the price panel.
+
+    quality = 0.5*rank(ROE) + 0.5*rank(GP/assets), currency-neutral (covers ~all names).
+    value   = 0.5*rank(B/P) + 0.5*rank(E/P), GBX-quoted GBP/GBX reporters only (price and
+    statement must share currency; mega-cap USD reporters are excluded -> thinner coverage).
+    """
     mi = M.index
     f = pd.read_parquet(FUND)
     book, ni = asof(f, "book_equity", mi), asof(f, "net_income", mi)
@@ -111,8 +115,15 @@ def main():
     bp[bad] = np.nan; ep[bad] = np.nan                                   # value: GBX-quoted GBP/GBX reporters only
     quality = (0.5 * roe.rank(axis=1, pct=True) + 0.5 * gpa.rank(axis=1, pct=True)).reindex(columns=M.columns)
     value = (0.5 * bp.rank(axis=1, pct=True) + 0.5 * ep.rank(axis=1, pct=True)).reindex(columns=M.columns)
+    return quality, value, len(cols)
+
+
+def main():
+    say("Building price panel + point-in-time factor rasters...")
+    M, mret, liq, signal = build()
+    quality, value, ncols = build_factors(M)
     say(f"factor coverage (names with a value in 2020): quality {quality.loc['2020-06':'2020-07'].iloc[0].notna().sum()}, "
-        f"value {value.loc['2020-06':'2020-07'].iloc[0].notna().sum()} of {len(cols)}\n")
+        f"value {value.loc['2020-06':'2020-07'].iloc[0].notna().sum()} of {ncols}\n")
 
     books = {
         "momentum only": {"mom": signal},

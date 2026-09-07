@@ -421,3 +421,47 @@ value only               +12.86%    0.74    -61%
 Caveat: value coverage (1,325) is thinner than quality (2,175) because of the currency restriction, and
 all books share momentum's structural ~−47% drawdown vulnerability. Vol-targeting (previous section) is
 the lever for the drawdown; the factor overlay is the lever for return/Sharpe. They are complementary.
+
+---
+
+## Combining the levers: vol-targeted multi-factor tilt (`momentum_combined.py`)
+
+The factor overlay is the return/Sharpe lever; vol-targeting is the drawdown lever. Do they
+stack? Take each book's net monthly tilt series, then scale exposure to a constant vol
+(w = target / trailing-12m-vol, causal). Survivorship-free top-350, net tiered costs.
+
+```
+eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+
+                                    CAGR    vol  Sharpe  maxDD
+momentum only
+  raw (no targeting)              +10.58%  15.8%   0.72   -47%
+  vol-target own-vol, no lev      +10.31%  14.2%   0.76   -38%
+  vol-target own-vol, lev<=1.5    +11.95%  17.6%   0.73   -42%
+mom + quality
+  raw (no targeting)              +11.38%  15.0%   0.80   -47%
+  vol-target own-vol, no lev      +10.88%  13.6%   0.83   -39%
+  vol-target own-vol, lev<=1.5    +12.93%  16.6%   0.82   -42%
+mom + value + quality
+  raw (no targeting)              +12.60%  15.7%   0.84   -51%
+  vol-target own-vol, no lev      +11.28%  14.2%   0.83   -45%
+  vol-target own-vol, lev<=1.5    +13.30%  17.3%   0.81   -49%
+```
+
+**The two levers stack cleanly — they act on different axes and don't fight.**
+
+- **Best risk-controlled build: `mom + quality`, vol-targeted, no leverage → CAGR 10.88%,
+  Sharpe 0.83, maxDD −39%.** Versus plain momentum (10.58% / 0.72 / −47%): more return,
+  a big Sharpe jump (0.72 → 0.83), and the drawdown cut by ~8pp — all at once, no leverage.
+- **Best return build: `mom + value + quality`, own-vol with lev≤1.5 → CAGR 13.30%,
+  Sharpe 0.81, maxDD −49%.** Leverage buys ~2.7pp of CAGR but hands most of the drawdown
+  back; the drawdown stays wherever the underlying book sits (value's deep-DD nature shows).
+- **Quality is the sweet spot for the combination.** It enters with the shallowest raw
+  drawdown, so vol-targeting starts from a better base: `mom + quality` no-lev reaches
+  Sharpe 0.83 at only 13.6% vol and −39% DD — the best all-round point on the frontier.
+
+Frontier summary: pick `mom + quality` no-leverage if drawdown is the binding constraint
+(0.83 Sharpe, −39% DD at ~13.6% vol); step up to leverage / add value only to chase raw
+CAGR, accepting the drawdown creeps back toward −45/−49%. Every combined build still beats
+the eligible universe B&H (5.65% / 0.42) decisively. This is the programme's best build:
+survivorship-free, net of costs, point-in-time factors, causal vol-targeting.

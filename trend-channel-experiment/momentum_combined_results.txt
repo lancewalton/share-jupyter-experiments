@@ -1,0 +1,25 @@
+Building panel + point-in-time factor rasters...
+
+####################################################################################
+# VOL-TARGETED MULTI-FACTOR TILT (survivorship-free top-350, net tiered costs)
+####################################################################################
+eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+
+momentum only  (raw realised vol 15.8%)
+  raw (no targeting)                 CAGR +10.58%  vol  15.8%  Sharpe  0.72  maxDD   -47%
+  vol-target own-vol, no lev         CAGR +10.31%  vol  14.2%  Sharpe  0.76  maxDD   -38%
+                                     avg exposure 0.94
+  vol-target own-vol, lev<=1.5       CAGR +11.95%  vol  17.6%  Sharpe  0.73  maxDD   -42%
+
+mom + quality  (raw realised vol 15.0%)
+  raw (no targeting)                 CAGR +11.38%  vol  15.0%  Sharpe  0.80  maxDD   -47%
+  vol-target own-vol, no lev         CAGR +10.88%  vol  13.6%  Sharpe  0.83  maxDD   -39%
+                                     avg exposure 0.94
+  vol-target own-vol, lev<=1.5       CAGR +12.93%  vol  16.6%  Sharpe  0.82  maxDD   -42%
+
+mom + value + quality  (raw realised vol 15.7%)
+  raw (no targeting)                 CAGR +12.60%  vol  15.7%  Sharpe  0.84  maxDD   -51%
+  vol-target own-vol, no lev         CAGR +11.28%  vol  14.2%  Sharpe  0.83  maxDD   -45%
+                                     avg exposure 0.94
+  vol-target own-vol, lev<=1.5       CAGR +13.30%  vol  17.3%  Sharpe  0.81  maxDD   -49%
+
