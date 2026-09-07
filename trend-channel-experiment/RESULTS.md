@@ -229,6 +229,28 @@ equities, *and* bonds (a part-time long-only filter forgoes the drift). But its 
 regime-shape-dependent: negative in whipsaw-prone equities, positive in sustained-trend bond drawdowns. Not
 UK-specific, and not vol suppression — drawdown shape.
 
+### Cross-strategy regime dashboard (`regime_dashboard.py`, `charts/regime_dashboard.png`)
+
+Rolling 3-year edge (vs equal-weight FTSE B&H, gross) of four implementable strategies, to see which ideas'
+regimes have turned. The annual panel shows a clear **rotation between trend and reversion**:
+
+- **2018–2023 (whipsaw era):** channel −5 to −15%/yr, momentum ~0 to −3%, **reversal +2 to +9%** — reversion's regime.
+- **2024–2026 (recovery):** channel **+11.7 / +6.3%**, momentum **+5.5 / +5.0%**, reversal turns **−4.5 / −9.4%** — trend's regime.
+
+**12-1 momentum is the most consistent** (positive in most years, full-sample +4.2%/yr gross, only mildly
+negative 2009–11 and 2020–23); the **channel selector is the most regime-sensitive** (swings +37% to −15%);
+**low-vol is persistently weak** on this universe (−2.3%/yr); **reversal is anti-trend** (its good years are
+the trend strategies' bad ones).
+
+*Caveat:* the efficiency-ratio regime indicator used here is 3y-smoothed and secularly declines, so its
+correlation column is confounded (all four spuriously positive) — read the annual panel, not the corr.
+
+**Implication for the 2024–26 recovery:** of the ideas worth revisiting, **12-1 momentum is the strongest
+candidate** (consistent, currently favourable, and the programme's one robust directional edge); the channel
+selector is speculative (high variance); the reversion fade is in its *adverse* regime; low-vol is out. The
+regime-timing caveat still applies — small sample, and the programme repeatedly found premia can't be timed
+for free.
+
 ## Reframed conclusion
 
 The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*
