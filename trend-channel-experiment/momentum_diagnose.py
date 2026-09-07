@@ -13,9 +13,8 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-SP = Path("/private/tmp/claude-501/-Users-lance-Projects-share-jupyter-experiments/"
-          "ef57bf07-743d-4448-a1f7-5248924dfeaf/scratchpad")
-OHLCV = HERE / "eodhd_uk_ohlcv.parquet"
+DATA = HERE.parent / "data" / "eodhd"
+OHLCV = DATA / "eodhd_uk_ohlcv.parquet"
 
 
 def main() -> None:
@@ -23,7 +22,7 @@ def main() -> None:
     df = df[df["date"] >= "1998-01-01"]
     ccy, name = {}, {}
     for fn in ("lse_active.json", "lse_delisted.json"):
-        for x in json.load(open(SP / fn)):
+        for x in json.load(open(DATA / fn)):
             ccy.setdefault(x.get("Code"), x.get("Currency"))
             name.setdefault(x.get("Code"), x.get("Name"))
     fac = df["code"].map(lambda c: 0.01 if ccy.get(c) == "GBX" else 1.0).astype("float32")

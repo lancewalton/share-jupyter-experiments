@@ -20,9 +20,8 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-SP = Path("/private/tmp/claude-501/-Users-lance-Projects-share-jupyter-experiments/"
-          "ef57bf07-743d-4448-a1f7-5248924dfeaf/scratchpad")
-OHLCV = HERE / "eodhd_uk_ohlcv.parquet"
+DATA = HERE.parent / "data" / "eodhd"
+OHLCV = DATA / "eodhd_uk_ohlcv.parquet"
 START = "1998-01-01"
 BT_START = "2001-01-01"        # backtest era (match the survivor-only test)
 FRAC = 0.2
@@ -42,7 +41,7 @@ def say(s: str = "") -> None:
 def ccy_map() -> dict:
     m = {}
     for fn in ("lse_active.json", "lse_delisted.json"):
-        for x in json.load(open(SP / fn)):
+        for x in json.load(open(DATA / fn)):
             if x.get("Code") and x["Code"] not in m:
                 m[x["Code"]] = x.get("Currency")
     return m

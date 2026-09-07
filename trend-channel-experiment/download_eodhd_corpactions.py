@@ -19,13 +19,12 @@ import pandas as pd
 import requests
 
 HERE = Path(__file__).resolve().parent
-SP = Path("/private/tmp/claude-501/-Users-lance-Projects-share-jupyter-experiments/"
-          "ef57bf07-743d-4448-a1f7-5248924dfeaf/scratchpad")
+DATA = HERE.parent / "data" / "eodhd"
 TOKEN = os.environ["EODHD_API_TOKEN"]
 RATE = 14.0
 WORKERS = 8
-OUT_DIV = HERE / "eodhd_uk_dividends.parquet"
-OUT_SPLIT = HERE / "eodhd_uk_splits.parquet"
+OUT_DIV = DATA / "eodhd_uk_dividends.parquet"
+OUT_SPLIT = DATA / "eodhd_uk_splits.parquet"
 
 _lock = threading.Lock()
 _next = [time.monotonic()]
@@ -41,8 +40,8 @@ def throttle() -> None:
 
 
 def universe():
-    act = json.load(open(SP / "lse_active.json"))
-    de = json.load(open(SP / "lse_delisted.json"))
+    act = json.load(open(DATA / "lse_active.json"))
+    de = json.load(open(DATA / "lse_delisted.json"))
     out, seen = [], set()
     for d in (act, de):
         for x in d:
