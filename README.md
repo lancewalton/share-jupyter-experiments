@@ -40,7 +40,8 @@ it.*
   US equities, and bonds.
 
 The full write-ups are the `synthesis-*.html` / `strategy.html` documents at the
-repo root, plus a `WRITEUP.md` / `RESULTS.md` inside most experiment folders.
+repo root (and `momentum.html` — the programme's one positive, survivorship-tested
+edge), plus a `WRITEUP.md` / `RESULTS.md` inside most experiment folders.
 `BACKLOG.md` and `STRATEGY.md` are the cross-project idea log and operational
 spec.
 

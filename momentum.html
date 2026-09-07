@@ -1,0 +1,151 @@
+<title>The Edge That Held</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ground:#eceff0;--surface:#fff;--surface-2:#f6f8f8;--ink:#14181b;--ink-soft:#48555c;--ink-faint:#7d8b92;
+    --line:#dae1e3;--signal:#0c757f;--signal-ink:#095e66;--signal-wash:#e1eff0;
+    --limit:#a8631a;--limit-ink:#8a5115;--limit-wash:#f2e7d8;
+    --shadow:0 1px 2px rgba(20,24,27,.05),0 10px 30px -16px rgba(20,24,27,.24);--measure:66ch;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#0d1214;--surface:#141b1e;--surface-2:#192125;--ink:#e8eff1;--ink-soft:#a3b1b7;--ink-faint:#6d7f86;
+    --line:#25302f;--signal:#3bb2bd;--signal-ink:#65c8d1;--signal-wash:#11282b;
+    --limit:#d8983f;--limit-ink:#e6ad58;--limit-wash:#291f14;--shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -18px rgba(0,0,0,.62);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#0d1214;--surface:#141b1e;--surface-2:#192125;--ink:#e8eff1;--ink-soft:#a3b1b7;--ink-faint:#6d7f86;
+    --line:#25302f;--signal:#3bb2bd;--signal-ink:#65c8d1;--signal-wash:#11282b;
+    --limit:#d8983f;--limit-ink:#e6ad58;--limit-wash:#291f14;--shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -18px rgba(0,0,0,.62);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"Newsreader",Georgia,serif;font-size:1.19rem;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+  .col{max-width:var(--measure)}
+  h1,h2,h3,.eyebrow,.mono,th,.stat-n,.tag{font-family:"Archivo",system-ui,sans-serif}
+  .mono,.stat-n,td.num,th.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{font-size:.73rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--signal-ink);margin:0 0 1.1rem}
+  .eyebrow.lim{color:var(--limit-ink)}
+  h1{font-weight:800;font-size:clamp(2.6rem,7vw,4.4rem);line-height:1.0;letter-spacing:-.022em;text-wrap:balance;margin:0}
+  h2{font-weight:700;font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 .6rem;text-wrap:balance}
+  h3{font-weight:700;font-size:1.12rem;margin:0 0 .3rem}
+  p{margin:0 0 1.15rem}
+  strong{font-weight:500;background:linear-gradient(transparent 62%,var(--signal-wash) 62%);padding:0 .06em}
+  strong.l{background:linear-gradient(transparent 62%,var(--limit-wash) 62%)}
+  a{color:var(--signal-ink)}
+  header.hero{border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--surface),var(--ground))}
+  .hero-inner{padding:clamp(3rem,9vh,5.6rem) 0 clamp(2.4rem,6vh,3.4rem)}
+  .lede{max-width:48ch;font-size:clamp(1.2rem,2.1vw,1.45rem);line-height:1.42;color:var(--ink-soft);margin-top:1.4rem}
+  .credit{margin-top:2rem;font-size:.82rem;color:var(--ink-faint)}
+  section{padding:clamp(2.6rem,7vh,4.4rem) 0}section+section{border-top:1px solid var(--line)}
+  .band{background:var(--surface)}
+  .lede-lg{font-size:1.3rem;line-height:1.5;color:var(--ink)}.muted{color:var(--ink-soft)}.small{font-size:.96rem}
+  .stats{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:2rem 0 .6rem}
+  @media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:var(--surface);padding:1.25rem 1.35rem}
+  .stat-n{font-size:1.85rem;font-weight:600;letter-spacing:-.02em;color:var(--signal-ink);line-height:1}
+  .stat-n.lim{color:var(--limit-ink)}
+  .stat-l{font-family:"Archivo",sans-serif;font-size:.8rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.3}
+  .tbl{overflow-x:auto;margin:1.6rem 0 .4rem;border:1px solid var(--line);border-radius:7px}
+  table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.9rem;background:var(--surface)}
+  caption{text-align:left;font-family:"Archivo",sans-serif;font-size:.82rem;color:var(--ink-faint);letter-spacing:.04em;padding:.9rem 1rem .2rem}
+  th,td{padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  td.num,th.num{text-align:right}tbody tr:last-child td{border-bottom:none}
+  tr.hi td{background:var(--signal-wash)}tr.hi td:first-child{font-weight:600;color:var(--signal-ink)}
+  .up{color:var(--signal-ink)}.dn{color:var(--limit-ink)}
+  .callout{border-left:3px solid var(--signal);background:var(--signal-wash);padding:1.2rem 1.4rem;border-radius:0 7px 7px 0;margin:1.8rem 0}
+  .callout.lim{border-left-color:var(--limit);background:var(--limit-wash)}
+  .callout p{margin:0}.callout p+p{margin-top:.6rem}
+  .pull{font-family:"Archivo",sans-serif;font-weight:600;font-size:clamp(1.4rem,3vw,2rem);line-height:1.22;letter-spacing:-.015em;text-wrap:balance;max-width:28ch;margin:0}
+  .pull .s{color:var(--signal-ink)}.pull .l{color:var(--limit-ink)}
+  footer{background:var(--surface);border-top:1px solid var(--line);padding:3rem 0 4rem}
+  .note{font-size:.9rem;color:var(--ink-faint);max-width:var(--measure)}
+</style>
+
+<header class="hero">
+  <div class="wrap hero-inner col">
+    <p class="eyebrow">A quantitative research programme · the one positive result</p>
+    <h1>The Edge That Held</h1>
+    <p class="lede">Direction is a mirage — except for one signal that keeps working: cross-sectional momentum. We found it by accident while trying to kill trend lines, then subjected it to the test that should have debunked it. It survived.</p>
+    <p class="credit mono">12-1 momentum · UK equities · survivorship-free · net of costs</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">How we got here</p>
+    <p class="lede-lg">Every attempt to trade on chart geometry failed — support/resistance breakouts, rising-channel timing, buy-the-dip, ride-the-winner, capital rotation. All lost to buy-and-hold, robustly. But one variant looked promising: <em>holding the names that were in strong rising channels</em>. On inspection, that wasn't a trend-line effect at all — it was <strong>cross-sectional momentum in disguise</strong>. So we isolated it and tested it properly.</p>
+    <p class="muted">Momentum is a ranked-return signal, not a chart pattern: rank stocks by their return over the past 12 months <em>skipping the most recent one</em> (the "12-1"), hold the winners, rebalance monthly. You don't need lines to capture it — and the line-drawing machinery, it turned out, only got in the way.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The test that should have killed it</p>
+      <h2>Survivorship: the alpha survived</h2>
+      <p class="muted">Our first momentum backtest used current FTSE constituents — a survivor-only universe that flatters momentum more than almost any factor, because the losers it would have avoided are simply missing. So we bought a genuine survivorship-free universe: <strong>3,237 UK stocks — 1,570 live and 1,667 <em>delisted</em></strong> (Carillion, Thomas Cook, NMC…), full history. The worry was that the edge would evaporate. It didn't.</p>
+    </div>
+    <div class="tbl col" style="max-width:none">
+      <table>
+        <caption>12-1 long-only tilt: survivor-only vs survivorship-free (net of costs)</caption>
+        <thead><tr><th>metric</th><th class="num">survivor-only (120)</th><th class="num">survivorship-free (top-350)</th></tr></thead>
+        <tbody>
+          <tr><td>market benchmark CAGR</td><td class="num">~8–9% (inflated)</td><td class="num">5.65% (true)</td></tr>
+          <tr><td>long-only CAGR</td><td class="num">13.0%</td><td class="num">11.4%</td></tr>
+          <tr><td>Sharpe</td><td class="num">0.83</td><td class="num">0.77</td></tr>
+          <tr class="hi"><td>alpha over market</td><td class="num">+5.75%</td><td class="num">+6.35%</td></tr>
+          <tr><td>pre / post-2013 CAGR</td><td class="num">13.5 / 12.6%</td><td class="num">11.7 / 11.2%</td></tr>
+          <tr><td>market-neutral Sharpe</td><td class="num">0.25</td><td class="num">0.65</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <div class="callout"><p>Survivorship bias inflated the <strong>market benchmark</strong> (~3pp/yr) more than it inflated momentum — which already avoids losers. So the <em>alpha</em> held, and was marginally <em>higher</em> survivorship-free. And the market-neutral book <strong>improved</strong> (Sharpe 0.25 → 0.65), because shorting the delisted losers — absent from the survivor set — actually pays.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">Is it tradeable?</p>
+    <h2>Costs are almost irrelevant</h2>
+    <p class="muted">The tilt trades slowly — about 6.3× one-way turnover a year — so realistic frictions barely touch it. Net of a liquidity-tiered spread (15/40/80 bps by size), the long-only tilt earns <strong>10.6% CAGR at Sharpe 0.72</strong>, versus the market's 5.65% / 0.42.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">0.72</div><div class="stat-l">net Sharpe (tiered costs) vs market 0.42</div></div>
+      <div class="stat"><div class="stat-n">6.3×</div><div class="stat-l">one-way turnover per year</div></div>
+      <div class="stat"><div class="stat-n">~200bp</div><div class="stat-l">break-even round-trip cost (edge dies above)</div></div>
+      <div class="stat"><div class="stat-n lim">−47%</div><div class="stat-l">max drawdown — the real constraint</div></div>
+    </div>
+    <p class="muted">The <strong>break-even round-trip cost is ~200 bps</strong> — an order of magnitude above realistic execution (~15–40 bps). The edge dwarfs the frictions. Monthly rebalancing beats quarterly (Sharpe 0.72 vs 0.63): the turnover saving isn't worth the responsiveness lost, because cost was never the binding constraint.</p>
+    <div class="callout lim">
+      <p class="eyebrow lim" style="margin-bottom:.4rem">The cost of admission is drawdown, not cost</p>
+      <p>The long-only tilt is a high-beta long book (β ≈ 0.84), so its worst months are simply <em>market</em> crashes — −20% in 2008, −17% in the 2020 COVID crash — and its max drawdown is ~−47%. The market-neutral version removes the beta but exposes the <strong class="l">momentum crash</strong>: a −48% single month in April 2009 and a −64% max drawdown. Real, but a brutal tail to hold or lever.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap col">
+    <p class="eyebrow lim">What we won't claim</p>
+    <h2>Honest caveats</h2>
+    <p class="muted">It's a <strong>high-beta tilt with real alpha</strong>, not market-neutral magic — most of the 10.6% is equity beta; the value-add over that is ~+6%/yr. The survivorship-free universe is <em>messy</em> (bad ticks in delisted micro-caps), so returns are winsorised cross-sectionally — a cleaning judgment the exact numbers depend on, though the liquid top-350 is relatively clean. Results are one market (UK), one construction. And a real edge is not the same as an easy one: you must sit through −47% drawdowns to earn it.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">Where it sits in the programme</p>
+    <p class="pull"><span class="l">Direction</span> is a mirage no chart pattern beats. The one exception is <span class="s">momentum</span> — winners keep winning over a year — and it is captured by ranking returns, not by drawing lines.</p>
+    <p class="muted" style="margin-top:1.6rem">Across a dozen experiments, every repeatable edge was a risk-premium-shaped thing — sell insurance, bear a crash, collect a modest, honest return. Momentum is the directional member of that family: a real, survivorship-robust, cost-insensitive premium whose price is a fat left tail. It is the programme's standout positive result — and, fittingly, the one idea that owes nothing to the trend lines that led us to it.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p class="eyebrow">Provenance</p>
+    <p class="note">12-1 cross-sectional momentum (12-month return skipping the most recent month), monthly rebalance, top-quintile long-only tilt and top-minus-bottom market-neutral book. Universe: 3,237 GBP/GBX LSE common stocks (1,570 live + 1,667 delisted) from EODHD, full OHLCV; point-in-time top-350 by liquidity. Returns winsorised cross-sectionally (1/99). Costs: liquidity-tiered spread (15/40/80 bps round-trip) applied on turnover; break-even and sensitivity reported. Backtest 2001–2026, net, with year-block bootstrap CI [+4.2%, +19.5%] on the long-only annual mean. Scripts and full results in <span class="mono">trend-channel-experiment/</span>; data in <span class="mono">data/eodhd/</span> (local-only). A validated research programme, honestly caveated — not investment advice.</p>
+  </div>
+</footer>
