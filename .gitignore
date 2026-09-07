@@ -16,6 +16,8 @@ env/
 *.csv
 candle-data/data/
 **/data_futures/
+# EODHD raw downloads (regenerable via the API; large)
+**/eodhd_fundamentals/
 
 # --- Python / Jupyter cruft ---
 __pycache__/

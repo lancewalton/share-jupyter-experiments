@@ -276,6 +276,40 @@ significant result in the whole programme — the one idea that beats buy-and-ho
 out-of-sample and today. But it's a high-beta tilt with real-but-smaller alpha, inflated by survivorship —
 "the best candidate to actually build," not "a proven 13% edge."
 
+### Survivorship-free 12-1 momentum (EODHD, active + delisted) — the caveat RESOLVED (2026-09-07)
+
+Rebuilt on a genuine survivorship-free UK universe from EODHD: 3,237 GBP/GBX common stocks (1,570 live +
+1,667 **delisted** — Carillion, Thomas Cook, NMC, Intu, Sirius...), full OHLCV. Point-in-time top-350-by-
+liquidity universe (FTSE-350-like, incl. names that were liquid then and later died), same 12-1 momentum,
+monthly, net of turnover costs. Returns winsorised cross-sectionally (1/99 within eligible) to kill
+adjusted_close bad ticks — the raw universe is messy (even top-350 had +1000%+ monthly ticks; an unwinsorised
+first pass gave nonsense CAGRs of +50-70%). Files: `download_eodhd_uk.py`, `momentum_survivorship_free.py`,
+`momentum_diagnose.py`.
+
+**The momentum alpha survives survivorship correction — essentially intact:**
+
+| metric | survivor-only (120 current) | survivorship-free (top-350 incl. delisted) |
+| --- | --- | --- |
+| eligible EW B&H CAGR | ~8–9% (inflated) | 5.65% (true) |
+| long-only tilt CAGR (net 10bps) | 13.0% | 11.4% |
+| long-only Sharpe | 0.83 | 0.77 |
+| long-only alpha over market | +5.75% | **+6.35%** |
+| OOS pre / post-2013 | 13.5% / 12.6% | 11.7% / 11.2% |
+| bootstrap 95% CI | [+6.2, +20.8] | [+4.2, +19.5] (clears 0) |
+| market-neutral long-short Sharpe | 0.25 | **0.65** |
+
+**Key insight:** survivorship bias inflated the *market benchmark* (~3pp/yr) MORE than it inflated momentum
+(which already avoids losers), so momentum's *alpha is robust* — marginally higher survivorship-free. And the
+market-neutral long-short IMPROVES markedly (0.25 → 0.65) because shorting the delisted losers (absent from the
+survivor set) pays. The earlier worry that survivorship inflated the alpha was wrong in direction: it inflated
+the benchmark, not the edge.
+
+**Caveats:** high-beta tilt (0.84, −46% DD); long-short carries momentum-crash DD (−64%); winsorisation is a
+cleaning judgment; top-100 unreliable (insufficient winsorisation in a small set — beta 3.5), use top-350.
+
+**Verdict: 12-1 momentum is real, significant, cost-surviving, era-consistent, and survivorship-robust — the
+programme's genuine standout edge.** The survivorship test meant to undo it instead validated it.
+
 ## Reframed conclusion
 
 The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*

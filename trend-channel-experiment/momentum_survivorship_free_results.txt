@@ -1,0 +1,22 @@
+Loading OHLCV and building monthly panels...
+panel: 3237 names x 345 months; backtest from 2001-01-01
+
+####################################################################################
+# SURVIVORSHIP-FREE 12-1 MOMENTUM (EODHD UK, active+delisted)
+####################################################################################
+Reference — survivor-only (120 current constituents): long-only CAGR 13.0%, Sharpe 0.83, alpha +5.75%
+
+=== top-100 liquid universe (309 months) ===
+  eligible-universe EW B&H: CAGR +10.19%  Sharpe 0.48
+  LONG-ONLY tilt (net 10bps): CAGR +22.28%  Sharpe 0.36  beta 3.53  alpha -5.22%  maxDD -43%
+    OOS: pre-2013 CAGR +6.66% | post-2013 +37.77% | 2023-26 +20.26%
+    long-only bootstrap ann mean +38.71% 95% CI [+5.02%, +100.82%] (CI>0)
+  LONG-SHORT (net 10bps): CAGR +15.55%  Sharpe 0.33  maxDD -81%
+
+=== top-350 liquid universe (309 months) ===
+  eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+  LONG-ONLY tilt (net 10bps): CAGR +11.42%  Sharpe 0.77  beta 0.84  alpha +6.35%  maxDD -46%
+    OOS: pre-2013 CAGR +11.66% | post-2013 +11.20% | 2023-26 +16.70%
+    long-only bootstrap ann mean +12.12% 95% CI [+4.21%, +19.53%] (CI>0)
+  LONG-SHORT (net 10bps): CAGR +11.04%  Sharpe 0.65  maxDD -64%
+
