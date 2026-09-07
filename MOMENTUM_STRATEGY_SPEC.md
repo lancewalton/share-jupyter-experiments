@@ -47,6 +47,12 @@ one-parameter change (§6.3).
   an operational choice, not a source of edge.
 - **Capital:** the strategy holds ~69 names across three liquidity tiers; capacity is bounded by
   the mid/low tiers (§8). Size accordingly.
+- **Broker requirement — fractional shares / micro-lots.** The book is ~69 near-equal positions
+  (~1.4% of NAV each) further scaled by a fractional vol-target exposure, so precise sizing needs
+  sub-share granularity. Whole-share dealing is only adequate at large NAV (§7.4); at small/retail
+  NAV it makes accurate equal-weighting impossible. **The execution venue must support fractional
+  UK-equity dealing (or the NAV must be large enough that whole-share rounding is immaterial), and
+  expose it via API.** This is a hard selection criterion for the broker.
 
 ---
 
@@ -206,13 +212,15 @@ limits support it before enabling.
 ### 7.2 Order generation
 1. Compute target weights `w` (§6).
 2. Convert to target notionals: `notional[i] = w[i] × NAV`.
-3. Convert to target shares using the **raw** close and currency (`shares = notional / (raw_close × fx)`),
-   rounded to the tradeable lot.
+3. Convert to target shares using the **raw** close and currency
+   (`shares = notional / (raw_close × fx)`), rounded to the venue's minimum increment — a
+   **fractional quantity** where supported (see §7.4), otherwise a whole share.
 4. Diff against current holdings → buy/sell orders. Names dropped from the target get fully
    liquidated; new names get established.
 5. Execute to minimise impact: prefer limit / VWAP / participation orders over market orders,
    especially in the mid- and low-liquidity tiers. Turnover is low (§8), so there is no need to
-   rush fills within the rebalance day.
+   rush fills within the rebalance day. (Some venues route fractional quantities as market-on-
+   aggregate orders — check that fractional dealing still permits your intended order type.)
 
 ### 7.3 Held-name corporate actions / delisting between rebalances
 - **Splits/dividends:** adjust share counts / cash; the adjusted-close series handles signal
@@ -220,6 +228,24 @@ limits support it before enabling.
 - **Delisting or suspension of a held name:** exit via the corporate-action mechanism (cash
   received, or write-off at last traded price). Do not assume you can sell at a model price. This is
   a real, expected event in a survivorship-free universe and must be handled operationally.
+
+### 7.4 Share granularity and minimum NAV
+Each position targets `p ≈ exposure × (1/k) × NAV ≈ 0.0136 × NAV` (for `exposure ≈ 0.94`, `k ≈ 69`).
+With **whole-share** dealing, rounding a name costs up to half a share, so the relative sizing
+error per name is up to `(0.5 × raw_price) / p ≈ 37 × raw_price / NAV`.
+
+- To keep that per-name error under ~10% of the target position for a typical LSE share price,
+  NAV must be on the order of **£100k+**; for higher-priced names it is larger still, and a name
+  whose share price exceeds `p` cannot be held at target weight **at all** — it forces either an
+  overweight (≥1 share) or a skip.
+- **Fractional-share dealing removes this floor entirely** — you size each name to `p` directly and
+  the equal-weighting is exact regardless of NAV. This is why fractional support is a hard broker
+  requirement (§1) for anything but a large book.
+- **Rounding policy (whichever granularity applies):** round to the venue increment, and apply a
+  **no-trade band** so a name is only re-traded when its weight drifts beyond a tolerance (e.g.
+  ±25% of the equal weight). This suppresses churn from rounding noise and keeps realised turnover
+  near the modelled ~4–6×/yr. Sweep residual rounding cash into the next rebalance rather than
+  forcing tiny corrective trades.
 
 ---
 
@@ -300,6 +326,7 @@ must be replaced by real machinery live.
 | Vol window | — | 12 months, lagged 1 month | causal |
 | Exposure cap | `CAP` | 1.0 (default) / 1.5 (levered) | |
 | Rebalance | `K` | monthly | any fixed day |
+| No-trade band | — | ±25% of equal weight | suppress rounding/drift churn (§7.4) |
 | Cost tiers | — | 15 / 40 / 80 bps round-trip | top / mid / low liquidity tercile |
 
 ---
@@ -348,6 +375,8 @@ execute(orders)  with limit/VWAP, respecting ADV caps            # T+1 open afte
 - [ ] Paper-trade for ≥ 1–2 rebalance cycles; reconcile modelled vs actual fills and slippage.
 - [ ] Verify corporate-action and delisting handling on at least one real event.
 - [ ] Confirm GBX/GBP handling with a spot check against a known price and known ADV.
+- [ ] Confirm the broker supports **fractional UK-equity dealing via API** (or that NAV is large
+      enough for whole-share rounding — §7.4); verify a fractional test order fills as expected.
 - [ ] Risk sign-off on the expected −40%-class drawdown and the (optional) use of leverage.
 
 ---
