@@ -28,6 +28,16 @@ it.*
   breakout extent, relative line age, and the volatility regime — and every filter
   (and every combination) raised how *often* a breakout wins, never how *much*.
   Strong breakouts revert rather than continue; the method stays net-negative.
+- **Trend-following adds value against sustained trends, destroys it against
+  whipsaws.** A rising-channel strategy loses to buy-and-hold everywhere — as a
+  *timer* (dip-buy / top-sell clips the right tail of big compounders; even
+  ride-the-winner and capital rotation can't fix it) and as a *selector* (holding
+  names in qualifying channels is just momentum — beats B&H pre-2013, loses after).
+  The tell is the edge's correlation with volatility: **negative for equities**
+  (V-shaped crashes whipsaw the trend exit) but **positive for bonds** (the
+  sustained 2022 sell-off rewards it). So the driver is drawdown *shape*, not a
+  2012 regime change or vol suppression — and the pattern holds across UK equities,
+  US equities, and bonds.
 
 The full write-ups are the `synthesis-*.html` / `strategy.html` documents at the
 repo root, plus a `WRITEUP.md` / `RESULTS.md` inside most experiment folders.
@@ -49,7 +59,7 @@ spec.
 | `fx-rotation-experiment` | FX value / momentum / carry |
 | `swing-trading-trend-lines-experiment` | A support/resistance trend-line breakout method |
 | `quick-flip-scalper-experiment` | An intraday opening-range strategy (fade, then follow) |
-| `trend-channel-experiment` | Buy low / sell high inside a rising regression channel vs buy-and-hold |
+| `trend-channel-experiment` | Rising-channel trading vs buy-and-hold — timing vs selection, and the drawdown-shape mechanism across UK/US equities and bonds |
 
 ### Follow-up studies
 
