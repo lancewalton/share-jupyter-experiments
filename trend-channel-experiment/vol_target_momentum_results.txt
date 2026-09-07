@@ -1,0 +1,26 @@
+Building panel + net tilt series (tiered costs, monthly)...
+raw tilt: 309 months, realised vol 15.8%
+
+################################################################################
+# VOL-TARGETING the 12-1 momentum long-only tilt
+################################################################################
+  RAW tilt (no targeting)      CAGR +10.58%  vol  15.8%  Sharpe  0.72  maxDD   -47%
+
+  --- target = raw tilt's own vol (exposure-neutral on average) ---
+  vol-target, no leverage (cap 1.0) CAGR +10.31%  vol  14.2%  Sharpe  0.76  maxDD   -38%
+                               avg exposure 0.94, 2020 return +3%, 2008-09 -18%
+  vol-target, capped lev 1.5   CAGR +11.95%  vol  17.6%  Sharpe  0.73  maxDD   -42%
+                               avg exposure 1.16, 2020 return -7%, 2008-09 -19%
+
+  --- fixed target vols (no leverage, cap 1.0) ---
+  target 10% vol               CAGR  +7.95%  vol  11.3%  Sharpe  0.73  maxDD   -29%
+  target 12% vol               CAGR  +9.04%  vol  12.7%  Sharpe  0.75  maxDD   -32%
+  target 15% vol               CAGR +10.19%  vol  14.0%  Sharpe  0.77  maxDD   -37%
+
+  --- fixed target vols (capped leverage 1.5) ---
+  target 12% vol, lev<=1.5     CAGR  +9.39%  vol  14.2%  Sharpe  0.71  maxDD   -37%
+  target 15% vol, lev<=1.5     CAGR +11.58%  vol  17.0%  Sharpe  0.73  maxDD   -41%
+  target 20% vol, lev<=1.5     CAGR +14.03%  vol  20.1%  Sharpe  0.76  maxDD   -48%
+
+  (raw tilt for reference: CAGR 10.58%, Sharpe 0.72, maxDD -47%;
+   eligible-universe B&H: CAGR 5.65%, Sharpe 0.42)

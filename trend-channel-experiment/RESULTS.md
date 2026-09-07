@@ -329,6 +329,22 @@ vs quarterly; break-even cost; crash profile):
 buy-and-hold's 0.42, robust to any realistic cost, survivorship-confirmed; its binding constraint is
 equity-beta drawdowns (~−47%), not frictions. The market-neutral factor is real but momentum-crash-tailed.
 
+### Vol-targeting the momentum tilt — a clean risk dial + modest Sharpe uplift (`vol_target_momentum.py`)
+
+Scale the long-only tilt's exposure to constant vol (w = target / trailing-12m vol, causal; small scaling cost):
+
+- **No leverage, target = the tilt's own vol (exposure-neutral):** CAGR 10.31% (≈ raw 10.58%), Sharpe 0.76
+  (from 0.72), **maxDD −38% (from −47%)** — same return, ~10pp less drawdown, a clean win.
+- **Mostly a risk dial:** target 10/12/15% vol → maxDD −29/−32/−37%, CAGR 8.0/9.0/10.2%, Sharpe ~0.73–0.77;
+  lever to 20% → CAGR 14.0%, DD −48%. Sharpe is roughly constant across the dial — chiefly re-scaling risk,
+  plus a small timing bonus.
+- The Sharpe bonus is modest because some drawdowns are V-shaped (2020: de-risk then miss the snap-back); it
+  helped more in the sustained 2008-09 crash (cut to −18%).
+
+**Verdict:** vol-targeting is worth applying — real drawdown control (−47% → −38% at no return cost) and a
+small Sharpe uplift, plus a clean way to set the risk level. An improvement, not a transformation (consistent
+with the programme's earlier "vol-targeting is real but modest").
+
 ## Reframed conclusion
 
 The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*
