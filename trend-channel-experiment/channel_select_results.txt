@@ -1,0 +1,21 @@
+Loading 120 names...
+120 names. Universe equal-weight B&H: CAGR +9.57%  Sharpe +0.65
+
+############################################################################################
+# CHANNEL-SELECTION (hold while in a qualifying channel), L=100  vs universe B&H
+############################################################################################
+ w_min  avgHeld  turnovr/yr  CAGR(gross)   CAGR(net)  Sharpe  exBH_CAGR  vsUniv
+  0.00       12        12.7        7.16%       5.44%    0.39      9.57%  loses
+  0.15        3        21.6       13.16%      10.56%    0.55      9.71%  WINS
+  0.25        1        10.0        6.86%       6.00%    0.37     11.50%  loses
+
+############################################################################################
+# CHANNEL-SELECTION (hold while in a qualifying channel), L=250  vs universe B&H
+############################################################################################
+ w_min  avgHeld  turnovr/yr  CAGR(gross)   CAGR(net)  Sharpe  exBH_CAGR  vsUniv
+  0.00       14         4.8       11.92%      11.25%    0.66      9.57%  WINS
+  0.15       10         7.0       11.30%      10.41%    0.61      9.57%  WINS
+  0.25        4         9.3       15.74%      14.61%    0.69     10.20%  WINS
+
+exBH_CAGR = hold-forever the names that EVER qualify (look-ahead upper bound).
+universe B&H CAGR 9.57%, Sharpe 0.65.

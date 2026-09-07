@@ -150,9 +150,38 @@ negative everywhere (−4.7% to −8.9%/yr); requiring more touches makes it wor
 touch gate doesn't even select a special subset (all 120 names trade, traded-B&H = universe 9.57%). So the
 negative-edge verdict holds across **two independent channel-definition families** (fit/width and touches).
 
-## Final conclusion
+### Channel as a SELECTOR, not a timer — beats B&H (`channel_select.py`)
 
-No version of channel timing beats buy-and-hold — not the universe, and not even the specific names it picks.
+The comparisons above are all vs B&H of the *same names* — but the channel is what *selects* those names.
+Testing pure selection (hold an equal-weight book of every name **currently** in a qualifying rising channel,
+causal, no dip-timing; drop it when the channel stops qualifying) changes the verdict:
+
+| L | w_min | avg held | turnover/yr | net CAGR | Sharpe | vs universe B&H (9.57%, 0.65) |
+| ---: | ---: | ---: | ---: | ---: | ---: | :--- |
+| 250 | 0.00 | 14 | 4.8 | 11.25% | 0.66 | WINS |
+| 250 | 0.15 | 10 | 7.0 | 10.41% | 0.61 | WINS |
+| 250 | 0.25 | 4 | 9.3 | 14.61% | 0.69 | WINS |
+| 100 | 0.15 | 3 | 21.6 | 10.56% | 0.55 | WINS (others lose) |
+
+Causal and net of costs; L=250 wins at every width. And the causal book beats even holding those names
+*forever* (ex-post upper bound 10.20% at w_min=0.25 vs causal 14.61%), so the **exit** (leaving a name when
+its channel stops rising) adds drawdown-avoidance value — this is a trend/quality filter, not just picking.
+
+**Caveats before belief:** the best cell holds only ~4 names (concentrated, high variance); it is essentially
+a momentum/trend filter (real but decaying elsewhere in the programme), so needs an out-of-sample split; and
+survivorship inflates both sides (the *relative* edge is the trustworthy part). Stress tests pending.
+
+## Reframed conclusion
+
+The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*
+overlay has strictly negative edge versus holding the same names (−2.5 to −8.9 pp/yr, across exit rule,
+rotation, window, width, gradient, and touch-count definition). But holding an equal-weight book of names
+*currently in a qualifying rising channel* — pure selection, causal, net of costs — beats equal-weight
+buy-and-hold on both return and Sharpe (L=250, robust across width), and beats holding those names forever,
+because the exit side-steps their later drawdowns. That selection edge is a trend/momentum filter and needs
+out-of-sample and concentration stress-testing before it is believed.
+
+## Original (timing) conclusion
 The proposed fixes each did real work: **rotation** fixed exposure (~90%), the **ride-the-winner** exit fixed
 winner-capping (capture 0.04 → 0.4), and a **minimum width** filter found the high-return names (best cell
 L=100, w_min=0.25: CAGR 8.84% vs universe 9.57%). But the degeneration check settles it — the channel-timing
