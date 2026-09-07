@@ -1,0 +1,27 @@
+Loading data; z-score compression fade, TH=2.0, hold sweep [1, 2, 3, 5, 8, 10, 15, 20, 30, 40]...
+
+####################################################################
+# Hold-horizon sweep (net = gross - 20bps spread - 5%/yr financing)
+####################################################################
+ hold      n   win%  gross/tr%   net/tr%    PF
+    1   5398   46.4      0.110    -0.110  0.88
+    2   4926   48.0      0.169    -0.071  0.93
+    3   4605   47.6      0.206    -0.053  0.96
+    5   4233   49.5      0.367     0.069  1.05
+    8   3903   49.7      0.472     0.114  1.07
+   10   3724   49.2      0.444     0.048  1.02
+   15   3361   49.7      0.597     0.103  1.04
+   20   3026   48.9      0.577    -0.015  0.99
+   30   2454   49.1      0.883     0.096  1.03
+   40   2081   46.1      0.538    -0.445  0.89
+
+Best net hold = 8d (net mean/tr +0.114%)
+
+===== STRESS: fade hold=8d  (n=3903, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr +0.472%  95% CI [+0.306%, +0.632%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr +0.114%  95% CI [-0.058%, +0.277%]
+  beta-neutral alpha (gross)      : mean/tr +0.340%  95% CI [+0.187%, +0.493%]  <-- CI excludes 0
+  concentration (net): names +14/-6, top-3 names 65% of total; years +18/-9, top-3 years 65%
+  OOS split @ 2013: pre  net10 n= 1880  win=48.8%  mean/tr=+0.174%  PF=1.10
+                        post net10 n= 2023  win=50.5%  mean/tr=+0.059%  PF=1.03
+  per-ticker compound (net): median +1.1%  %profitable 55%  |  median buy&hold +250.8%

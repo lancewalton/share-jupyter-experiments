@@ -260,3 +260,27 @@ the driver), and **costs erase it**: net −0.084%/tr (CI [−0.238, +0.061] cro
 **Takeaway:** a third independent confirmation that daily equities mean-revert (real, significant gross),
 via the breakout-fade door — and the same wall: dealing costs erase the net, and it's uniform reversion,
 not a strong-vs-weak effect.
+
+## Longer hold: does it amortise the fixed spread? (2026-09-07)
+
+The spread is a fixed ~20 bps round-trip, so holding the reversion longer amortises it — *if* the
+reversion keeps growing faster than financing (~1.37 bps/day). Tested on the strongest fade (z-score
+compression fade, TH=2), sweeping a fixed hold of 1–40 days (`fade_hold_sweep.py`, output
+`fade_hold_sweep_results.txt`).
+
+**It works — the best result in the programme.** Net flips from negative at short holds to positive across
+a broad plateau: net/tr −0.11% (1d) → +0.069% (5d) → **+0.114% (8d)** → +0.103% (15d) → +0.096% (30d), with
+gross rising with hold (reversion keeps developing out to ~30 days). Stress at the best hold (8d, n=3903):
+
+- gross +0.472%/tr, year-block CI [+0.306, +0.632] — **significant**;
+- **beta-neutral alpha +0.340%/tr, CI [+0.187, +0.493] — significant** (real reversion alpha, not beta);
+- net +0.114%/tr, CI **[−0.058, +0.277] — positive point estimate but crosses zero**;
+- both out-of-sample halves net-positive (pre-2013 +0.174% PF 1.10, post-2013 +0.059% PF 1.03);
+- 14/20 names and 18/27 years net-positive, though top-3 names/years ≈ 65% of net (moderate concentration);
+- per-ticker compound median +1.1%, 55% profitable — still far below buy-and-hold +251%.
+
+**Status: promising, not proven.** The longer-hold lever genuinely amortises the spread and turns the fade
+net-positive on a robust plateau, in both eras, with significant beta-neutral gross alpha — the first
+configuration in the daily-FTSE work to clear its own window. But the net edge is small, its bootstrap CI
+crosses zero, and it leans on a subset of names. This is the first result that honestly earns out-of-sample
+confirmation on fresh data (a wider universe or a new window) rather than being refuted in-sample.
