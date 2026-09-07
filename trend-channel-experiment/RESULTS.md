@@ -142,6 +142,14 @@ names that would have returned 11.38% if simply held — the overlay captured *l
 3–4 years (nearly buy-and-hold already), the strategy loses to holding the same names, because it sits out
 the post-break re-entry gaps.
 
+### Touch-defined channel (idea #2) — also negative edge (`channel_touch.py`)
+
+Defining/validating the channel by **≥N touches of each band** (replacing the R² gate) rather than by fit
+quality does not help. Across L∈{100,250} and N∈{2,3,4}, the edge vs buy-and-hold of the traded names is
+negative everywhere (−4.7% to −8.9%/yr); requiring more touches makes it worse (later entries), and the
+touch gate doesn't even select a special subset (all 120 names trade, traded-B&H = universe 9.57%). So the
+negative-edge verdict holds across **two independent channel-definition families** (fit/width and touches).
+
 ## Final conclusion
 
 No version of channel timing beats buy-and-hold — not the universe, and not even the specific names it picks.
@@ -149,7 +157,7 @@ The proposed fixes each did real work: **rotation** fixed exposure (~90%), the *
 winner-capping (capture 0.04 → 0.4), and a **minimum width** filter found the high-return names (best cell
 L=100, w_min=0.25: CAGR 8.84% vs universe 9.57%). But the degeneration check settles it — the channel-timing
 decision itself has **strictly negative edge versus holding the same instruments**, in every configuration
-tried (exit rule, rotation, window, width, gradient), by 2.5–5.8 pp/yr. There is no dip-timing skill to
+tried (exit rule, rotation, window, width, gradient, and touch-count definition), by 2.5–8.9 pp/yr. There is no dip-timing skill to
 harvest; the strategy can only degenerate toward buy-and-hold from below. Buy-and-hold wins on return and
 Sharpe. Experiment closed.
 

@@ -1,0 +1,15 @@
+Loading 120 names...
+120 names. Universe equal-weight B&H CAGR +9.57%
+
+##############################################################################################
+# TOUCH-DEFINED channel (>=N touches each band), ride exit, degeneration check
+##############################################################################################
+   L  Ntouch  names  trades   expo  stratCAGR  tradedBH    edge  Sharpe  vsUniv
+ 100       2    120     815    98%      4.87%     9.57%  -4.69%    0.37  loses
+ 100       3    120     764    96%      0.65%     9.57%  -8.91%    0.13  loses
+ 100       4    120     716    97%      0.96%     9.57%  -8.61%    0.14  loses
+ 250       2    120     658    96%      4.28%     9.57%  -5.29%    0.32  loses
+ 250       3    120     617    96%      3.84%     9.57%  -5.73%    0.29  loses
+ 250       4    120     584    94%      4.85%     9.57%  -4.72%    0.36  loses
+
+  edge = strategy CAGR - B&H CAGR of the same traded names (the decisive test).
