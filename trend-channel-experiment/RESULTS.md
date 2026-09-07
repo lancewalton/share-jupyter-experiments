@@ -310,6 +310,25 @@ cleaning judgment; top-100 unreliable (insufficient winsorisation in a small set
 **Verdict: 12-1 momentum is real, significant, cost-surviving, era-consistent, and survivorship-robust — the
 programme's genuine standout edge.** The survivorship test meant to undo it instead validated it.
 
+### 12-1 momentum tradeability (survivorship-free, top-350) — genuinely tradeable (`momentum_tradeability.py`)
+
+Stress the tilt net of realistic frictions (liquidity-tiered spread 15/40/80 bps by turnover tercile; monthly
+vs quarterly; break-even cost; crash profile):
+
+- **Costs are almost irrelevant.** Turnover only 6.3×/yr; net-of-tiered-cost long-only CAGR 10.58%, Sharpe
+  0.72 vs eligible B&H 5.65% / 0.42. **Break-even ~200 bps round-trip** — it still beats B&H at absurd costs
+  (realistic is ~15–40 bps). The edge dwarfs the frictions.
+- **Monthly beats quarterly** (Sharpe 0.72 vs 0.63; maxDD −47% vs −54%) — the turnover saving from quarterly
+  isn't worth the performance loss, because costs weren't the constraint.
+- **The real cost of admission is drawdown, not cost.** Long-only maxDD −47% (beta 0.84 → eats full market
+  crashes; worst months 2008-09 −20%, COVID-2020 −17% are *market*, not momentum-specific).
+- **Market-neutral long-short is the crash-prone one:** net Sharpe 0.58 but maxDD −64%, a −48% single month
+  (Apr-2009 momentum crash), −50% through 2008-09, −32% Nov-2020. Real but a brutal tail.
+
+**Verdict:** the long-only 12-1 momentum tilt is a genuinely tradeable edge — net Sharpe ~0.72 vs
+buy-and-hold's 0.42, robust to any realistic cost, survivorship-confirmed; its binding constraint is
+equity-beta drawdowns (~−47%), not frictions. The market-neutral factor is real but momentum-crash-tailed.
+
 ## Reframed conclusion
 
 The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*

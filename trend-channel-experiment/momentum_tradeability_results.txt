@@ -1,0 +1,27 @@
+Building panel...
+panel 3237 names x 345 months
+
+################################################################################################
+# 12-1 MOMENTUM TRADEABILITY (survivorship-free UK, top-350)
+################################################################################################
+eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+
+    rebal       cost  LO_CAGR  LO_Sh  LO_maxDD  turn/yr  beatsBH  LS_CAGR  LS_Sh  LS_maxDD
+  monthly      gross  +12.06%   0.81      -46%     6.3x      yes  +12.27%   0.71      -63%
+  monthly  flat 10bp  +11.74%   0.79      -46%     6.3x      yes  +11.65%   0.68      -64%
+  monthly  flat 30bp  +11.09%   0.75      -47%     6.3x      yes  +10.43%   0.62      -64%
+  monthly     tiered  +10.58%   0.72      -47%     6.3x      yes   +9.48%   0.58      -64%
+
+quarterly      gross  +10.19%   0.68      -53%     3.6x      yes  +10.65%   0.65      -67%
+quarterly  flat 10bp  +10.00%   0.67      -53%     3.6x      yes  +10.29%   0.63      -67%
+quarterly  flat 30bp   +9.64%   0.65      -54%     3.6x      yes   +9.58%   0.60      -67%
+quarterly     tiered   +9.35%   0.63      -54%     3.6x      yes   +9.03%   0.57      -67%
+
+=== break-even flat round-trip cost (long-only CAGR drops to eligible B&H) ===
+  monthly: still beats B&H at 200bps
+  quarterly: still beats B&H at 200bps
+
+=== momentum-crash / drawdown profile (tiered costs, monthly) ===
+  long-only tilt: maxDD -47%   worst months: 2008-09-30 -20%, 2020-03-31 -17%, 2008-10-31 -15%
+  long-short: maxDD -64%   worst months: 2009-04-30 -48%, 2020-11-30 -32%, 2009-05-31 -15%
+  long-short 2008-09 cumulative: -50% (classic momentum crash)
