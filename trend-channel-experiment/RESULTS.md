@@ -169,7 +169,19 @@ its channel stops rising) adds drawdown-avoidance value — this is a trend/qual
 
 **Caveats before belief:** the best cell holds only ~4 names (concentrated, high variance); it is essentially
 a momentum/trend filter (real but decaying elsewhere in the programme), so needs an out-of-sample split; and
-survivorship inflates both sides (the *relative* edge is the trustworthy part). Stress tests pending.
+survivorship inflates both sides (the *relative* edge is the trustworthy part).
+
+### Selection stress — FAILS out-of-sample and concentration (`channel_select_stress.py`)
+
+- **OOS split @2013: the edge is pre-2013 only.** Selection net CAGR pre/post: 16.7%/**6.2%** (w=0),
+  14.0%/**7.0%** (w=0.15), 21.8%/**8.0%** (w=0.25) — vs universe 10.2%/**8.98%**. It crushes B&H before 2013 and
+  **loses to B&H after 2013** in every config. Same signature as the futures TSMOM premium: momentum real but
+  decayed post-2012.
+- **Concentration: a few names carry it.** Dropping the top-3 contributing names takes it below the universe
+  (11.25% → 7.82% at w=0; 14.61% → 6.80% at w=0.25). The same name (AEP) tops every list — not diversified.
+
+So the selection edge is the decayed momentum premium, concentrated in ~3 names; it is **not a live,
+exploitable edge** and does not beat buy-and-hold out-of-sample.
 
 ## Reframed conclusion
 
@@ -178,8 +190,11 @@ overlay has strictly negative edge versus holding the same names (−2.5 to −8
 rotation, window, width, gradient, and touch-count definition). But holding an equal-weight book of names
 *currently in a qualifying rising channel* — pure selection, causal, net of costs — beats equal-weight
 buy-and-hold on both return and Sharpe (L=250, robust across width), and beats holding those names forever,
-because the exit side-steps their later drawdowns. That selection edge is a trend/momentum filter and needs
-out-of-sample and concentration stress-testing before it is believed.
+because the exit side-steps their later drawdowns. **But that selection edge fails the stress tests:** it is
+entirely pre-2013 (post-2013 it loses to B&H, 6–8% vs 8.98% CAGR) and concentrated (dropping the top-3 names
+sinks it below the universe). It is the programme's familiar **decayed momentum premium** — real once, gone
+since ~2012 — not a live edge. So neither timing nor selection gives a buy-and-hold-beating strategy that
+survives out-of-sample.
 
 ## Original (timing) conclusion
 The proposed fixes each did real work: **rotation** fixed exposure (~90%), the **ride-the-winner** exit fixed
