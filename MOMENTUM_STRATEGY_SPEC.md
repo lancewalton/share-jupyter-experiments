@@ -199,6 +199,29 @@ Do not fine-tune the count to a single in-sample optimum; the plateau across 50�
 robust choice, with concentration a deliberate return-for-drawdown trade rather than an
 optimisation.
 
+**Breadth × factor interaction — which factor to pair with which breadth**
+(`momentum_concentration_factors.py`). The best *third* ingredient depends on how concentrated the
+book is:
+
+| book | 20 names | 69 names |
+|---|---|---|
+| mom + quality | +12.9% / 0.75 / −55% | +11.4% / 0.80 / −47% |
+| mom + value | +13.4% / 0.73 / −61% | +10.9% / 0.71 / −53% |
+| mom + value + quality | +12.5% / 0.72 / −59% | +12.7% / **0.84** / −51% |
+
+*(CAGR / Sharpe / maxDD, net tiered costs.)*
+
+- **Value earns its keep only when diversified.** Adding value gives the programme's best Sharpe
+  (0.84) at ~69 names, but under concentration its slow, deep-drawdown nature dominates faster than
+  its return: at 20 names `mom+value+quality` (12.5% / 0.72 / −59%) is **worse on every axis** than
+  `mom+quality` (12.9% / 0.75 / −55%). `mom+value` at 20 has the highest raw CAGR (13.4%) but the
+  deepest drawdown anywhere (−61%) and no Sharpe gain.
+- **Rule of thumb: quality for a concentrated book, value (added) for a wide one.** For a
+  concentrated (20–30 name) build, use `mom + quality`; reserve value for the ~69-name book.
+- **Maximum-aggression corner:** 20-name `mom+value+quality`, vol-targeted at lev ≤1.5, reaches the
+  programme's highest CAGR (**15.2%**) at Sharpe 0.77 / maxDD −53% — a raw-return extreme, not a
+  well-run default.
+
 ---
 
 ## 6. Portfolio construction

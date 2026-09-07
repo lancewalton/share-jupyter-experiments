@@ -525,3 +525,39 @@ CAGR (same as the value+leverage route, fewer moving parts) if you can stomach ~
 stay at the quintile for max Sharpe. A smaller book is also easier to hold accurately at small
 NAV with whole shares (see spec 7.4), making a 20-30 name build the natural small-account
 configuration. Do not fine-tune to a single number -- the plateau is the robust choice.
+
+---
+
+## Breadth × factor: does value earn its place when concentrated? (`momentum_concentration_factors.py`)
+
+Following the breadth sweep: at ~69 names, adding value gives the best Sharpe of all
+(mom+value+quality 0.84). Does that survive concentration? Each factor book at 20/30/69
+names, long-only, net tiered costs:
+
+```
+book                 #held     CAGR  Sharpe   maxDD  turn/yr
+mom+quality             20  +12.86%    0.75    -55%     6.8x
+mom+quality             30  +12.15%    0.76    -54%     6.0x
+mom+quality             69  +11.40%    0.80    -47%     4.3x
+mom+value               20  +13.39%    0.73    -61%     7.3x
+mom+value               30  +13.15%    0.75    -62%     6.7x
+mom+value               69  +10.90%    0.71    -53%     4.9x
+mom+value+quality       20  +12.48%    0.72    -59%     7.0x
+mom+value+quality       30  +12.18%    0.73    -59%     6.4x
+mom+value+quality       69  +12.66%    0.84    -51%     4.8x
+
+vol-target on 20-name mom+value+quality (own-vol 19.0%):
+  no leverage  CAGR +12.16%  Sharpe 0.76  maxDD -50%  avg exp 0.94
+  lev<=1.5     CAGR +15.18%  Sharpe 0.77  maxDD -53%  avg exp 1.20
+```
+
+**Verdict: value needs BREADTH; quality suits CONCENTRATION.** Value gives the best Sharpe
+(0.84) only in the wide ~69-name book. Concentrate and its slow, deep-drawdown nature
+dominates faster than its return: at 20 names mom+value+quality (12.5%/0.72/-59%) is worse
+than mom+quality (12.9%/0.75/-55%) on every axis, and mom+value has the highest raw CAGR
+(13.4%) but the deepest drawdown anywhere (-61%) with no Sharpe gain. So use mom+quality for
+a concentrated (20-30 name) build and reserve value for the ~69-name book. The maximum-
+aggression corner -- 20-name mom+value+quality, vol-targeted lev<=1.5 -- reaches the
+programme's highest CAGR (15.2%) at Sharpe 0.77 / maxDD -53%: a raw-return extreme, not a
+well-run default. Ends of the risk dial: Sharpe-best = mom+value+quality @69 (0.84);
+CAGR-best = 20-name three-factor levered (15.2%).
