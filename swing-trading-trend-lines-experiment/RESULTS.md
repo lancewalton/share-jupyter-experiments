@@ -240,3 +240,23 @@ profitable. These are hit-rate levers, not payoff levers.
 **The trend-line breakout is closed:** no geometry, volume, min-span, exit rule, vol regime, relative
 line duration, breakout extent, direction-alignment, or any combination makes it net-positive. Across
 every filter the pattern is identical — you can raise *how often* it wins, never *how much*.
+
+## Fade the breakout? A fixed-horizon event study (2026-09-07)
+
+"Strong breakouts revert" prompts two ideas: fade strong breakouts, or continue only weak ones. Both reduce
+to the forward break-direction return vs breakout extent, so `event_study.py` measures it cleanly — enter at
+the recorded price, hold a fixed horizon (5/10/20 days), free of the trailing-stop trade — output
+`event_study_results.txt`.
+
+**Findings.** (1) The earlier "strong breakouts revert" was partly a **trailing-stop artefact**: cleanly,
+`break_extent` barely grades the forward return (Spearman ≈ 0, insignificant IS and OOS), and breakouts
+revert in *every* extent tercile (H5: weak −0.20%, mid −0.14%, strong −0.21%). (2) So "**continue weak
+breakouts**" is refuted — weak breakouts revert too (continue-weak net −0.5% to −0.9%). (3) "**Fade the
+breakout**" is a real **gross** edge — fade-strong H5 gross +0.214%/tr (win 51%, PF 1.14), year-block
+bootstrap CI [+0.065, +0.360] excludes zero — but it is the *general* daily-equity reversion (extent isn't
+the driver), and **costs erase it**: net −0.084%/tr (CI [−0.238, +0.061] crosses zero), beta-neutral alpha
++0.121% (CI crosses zero), 30% of names profitable, median compound −35% vs buy-and-hold +251%.
+
+**Takeaway:** a third independent confirmation that daily equities mean-revert (real, significant gross),
+via the breakout-fade door — and the same wall: dealing costs erase the net, and it's uniform reversion,
+not a strong-vs-weak effect.

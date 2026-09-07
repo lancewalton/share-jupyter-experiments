@@ -1,0 +1,39 @@
+Loading cached breakouts and computing forward returns...
+
+########################################################################
+# Does break_extent predict the forward BREAK-direction return? (negative => revert)
+########################################################################
+  H= 5d  IS rho +0.018(p0.17)  OOS rho -0.001(p0.96)  n_OOS=5917
+  H=10d  IS rho +0.007(p0.61)  OOS rho +0.004(p0.74)  n_OOS=5910
+  H=20d  IS rho +0.013(p0.31)  OOS rho -0.001(p0.96)  n_OOS=5890
+
+########################################################################
+# Forward break-direction return by extent tercile (gross %, mean)
+########################################################################
+  H= 5d  weak: -0.201% (win 47%, n=3949)  mid: -0.139% (win 49%, n=3948)  strong: -0.214% (win 48%, n=3949)
+  H=10d  weak: -0.246% (win 47%, n=3947)  mid: -0.252% (win 48%, n=3946)  strong: -0.174% (win 48%, n=3946)
+  H=20d  weak: -0.275% (win 48%, n=3940)  mid: -0.447% (win 48%, n=3939)  strong: -0.180% (win 50%, n=3940)
+
+########################################################################
+# Candidate books (net of 10bps/side + 5%/yr), by horizon
+########################################################################
+
+  H=5d
+    continue-weak   gross n= 3952  win=46.9%  mean/tr=-0.207%  PF=0.88 | net n= 3952  win=43.5%  mean/tr=-0.505%  PF=0.72
+    fade-strong     gross n= 3949  win=51.1%  mean/tr=+0.214%  PF=1.14 | net n= 3949  win=47.7%  mean/tr=-0.084%  PF=0.95
+
+  H=10d
+    continue-weak   gross n= 3949  win=47.4%  mean/tr=-0.251%  PF=0.89 | net n= 3949  win=43.7%  mean/tr=-0.647%  PF=0.73
+    fade-strong     gross n= 3948  win=51.5%  mean/tr=+0.175%  PF=1.09 | net n= 3948  win=48.5%  mean/tr=-0.221%  PF=0.90
+
+  H=20d
+    continue-weak   gross n= 3941  win=48.3%  mean/tr=-0.279%  PF=0.91 | net n= 3941  win=44.7%  mean/tr=-0.873%  PF=0.73
+    fade-strong     gross n= 3943  win=49.6%  mean/tr=+0.180%  PF=1.06 | net n= 3943  win=46.4%  mean/tr=-0.413%  PF=0.87
+
+Best net book: fade-strong H5 (net mean/tr -0.084%)
+
+===== STRESS: fade-strong H5  (n=3949, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr +0.214%  95% CI [+0.065%, +0.360%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.084%  95% CI [-0.238%, +0.061%]
+  beta-neutral alpha (gross)      : mean/tr +0.121%  95% CI [-0.053%, +0.285%]
+  per-ticker compound (net): median -34.7%  %profitable 30%  |  median buy&hold +250.8%
