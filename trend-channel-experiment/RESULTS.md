@@ -59,3 +59,25 @@ boundedness, so a ratchet is the wrong tool.
 near the lower band), so it often exited one bar after entry. Removing it lifts the fair channel baseline
 from −4% to **+8% median (TIM 32%, net +1.56%/trade)** — still a decisive loss to B&H +160%, but with a
 healthy per-trade edge, which motivates the portfolio test below.
+
+### Capital rotation (portfolio) — solves exposure, still loses to B&H
+
+`channel_portfolio.py` schedules trades into S slots, filling each free slot with the highest-gradient
+channel-bottom signal available that day (so idle cash is redeployed into the next name at the bottom of its
+channel — the intended fix). Rotation genuinely **fixes time-in-market: exposure 73–89%.** But every slot
+count loses to equal-weight buy-and-hold (total +1068%, CAGR 9.57%, Sharpe 0.65): best is S=10 at total
++310% (CAGR 5.38%, Sharpe 0.43).
+
+**The decisive diagnostic:** return per year *while deployed* (S=1, 89% exposure) is **+5.4%/yr — below the
+market drift of +9.57%/yr.** The premise that a channel round-trip gains *faster* than buy-and-hold is false:
+the median bottom-to-top hold is **138 calendar days (~4.5 months)**, so a +1.56%/trade capture annualises to
+only ~4–5%/yr — slower than simply holding through the drift. Selling at the top and rotating swaps a
+faster-drifting hold for a slower oscillation-capture; fully deployed or not, you cannot out-compound a
+drift you are capturing more slowly.
+
+## Final conclusion
+
+Both proposed fixes fail, for complementary reasons. The **ratchet** is worse than selling at the top because
+a genuine channel reverts at its upper band. **Rotation** removes the idle-cash drag (exposure ~85%) but the
+channel oscillation (~4–5%/yr while deployed) is slower than the market drift (~9.6%/yr) it forgoes.
+Buy-and-hold wins on both total return and Sharpe. Experiment closed.

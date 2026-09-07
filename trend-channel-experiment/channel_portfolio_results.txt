@@ -1,0 +1,20 @@
+Loading 120 names; precomputing channels + trades...
+120 names, 2471 candidate entries, median hold 138 calendar days.
+
+##############################################################################
+# CAPITAL-ROTATION PORTFOLIO vs equal-weight buy-and-hold  (27y)
+##############################################################################
+  equal-weight B&H: total +1068%  CAGR +9.57%  Sharpe +0.65
+
+slots     total%    CAGR%  Sharpe  exposure  trades  vs B&H
+    1         -3    -0.11    0.15       89%      65  loses (B&H +1068%)
+    3         91     2.43    0.22       87%     186  loses (B&H +1068%)
+    5        259     4.87    0.36       85%     319  loses (B&H +1068%)
+   10        310     5.38    0.43       81%     594  loses (B&H +1068%)
+   20        178     3.87    0.36       73%    1059  loses (B&H +1068%)
+
+##############################################################################
+# Diagnostic: return per year WHILE DEPLOYED vs market drift
+##############################################################################
+  S=1 book: exposure 89%, ~+5.4%/yr annualised over deployed days
+  market drift (equal-weight CAGR): +9.57%/yr
