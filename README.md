@@ -52,6 +52,14 @@ committed — it is regenerable and large. Each experiment that needs data ships
 its own download/loader scripts (e.g. `candle-data/download_sp500_5m.py` and
 `candle-data/load.py`). Run those to repopulate the ignored `data/` directories.
 
+**FTSE daily data.** The daily-bar experiments (notably
+`swing-trading-trend-lines-experiment`) load ~120 FTSE stocks of daily OHLCV
+from a **separate private repository** (`lancewalton/shares`, expected at
+`~/Projects/shares/data/yfinance/`), not from this repo. That data is not
+public, so these experiments will not run as-is for anyone without access to
+that repository; substitute your own daily OHLCV source and point the loaders
+at it to reproduce them.
+
 ## Environment
 
 Experiments are Python (pandas / numpy / matplotlib / pyarrow / yfinance) in
