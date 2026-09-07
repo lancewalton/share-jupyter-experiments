@@ -1,0 +1,39 @@
+Trades: 10376  (in-sample 5188 to 2015-03-03, out-of-sample 5188 from 2015-03-03)
+Base gross win rate: in 15.9%  out 16.7%
+
+Spearman corr of feature vs GROSS return (rho, p):
+feature                                   in-sample      out-of-sample
+action_slope                       +0.017 (p=0.211)   +0.022 (p=0.119)
+safety_slope                       -0.017 (p=0.228)   +0.005 (p=0.709)
+convergence                        -0.028 (p=0.042)   -0.012 (p=0.387)
+separation                         +0.013 (p=0.356)   +0.027 (p=0.050)
+action_span                        -0.008 (p=0.544)   +0.003 (p=0.838)
+safety_span                        +0.024 (p=0.082)   -0.011 (p=0.431)
+rel_volume                         -0.005 (p=0.721)   +0.006 (p=0.691)
+
+Logistic AUC (out-of-sample):  geometry only 0.599   geometry + volume 0.615   (marginal +0.016)
+  (0.50 = no predictive information; in-sample geom+vol AUC 0.622)
+  weights: action_slope=-0.11  safety_slope=-0.16  convergence=-0.10  separation=-0.40  action_span=-0.13  safety_span=+0.01  rel_volume=+0.15
+
+OUT-OF-SAMPLE by breakout-volume quintile (5 = highest volume):
+quintile     n   win%  gross/tr%   net/tr%  medVol×
+       1  1038   15.4     -0.035    -0.251     0.68
+       2  1037   14.9     -0.048    -0.264     0.91
+       3  1038   15.7     -0.053    -0.269     1.10
+       4  1037   17.6     -0.030    -0.247     1.37
+       5  1038   19.7     -0.040    -0.256     2.03
+
+OUT-OF-SAMPLE return by predicted-score decile (10 = best geometry):
+decile     n   win%  gross/tr%   net/tr%
+     1   519    9.4     -0.086    -0.301
+     2   519   10.6     -0.095    -0.310
+     3   519   11.8     -0.011    -0.227
+     4   518    9.8     -0.150    -0.366
+     5   519   17.1     -0.026    -0.242
+     6   519   16.2     -0.116    -0.332
+     7   518   21.0      0.025    -0.192
+     8   519   23.3      0.019    -0.198
+     9   519   22.5     -0.021    -0.238
+    10   519   24.9      0.050    -0.167
+
+Top-decile geometry, OOS: n=519  win=24.9%  gross/tr=+0.050%  net/tr=-0.167%

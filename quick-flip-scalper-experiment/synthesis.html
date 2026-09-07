@@ -1,0 +1,371 @@
+<!-- content only; wrapped at publish -->
+<title>The Quick Flip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground:#eceff0; --surface:#fff; --surface-2:#f6f8f8;
+    --ink:#14181b; --ink-soft:#48555c; --ink-faint:#7d8b92;
+    --line:#dae1e3; --line-strong:#c4cdcf;
+    --signal:#0c757f; --signal-ink:#095e66; --signal-wash:#e1eff0;
+    --limit:#a8631a; --limit-ink:#8a5115; --limit-wash:#f2e7d8;
+    --shadow:0 1px 2px rgba(20,24,27,.05),0 10px 30px -16px rgba(20,24,27,.24);
+    --measure:64ch;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#0d1214; --surface:#141b1e; --surface-2:#192125;
+    --ink:#e8eff1; --ink-soft:#a3b1b7; --ink-faint:#6d7f86;
+    --line:#25302f; --line-strong:#33403f;
+    --signal:#3bb2bd; --signal-ink:#65c8d1; --signal-wash:#11282b;
+    --limit:#d8983f; --limit-ink:#e6ad58; --limit-wash:#291f14;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -18px rgba(0,0,0,.62);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#0d1214; --surface:#141b1e; --surface-2:#192125;
+    --ink:#e8eff1; --ink-soft:#a3b1b7; --ink-faint:#6d7f86;
+    --line:#25302f; --line-strong:#33403f;
+    --signal:#3bb2bd; --signal-ink:#65c8d1; --signal-wash:#11282b;
+    --limit:#d8983f; --limit-ink:#e6ad58; --limit-wash:#291f14;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -18px rgba(0,0,0,.62);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;font-size:1.19rem;line-height:1.62;
+    -webkit-font-smoothing:antialiased;font-optical-sizing:auto}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+  .col{max-width:var(--measure)}
+  h1,h2,h3,.eyebrow,.mono,th,.stat-n,.k,.tag,.n{font-family:"Archivo",system-ui,sans-serif}
+  .mono,.stat-n,td.num,th.num,.tick{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{font-size:.73rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--signal-ink);margin:0 0 1.1rem}
+  .eyebrow.lim{color:var(--limit-ink)}
+  h1{font-weight:800;font-size:clamp(2.7rem,7vw,4.6rem);line-height:1.0;letter-spacing:-.022em;text-wrap:balance;margin:0}
+  h2{font-weight:700;font-size:clamp(1.7rem,3.4vw,2.35rem);line-height:1.1;letter-spacing:-.015em;text-wrap:balance;margin:0 0 .6rem}
+  h3{font-weight:700;font-size:1.15rem;margin:0 0 .35rem}
+  p{margin:0 0 1.15rem}
+  strong{font-weight:500;color:var(--ink);background:linear-gradient(transparent 62%,var(--signal-wash) 62%);padding:0 .06em}
+  strong.l{background:linear-gradient(transparent 62%,var(--limit-wash) 62%)}
+  em{font-style:italic}
+  a{color:var(--signal-ink)}
+
+  header.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,var(--surface),var(--ground))}
+  .hero-inner{position:relative;z-index:2;padding:clamp(3.4rem,10vh,6rem) 0 clamp(2.4rem,6vh,3.4rem)}
+  .hero-inner .col{max-width:24ch}
+  .lede{max-width:46ch;font-size:clamp(1.2rem,2.1vw,1.5rem);line-height:1.4;color:var(--ink-soft);margin-top:1.5rem}
+  .credit{margin-top:2.1rem;font-size:.82rem;color:var(--ink-faint)}
+  .credit .mono{color:var(--ink-soft)}
+  figure.schematic{margin:2.6rem 0 0;background:var(--surface);border:1px solid var(--line);
+    border-radius:8px;box-shadow:var(--shadow);padding:1.1rem 1.2rem .8rem;overflow-x:auto}
+  figure.schematic svg{display:block;width:100%;min-width:520px;height:auto}
+  figure.schematic figcaption{font-family:"IBM Plex Mono",monospace;font-size:.76rem;
+    color:var(--ink-faint);margin-top:.55rem;letter-spacing:.02em}
+  .sv-box{fill:var(--signal-wash);stroke:var(--signal);stroke-opacity:.5}
+  .sv-up{fill:var(--signal);stroke:var(--signal-ink)}
+  .sv-dn{fill:var(--limit);stroke:var(--limit-ink)}
+  .sv-wick{stroke:var(--ink-faint);stroke-width:1.4}
+  .sv-tgt{stroke:var(--limit);stroke-width:1.6;stroke-dasharray:6 5;fill:none}
+  .sv-lbl{fill:var(--ink-faint);font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.01em}
+  .sv-lbl.s{fill:var(--signal-ink)} .sv-lbl.l{fill:var(--limit-ink)}
+
+  section{padding:clamp(3rem,8vh,5rem) 0}
+  section+section{border-top:1px solid var(--line)}
+  .band{background:var(--surface)}
+  .lede-lg{font-size:1.32rem;line-height:1.5;color:var(--ink)}
+  .muted{color:var(--ink-soft)} .small{font-size:.96rem}
+
+  .stats{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:2.2rem 0 .6rem}
+  @media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:var(--surface);padding:1.3rem 1.4rem}
+  .stat-n{font-size:1.9rem;font-weight:600;letter-spacing:-.02em;color:var(--signal-ink);line-height:1}
+  .stat-n.lim{color:var(--limit-ink)}
+  .stat-l{font-family:"Archivo",sans-serif;font-size:.82rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.3}
+
+  .tbl-scroll{overflow-x:auto;margin:1.8rem 0 .6rem;border:1px solid var(--line);border-radius:7px}
+  table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.9rem;background:var(--surface)}
+  caption{text-align:left;font-family:"Archivo",sans-serif;font-size:.82rem;color:var(--ink-faint);letter-spacing:.04em;padding:.9rem 1rem .2rem}
+  th,td{padding:.62rem 1rem;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  td.num,th.num{text-align:right}
+  tbody tr:last-child td{border-bottom:none}
+  tr.hi td{background:var(--signal-wash)} tr.hi td:first-child{font-weight:600;color:var(--signal-ink)}
+  .up{color:var(--signal-ink)} .dn{color:var(--limit-ink)}
+
+  .rules{display:grid;gap:0;margin-top:1.8rem;border-top:1px solid var(--line)}
+  .rule{padding:1.15rem 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:1.2rem}
+  .rule .k{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--limit-ink);padding-top:.15rem}
+  .rule h3{margin:0 0 .2rem;font-size:1.08rem}
+  .rule p{margin:0;font-size:1.02rem;color:var(--ink-soft)}
+
+  .lines{display:grid;gap:0;margin-top:2rem;border-top:1px solid var(--line)}
+  .line{display:grid;grid-template-columns:auto 1fr;gap:1.4rem;padding:1.5rem 0;border-bottom:1px solid var(--line);align-items:start}
+  .line .n{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--signal-ink);font-weight:500;padding-top:.35rem}
+  .line h3{font-size:1.22rem;letter-spacing:-.01em}
+  .line p{margin:.35rem 0 0;font-size:1.05rem;color:var(--ink-soft);max-width:62ch}
+
+  .callout{border-left:3px solid var(--signal);background:var(--signal-wash);padding:1.25rem 1.45rem;border-radius:0 7px 7px 0;margin:2rem 0}
+  .callout.lim{border-left-color:var(--limit);background:var(--limit-wash)}
+  .callout .eyebrow{margin-bottom:.5rem} .callout p{margin:0;font-size:1.04rem;color:var(--ink)}
+  .callout p+p{margin-top:.7rem}
+
+  .pull{font-family:"Archivo",sans-serif;font-weight:600;font-size:clamp(1.5rem,3.2vw,2.15rem);line-height:1.22;letter-spacing:-.015em;text-wrap:balance;max-width:28ch;margin:2.4rem 0 0}
+  .pull .s{color:var(--signal-ink)} .pull .l{color:var(--limit-ink)}
+
+  footer{background:var(--surface);border-top:1px solid var(--line);padding:3.4rem 0 4rem}
+  .foot{display:grid;gap:1.5rem 2rem;margin:1.7rem 0 2.3rem}
+  @media(min-width:640px){.foot{grid-template-columns:repeat(2,1fr)}}
+  .foot dt{font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:.3rem}
+  .foot dd{margin:0;font-size:.96rem;color:var(--ink-soft)}
+  .foot dd .mono{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--ink)}
+  .note{font-size:.9rem;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:1.3rem;max-width:var(--measure)}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:2px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Experiment 10 · a strategy from a video, put to the test</p>
+    <div class="col"><h1>The Quick Flip</h1></div>
+    <p class="lede">Presented as a very good opening-range scalping strategy. Tested honestly across the S&amp;P 500, it is a <em>real</em> reversion effect — and far too small to survive its own costs. Then we bet the other way, and <em>that</em> looked alive — until the statistics got hold of it.</p>
+    <figure class="schematic">
+      <svg viewBox="0 0 680 200" role="img" aria-labelledby="sch-t">
+        <title id="sch-t">A liquidity-grab fade that gets stopped out before reaching its target.</title>
+        <!-- opening-range box -->
+        <rect class="sv-box" x="52" y="98" width="470" height="52" rx="2"></rect>
+        <!-- target line (box low) -->
+        <line class="sv-tgt" x1="52" y1="150" x2="628" y2="150"></line>
+        <!-- C1 candles (up, teal) -->
+        <line class="sv-wick" x1="90" y1="150" x2="90" y2="122"></line>
+        <rect class="sv-up" x="81" y="126" width="18" height="22"></rect>
+        <line class="sv-wick" x1="140" y1="128" x2="140" y2="106"></line>
+        <rect class="sv-up" x="131" y="110" width="18" height="16"></rect>
+        <line class="sv-wick" x1="190" y1="112" x2="190" y2="98"></line>
+        <rect class="sv-up" x="181" y="100" width="18" height="10"></rect>
+        <!-- extension above the box (up) -->
+        <line class="sv-wick" x1="250" y1="102" x2="250" y2="80"></line>
+        <rect class="sv-up" x="241" y="86" width="18" height="14"></rect>
+        <!-- shooting star (down, amber, long upper wick) -->
+        <line class="sv-wick" x1="310" y1="94" x2="310" y2="64"></line>
+        <rect class="sv-dn" x="301" y="86" width="18" height="7"></rect>
+        <!-- entry candle, small down -->
+        <line class="sv-wick" x1="370" y1="101" x2="370" y2="88"></line>
+        <rect class="sv-dn" x="361" y="90" width="18" height="9"></rect>
+        <!-- rally back up = stop hit (up, teal, pierces star high) -->
+        <line class="sv-wick" x1="430" y1="101" x2="430" y2="64"></line>
+        <rect class="sv-up" x="421" y="74" width="18" height="25"></rect>
+        <!-- labels -->
+        <text class="sv-lbl s" x="52" y="176">C1 · opening-range box (the &quot;liquidity&quot; candle)</text>
+        <text class="sv-lbl l" x="300" y="56">shooting star → short the fade</text>
+        <text class="sv-lbl l" x="446" y="78">stopped</text>
+        <text class="sv-lbl l" x="536" y="146">target · box low</text>
+      </svg>
+      <figcaption>The setup, and its most common ending: 45% of trades stop out, 51% time out, 2.4% ever reach the target.</figcaption>
+    </figure>
+    <p class="credit"><span class="mono">502 shares · 5-minute candles · 60 trading days · 4,409 trades · pre-registered, cost-aware, adversarially tested</span></p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The claim</p>
+    <p class="lede-lg">The <em>quick-flip scalper</em> fades the opening range. Box the first fifteen minutes; call it a &ldquo;liquidity grab&rdquo; if that candle is large; then, when price pokes <em>outside</em> the box and prints a reversal candle, bet on a snap back to the far side of the box.</p>
+    <p class="muted">It is a tidy, mechanical, entirely testable story — big players engineer a shakeout, then price reverts. The pitch was that this works well. So we built it exactly as described and let the data answer, under one rule borrowed from the rest of this programme: <strong>assume any good result is a bug until it survives every attempt to break it</strong>.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The rig</p>
+      <h2>A fair test, not a highlight reel</h2>
+      <p class="muted">Every S&amp;P 500 name, every trading day in the window, run through one mechanical simulator. Parameters were fixed <em>before</em> looking at results, not tuned to flatter them. Fills are deliberately pessimistic: when a single five-minute bar straddles both stop and target, we assume the <em>stop</em> filled first, because the bar hides the true path.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">4,409</div><div class="stat-l">trades generated across the universe</div></div>
+      <div class="stat"><div class="stat-n">29,618</div><div class="stat-l">name-days that reached the entry search</div></div>
+      <div class="stat"><div class="stat-n">60</div><div class="stat-l">trading days (Jun–Aug 2026, one regime)</div></div>
+      <div class="stat"><div class="stat-n">0</div><div class="stat-l">parameters tuned to the sample</div></div>
+    </div>
+    <p class="small muted" style="margin-top:1.2rem">Liquidity filter as specified is nearly a no-op: the opening fifteen-minute range is a median <span class="mono">0.45&times;</span> the daily ATR, so <strong class="l">93%</strong> of days clear the 25% threshold. It is not selecting rare engineered events — it admits almost everything.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow lim">The verdict</p>
+    <h2>Break-even before costs. A loser after them.</h2>
+    <p class="muted">Both directions, all names, first valid signal per day. Return is shown in basis points and in <em>R</em> — profit as a multiple of the risk staked at entry. The average trade risks about <span class="mono">39&nbsp;bps</span>, so a modest <span class="mono">5&nbsp;bps</span> round-trip cost is already <span class="mono">0.13R</span> — and it is decisive.</p>
+  </div>
+  <div class="wrap">
+    <div class="tbl-scroll">
+      <table>
+        <caption>Quick-flip scalper · both sides · liquidity threshold 0.25× ATR</caption>
+        <thead><tr>
+          <th>Round-trip cost</th><th class="num">Trades</th><th class="num">Win %</th>
+          <th class="num">Avg / trade</th><th class="num">Avg R</th><th class="num">Profit factor</th>
+        </tr></thead>
+        <tbody>
+          <tr class="hi"><td>0 bps (gross)</td><td class="num">3,100</td><td class="num">40.4</td><td class="num up">+0.3 bps</td><td class="num up">+0.02</td><td class="num">1.02</td></tr>
+          <tr><td>5 bps</td><td class="num">3,100</td><td class="num">36.4</td><td class="num dn">−4.7 bps</td><td class="num dn">−0.21</td><td class="num">0.77</td></tr>
+          <tr><td>10 bps</td><td class="num">3,100</td><td class="num">32.4</td><td class="num dn">−9.7 bps</td><td class="num dn">−0.45</td><td class="num">0.58</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="col muted small" style="margin-top:1rem">Where trades end tells the same story: <strong class="l">45%</strong> stop out, <strong class="l">51%</strong> time out at the box edge, and the full-reversion target — the whole point of the trade — is reached just <strong class="l">2.4%</strong> of the time.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap col">
+    <p class="eyebrow lim">Why it fails</p>
+    <h2>There is no reversion to catch</h2>
+    <p class="muted">A fade needs price, on average, to come back. Measured on the actual bar extremes of every trade, it does the opposite.</p>
+    <div class="lines">
+      <div class="line"><div class="n">01</div><div>
+        <h3>Adverse excursion beats favourable</h3>
+        <p>Median move <em>against</em> the trade is <span class="mono">0.86R</span>; median move <em>for</em> it is only <span class="mono">0.72R</span>. The typical trade goes the wrong way more than the right way — the reversion the strategy is built on is not there.</p>
+      </div></div>
+      <div class="line"><div class="n">02</div><div>
+        <h3>The target is out of reach in the box</h3>
+        <p>Full reversion to the far side of C1 within seventy-five minutes happens 2.4% of the time. Most trades never get close, and expire at the time-stop.</p>
+      </div></div>
+      <div class="line"><div class="n">03</div><div>
+        <h3>A nearer target makes it worse</h3>
+        <p>Taking profit at a fixed 0.5–1.5R instead of the far side lowers expectancy further: small wins can't offset full-size losses at a 40% hit rate. The problem isn't the exit — it's the entry.</p>
+      </div></div>
+      <div class="line"><div class="n">04</div><div>
+        <h3>The &ldquo;liquidity&rdquo; filter isn't predictive</h3>
+        <p>Raising the threshold from 0.25× to 0.75× ATR removes trades without improving expectancy. The candle it flags as engineered is just a normal large opening candle.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The robustness sweep</p>
+    <h2>Real, consistent — and an order of magnitude too small</h2>
+    <p class="muted">Thirty-six configurations — wick geometry, trail trigger, box length, stop width — each allowed to pick its best liquidity threshold. Wider stops and a longer box both help, exactly as the whipsaw diagnosis predicts. Neither crosses zero.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">36</div><div class="stat-l">parameter configurations swept</div></div>
+      <div class="stat"><div class="stat-n lim">0</div><div class="stat-l">profitable net of a 5&nbsp;bps cost</div></div>
+      <div class="stat"><div class="stat-n">36</div><div class="stat-l">positive <em>gross</em> — the signal is real, not noise</div></div>
+      <div class="stat"><div class="stat-n lim">+2.5 bps</div><div class="stat-l">best gross edge per trade, anywhere in the grid</div></div>
+    </div>
+    <p class="pull">A genuine reversion edge of about <span class="s">two basis points</span> a trade, against a cost of <span class="l">thirteen</span>. Consistent — and structurally unpayable.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The opposite bet</p>
+      <h2>So we tried following, not fading</h2>
+      <p class="muted">The excursion asymmetry was a tell: price ran <em>further with</em> the opening move than against it. So we inverted the thesis — an opening-range <em>breakout</em> that enters with the first break of the box, stops at the far side, and rides the continuation for the seventy-five minutes. And something changed.</p>
+      <p class="muted">The liquidity filter — inert for the fade — suddenly <em>mattered</em>, and monotonically: the bigger the opening candle, the stronger the continuation. At the strict setting it cleared costs.</p>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <caption>Opening-range breakout · both sides · 75-minute hold</caption>
+        <thead><tr>
+          <th>Liquidity filter</th><th class="num">Gross</th><th class="num">Net 5 bps</th>
+          <th class="num">Net 10 bps</th><th class="num">Profit factor</th><th class="num">Trades</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>none</td><td class="num up">+2.5 bps</td><td class="num dn">−2.5</td><td class="num dn">−7.5</td><td class="num">0.93</td><td class="num">19,827</td></tr>
+          <tr><td>≥ 0.50× ATR</td><td class="num up">+4.8</td><td class="num dn">−0.2</td><td class="num dn">−5.2</td><td class="num">0.99</td><td class="num">7,175</td></tr>
+          <tr class="hi"><td>≥ 0.75× ATR</td><td class="num up">+11.4</td><td class="num up">+6.4</td><td class="num up">+1.4</td><td class="num">1.16</td><td class="num">1,928</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="col muted small" style="margin-top:1rem">Both directions were positive at the strict filter (short stronger), and the short horizon was essential — holding to the close gave the whole edge back. This was the first thing in the entire programme that looked like it might pay.</p>
+    <p class="pull"><span class="s">For one afternoon,</span> it looked like we had found something.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow lim">Under scrutiny</p>
+    <h2>Three artefacts in a trenchcoat</h2>
+    <p class="muted">A second hypothesis, on the same sixty days, chosen <em>because</em> the first failed — the textbook way to fool yourself. So before trusting a single basis point, four independent checks. It failed three, and the one it passed was the reason it failed the others.</p>
+    <div class="lines">
+      <div class="line"><div class="n">01</div><div>
+        <h3>Not significant, once clustered by day</h3>
+        <p>The 1,928 trades are really forty-five correlated mornings — everything on a given day shares one market move. Resample whole <em>days</em> and the 95% interval on net expectancy is <span class="mono">[−0.024, +0.060]&nbsp;R</span>. It straddles zero. The flattering profit factor came from counting correlated trades as independent.</p>
+      </div></div>
+      <div class="line"><div class="n">02</div><div>
+        <h3>It was three lucky mornings</h3>
+        <p>The best three days account for <span class="mono">156%</span> of the total profit — every other day, net, loses. Remove them and expectancy is <span class="mono">−0.011R</span>. Day to day it is a coin flip: 22 up, 23 down.</p>
+      </div></div>
+      <div class="line"><div class="n">03</div><div>
+        <h3>Beta, not alpha</h3>
+        <p>The window drifted <em>down</em> in the mornings (<span class="mono">−3.3 bps</span>), so shorts won for free. Market-neutralise — subtract each day's move in the trade's own direction — and the edge dissolves to <span class="mono">−0.011R</span>. The short side's strength was simply &ldquo;shorts win when the tape falls.&rdquo;</p>
+      </div></div>
+      <div class="line"><div class="n">04</div><div>
+        <h3>The one pass <em>was</em> that beta</h3>
+        <p>A direction-permutation test screams significance (p&nbsp;≈&nbsp;0) — but it only detects that the real direction beat a coin flip, which in a falling tape is the very beta the previous check removed. Not a signal; the confound wearing a lab coat.</p>
+      </div></div>
+    </div>
+    <div class="callout lim">
+      <p class="eyebrow lim">Why we stopped here</p>
+      <p>Strip the three artefacts and nothing is left. This is exactly why we did <em>not</em> buy a month of out-of-sample data to &ldquo;confirm&rdquo; it: you do not spend money chasing an edge that has already evaporated in the very window that produced it. A hypothesis has to survive its own data before it earns new data.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap col">
+    <p class="eyebrow lim">The gap</p>
+    <h2>Why the video looked good</h2>
+    <p class="muted">The strategy isn't fabricated — the faint gross edge is real, and a highlight reel of winning fades is easy to assemble. Four ordinary omissions turn that into &ldquo;a very good strategy&rdquo; — the same species of self-deception we very nearly fell for one section ago, just pointed outward instead of in.</p>
+    <div class="rules">
+      <div class="rule"><div class="k">01</div><div>
+        <h3>No costs</h3>
+        <p>The P&amp;L shown is gross. Our zero-cost column is mildly positive too — the video isn't lying, it's just omitting the line that decides the outcome.</p>
+      </div></div>
+      <div class="rule"><div class="k">02</div><div>
+        <h3>Cherry-picked charts</h3>
+        <p>A handful of clean hindsight examples where the fade worked, never the systematic sample. The 45% that stop out don't make the cut.</p>
+      </div></div>
+      <div class="rule"><div class="k">03</div><div>
+        <h3>Discretionary lookahead</h3>
+        <p>&ldquo;Wait for confirmation,&rdquo; &ldquo;the <em>right</em> liquidity candle&rdquo; — phrases that quietly use information the bar hadn't produced yet. Encode them mechanically and the edge evaporates.</p>
+      </div></div>
+      <div class="rule"><div class="k">04</div><div>
+        <h3>Survivorship in the storyteller</h3>
+        <p>You only hear the method from someone it recently worked for. The people it chopped up don't post.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">What we can and can't claim</p>
+    <h2>Dead here — not disproved everywhere</h2>
+    <p class="muted">Direction failed <em>both</em> ways: fade it and costs kill you; follow it and the apparent edge is beta plus three trend days. One failed on economics, one on statistics — the burden of proof sat with each claim, and neither carried it. But the test has edges worth naming.</p>
+    <div class="callout lim">
+      <p class="eyebrow lim">The caveats</p>
+      <p>One 60-day window and one regime, on a survivorship-biased snapshot of today's index. A more volatile regime could read differently.</p>
+      <p>We deliberately bought no out-of-sample data. The fade lost on costs; the one breakout variant that beat costs in-sample dissolved under stress-testing into beta and a handful of days. Confirming a dead edge on fresh data buys nothing — new data is for hypotheses that survived their own.</p>
+      <p>We tested faithful <em>mechanical</em> rules. A skilled discretionary trader might add context we didn't encode — but then it isn't this strategy, and it isn't testable as a claim.</p>
+    </div>
+    <p class="col" style="margin-top:1.8rem">The lasting product isn't the verdict on one video. It's the rig: any candlestick strategy can now be dropped into the same cost-aware, pre-registered, four-thousand-trade test and get a fair answer in an afternoon — a far better filter than a confident narrator.</p>
+    <p class="pull"><span class="s">Volatility is there.</span> Direction, and the reversion it promises, still isn't.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p class="eyebrow">Experiment 10 · quick-flip scalper</p>
+    <dl class="foot">
+      <div><dt>Data</dt><dd>S&amp;P 500, 5-minute candles, 60 trading days (Jun–Aug 2026), from Yahoo Finance via <span class="mono">candle-data/</span>. Current constituents — survivorship-biased.</dd></div>
+      <div><dt>Method</dt><dd>Pre-registered mechanical simulators; conservative intrabar fills; threshold and cost sweeps; 36-config robustness grid. The breakout result was stress-tested: day-block bootstrap, concentration, market-neutral (beta) control, direction permutation. Core logic under unit test.</dd></div>
+      <div><dt>The fade</dt><dd><span class="mono">+0.02R</span> gross, <span class="mono">≈ −0.21R</span> net of 5&nbsp;bps. <span class="mono">0 / 36</span> configurations net-profitable; <span class="mono">36 / 36</span> gross-positive — real, sub-cost.</dd></div>
+      <div><dt>The follow</dt><dd>Looked cost-clearing (PF&nbsp;<span class="mono">1.16</span> at ≥0.75× ATR) but failed the day-block bootstrap (CI crossed 0), was <span class="mono">156%</span> concentrated in three days, and market-neutralised to <span class="mono">−0.011R</span>.</dd></div>
+      <div><dt>Code</dt><dd><span class="mono">scalper.py</span> · <span class="mono">run_backtest.py</span> · <span class="mono">sweep.py</span> · <span class="mono">orb.py</span> · <span class="mono">stress.py</span> · <span class="mono">test_scalper.py</span></dd></div>
+    </dl>
+    <p class="note">Another investigation asking whether markets can be predicted, and another that splits along the same two axes: volatility yields to plain methods; direction resists every one — in <em>both</em> signs here. The fade dies on costs, the follow on scrutiny. The durable product isn't the verdict on one video; it's a cost-aware, pre-registered, stress-tested rig that gives any candlestick claim a fair hearing in an afternoon.</p>
+  </div>
+</footer>

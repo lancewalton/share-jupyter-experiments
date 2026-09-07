@@ -1,0 +1,28 @@
+# --- Python virtual environment (lives inside heirarchical-adaptive-filter-experiment) ---
+heirarchical-adaptive-filter-experiment/bin/
+heirarchical-adaptive-filter-experiment/include/
+heirarchical-adaptive-filter-experiment/lib/
+heirarchical-adaptive-filter-experiment/lib64
+heirarchical-adaptive-filter-experiment/share/
+heirarchical-adaptive-filter-experiment/pyvenv.cfg
+
+# Any other venvs
+.venv/
+venv/
+env/
+
+# --- Regenerable market data (fetch via the download scripts) ---
+*.parquet
+*.csv
+candle-data/data/
+**/data_futures/
+
+# --- Python / Jupyter cruft ---
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# --- Editor / OS / local tooling ---
+.DS_Store
+.claude/settings.local.json
+.pytest_cache/

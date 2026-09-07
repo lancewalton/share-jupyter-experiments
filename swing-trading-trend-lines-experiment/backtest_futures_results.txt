@@ -1,0 +1,28 @@
+=== FUTURES BASKET  k=0.5  (5bps/side, no financing) ===
+market           n   win%  grossMean%  grossTot%    netTot%
+silver         645   16.7       0.082       61.3      -15.4
+cotton         605   18.8       0.043       22.8      -33.0
+soybeans       577   18.4       0.038       21.7      -31.7
+copper         632   17.1       0.033       20.1      -36.2
+heating_oil    553   20.3       0.043       19.5      -31.3
+coffee         621   20.3       0.027       13.1      -39.2
+eur            601   21.5       0.015        8.9      -40.3
+gold           613   15.5       0.014        7.8      -41.6
+cad            585   20.5       0.008        4.4      -41.8
+corn           601   20.1       0.006        0.4      -45.0
+jpy            554   19.7      -0.005       -3.0      -44.3
+gasoline       568   16.9       0.000       -5.3      -46.3
+us30y          584   19.9      -0.009       -5.5      -47.3
+gbp            623   21.2      -0.008       -5.5      -49.3
+us10y          609   18.1      -0.016       -9.4      -50.8
+sugar          578   20.4      -0.011      -12.2      -50.7
+aud            570   18.1      -0.022      -12.3      -50.4
+sp500          508   19.9      -0.057      -26.0      -55.5
+nasdaq         590   19.8      -0.060      -31.2      -61.9
+wheat          624   14.7      -0.080      -42.0      -68.9
+natgas         563   19.0      -0.096      -48.0      -70.4
+WTI_crude      609   17.9      -0.111      -52.8      -74.3
+
+AGG trades=13013  hold=1.2d  win=18.8%
+  GROSS  mean/tr=-0.007%  profit factor=0.97  % markets gross-profitable=45%
+  NET    mean/tr=-0.107%  profit factor=0.66  % markets net-profitable=0%

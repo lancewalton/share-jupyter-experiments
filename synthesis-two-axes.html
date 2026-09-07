@@ -1,0 +1,407 @@
+<title>The Two Axes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground:#eceff0; --surface:#fff; --surface-2:#f6f8f8;
+    --ink:#14181b; --ink-soft:#48555c; --ink-faint:#7d8b92;
+    --line:#dae1e3; --line-strong:#c4cdcf;
+    --signal:#0c757f; --signal-ink:#095e66; --signal-wash:#e1eff0;
+    --limit:#a8631a; --limit-ink:#8a5115; --limit-wash:#f2e7d8;
+    --shadow:0 1px 2px rgba(20,24,27,.05),0 10px 30px -16px rgba(20,24,27,.24);
+    --measure:64ch;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#0d1214; --surface:#141b1e; --surface-2:#192125;
+    --ink:#e8eff1; --ink-soft:#a3b1b7; --ink-faint:#6d7f86;
+    --line:#25302f; --line-strong:#33403f;
+    --signal:#3bb2bd; --signal-ink:#65c8d1; --signal-wash:#11282b;
+    --limit:#d8983f; --limit-ink:#e6ad58; --limit-wash:#291f14;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -18px rgba(0,0,0,.62);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#0d1214; --surface:#141b1e; --surface-2:#192125;
+    --ink:#e8eff1; --ink-soft:#a3b1b7; --ink-faint:#6d7f86;
+    --line:#25302f; --line-strong:#33403f;
+    --signal:#3bb2bd; --signal-ink:#65c8d1; --signal-wash:#11282b;
+    --limit:#d8983f; --limit-ink:#e6ad58; --limit-wash:#291f14;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -18px rgba(0,0,0,.62);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;font-size:1.19rem;line-height:1.62;
+    -webkit-font-smoothing:antialiased;font-optical-sizing:auto}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+  .col{max-width:var(--measure)}
+  h1,h2,h3,.eyebrow,.mono,th,.stat-n,.k,.tag,.n{font-family:"Archivo",system-ui,sans-serif}
+  .mono,.stat-n,td.num,th.num,.tick{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{font-size:.73rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--signal-ink);margin:0 0 1.1rem}
+  .eyebrow.lim{color:var(--limit-ink)}
+  h1{font-weight:800;font-size:clamp(2.7rem,7vw,4.6rem);line-height:1.0;letter-spacing:-.022em;text-wrap:balance;margin:0}
+  h2{font-weight:700;font-size:clamp(1.7rem,3.4vw,2.35rem);line-height:1.1;letter-spacing:-.015em;text-wrap:balance;margin:0 0 .6rem}
+  h3{font-weight:700;font-size:1.15rem;margin:0 0 .35rem}
+  p{margin:0 0 1.15rem}
+  strong{font-weight:500;color:var(--ink);background:linear-gradient(transparent 62%,var(--signal-wash) 62%);padding:0 .06em}
+  strong.l{background:linear-gradient(transparent 62%,var(--limit-wash) 62%)}
+  em{font-style:italic}
+  a{color:var(--signal-ink)}
+
+  header.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,var(--surface),var(--ground))}
+  #axes{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hero-inner{position:relative;z-index:2;padding:clamp(3.4rem,10vh,6.4rem) 0 clamp(2.6rem,6vh,3.8rem)}
+  .hero-inner .col{max-width:19ch}
+  .lede{max-width:45ch;font-size:clamp(1.2rem,2.1vw,1.5rem);line-height:1.4;color:var(--ink-soft);margin-top:1.5rem}
+  .credit{margin-top:2.3rem;font-size:.82rem;color:var(--ink-faint)}
+  .credit .mono{color:var(--ink-soft)}
+
+  section{padding:clamp(3rem,8vh,5.2rem) 0}
+  section+section{border-top:1px solid var(--line)}
+  .band{background:var(--surface)}
+  .lede-lg{font-size:1.32rem;line-height:1.5;color:var(--ink)}
+  .muted{color:var(--ink-soft)} .small{font-size:.96rem}
+
+  /* project arc */
+  .arc{display:grid;gap:1rem;margin-top:2.1rem}
+  @media(min-width:720px){.arc{grid-template-columns:1fr 1fr}}
+  .proj{background:var(--surface);border:1px solid var(--line);border-radius:7px;
+    padding:1.5rem 1.6rem 1.55rem;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .proj .idx{display:flex;gap:.6rem;align-items:baseline;font-family:"IBM Plex Mono",monospace;
+    font-size:.78rem;color:var(--ink-faint);letter-spacing:.04em;margin-bottom:.5rem}
+  .proj .idx .n{color:var(--signal-ink);font-weight:600;font-size:.95rem}
+  .proj p{font-size:1.0rem;line-height:1.5;margin:.3rem 0 0;color:var(--ink-soft)}
+  .verdict{margin-top:1.05rem;display:flex;flex-direction:column;gap:.5rem}
+  .vr{display:flex;gap:.6rem;align-items:baseline;font-family:"Archivo",sans-serif;font-size:.92rem;line-height:1.35}
+  .vr .k{font-size:.67rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:.16em .5em;border-radius:3px;white-space:nowrap;flex:none}
+  .vr.yes .k{color:var(--signal-ink);background:var(--signal-wash)}
+  .vr.no .k{color:var(--limit-ink);background:var(--limit-wash)}
+  .vr span:last-child{color:var(--ink)}
+
+  /* through-lines */
+  .lines{display:grid;gap:0;margin-top:2rem;border-top:1px solid var(--line)}
+  .line{display:grid;grid-template-columns:auto 1fr;gap:1.4rem;padding:1.5rem 0;border-bottom:1px solid var(--line);align-items:start}
+  .line .n{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--signal-ink);font-weight:500;padding-top:.35rem}
+  .line h3{font-size:1.28rem;letter-spacing:-.01em}
+  .line p{margin:.35rem 0 0;font-size:1.05rem;color:var(--ink-soft);max-width:62ch}
+
+  /* stats */
+  .stats{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:2.2rem 0 .6rem}
+  @media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:var(--surface);padding:1.3rem 1.4rem}
+  .stat-n{font-size:1.9rem;font-weight:600;letter-spacing:-.02em;color:var(--signal-ink);line-height:1}
+  .stat-n.lim{color:var(--limit-ink)}
+  .stat-l{font-family:"Archivo",sans-serif;font-size:.82rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.3}
+
+  /* table */
+  .tbl-scroll{overflow-x:auto;margin:1.8rem 0 .6rem;border:1px solid var(--line);border-radius:7px}
+  table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.9rem;background:var(--surface)}
+  caption{text-align:left;font-family:"Archivo",sans-serif;font-size:.82rem;color:var(--ink-faint);letter-spacing:.04em;padding:.9rem 1rem .2rem}
+  th,td{padding:.62rem 1rem;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  td.num,th.num{text-align:right}
+  tbody tr:last-child td{border-bottom:none}
+  tr.hi td{background:var(--signal-wash)} tr.hi td:first-child{font-weight:600;color:var(--signal-ink)}
+  .up{color:var(--signal-ink)} .dn{color:var(--limit-ink)}
+
+  /* discipline rules */
+  .rules{display:grid;gap:0;margin-top:1.8rem;border-top:1px solid var(--line)}
+  .rule{padding:1.15rem 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:1.2rem}
+  .rule .k{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--limit-ink);padding-top:.15rem}
+  .rule p{margin:0;font-size:1.02rem;color:var(--ink-soft)}
+
+  .callout{border-left:3px solid var(--signal);background:var(--signal-wash);padding:1.25rem 1.45rem;border-radius:0 7px 7px 0;margin:2rem 0}
+  .callout.lim{border-left-color:var(--limit);background:var(--limit-wash)}
+  .callout .eyebrow{margin-bottom:.5rem} .callout p{margin:0;font-size:1.04rem;color:var(--ink)}
+  .callout p+p{margin-top:.7rem}
+
+  .pull{font-family:"Archivo",sans-serif;font-weight:600;font-size:clamp(1.5rem,3.2vw,2.15rem);line-height:1.22;letter-spacing:-.015em;text-wrap:balance;max-width:26ch;margin:0}
+  .pull .s{color:var(--signal-ink)} .pull .l{color:var(--limit-ink)}
+
+  footer{background:var(--surface);border-top:1px solid var(--line);padding:3.4rem 0 4rem}
+  .foot{display:grid;gap:1.5rem 2rem;margin:1.7rem 0 2.3rem}
+  @media(min-width:640px){.foot{grid-template-columns:repeat(2,1fr)}}
+  .foot dt{font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:.3rem}
+  .foot dd{margin:0;font-size:.96rem;color:var(--ink-soft)}
+  .foot dd .mono{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--ink)}
+  .note{font-size:.9rem;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:1.3rem;max-width:var(--measure)}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:2px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="hero">
+  <canvas id="axes" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">A quantitative research programme · ten investigations · one thesis</p>
+    <div class="col"><h1>The Two Axes</h1></div>
+    <p class="lede">Ten experiments asked whether markets can be predicted. They agree on which axis holds the answer, which one only looks like it does — and that the answer, where it exists, is always the same kind of thing.</p>
+    <p class="credit"><span class="mono">calibration · patterns · adaptive filters · risk &amp; regimes · a detection reframe · the variance premium · factor rotation · sentiment · FX carry · opening-range scalping</span></p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The question</p>
+    <p class="lede-lg">Every price series has two things to say. One is its <em>direction</em> — where it goes next. The other is its <em>volatility</em> — how violently it gets there. We spent ten projects testing which one you can actually hear, under a single rule: assume any good result is a bug until it survives walk-forward evaluation, held-out data, permutation nulls, and every attempt to break it.</p>
+    <p class="muted">The answer came out cleanly split along those two axes — and then a third finding surfaced beneath it: the handful of edges that survived are all the <em>same species</em> of thing. What we learned about <em>method</em> proved as durable as what we learned about markets.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The arc</p>
+      <h2>Ten routes to the same wall — and the doors that opened</h2>
+      <p class="muted">Each project attacked the problem from a different angle. Read in order, they are a single argument: direction resists every method thrown at it, while volatility — and the risk premia around it — yields to the plain ones.</p>
+    </div>
+    <div class="arc">
+      <article class="proj">
+        <div class="idx"><span class="n">01</span><span>monte-carlo · calibration</span></div>
+        <h3>Envelopes, not forecasts</h3>
+        <p>Bootstrap recent returns into forward price envelopes; judge them by whether reality lands inside.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>Filtered Historical Simulation gives honestly-calibrated tails across 193 series.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Drift is pinned to zero — and stays there. No resampling beats a one-line vol model on direction.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">02</span><span>pattern-discovery · direction</span></div>
+        <h3>Do chart patterns predict?</h3>
+        <p>Discover price-shape patterns from data rather than hand-drawing them; test out-of-sample.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>Patterns carry a <em>statistically real</em> signal (z&nbsp;=&nbsp;2.4); <em>amplitude</em> beats <em>shape</em>.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Economically negligible — IC&nbsp;≈&nbsp;0.006. Unsupervised chart patterns are provably meaningless.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">03</span><span>adaptive filters · volatility</span></div>
+        <h3>Self-tuning vol forecasts</h3>
+        <p>A hierarchy of adaptive filters and a mixture of experts, forecasting realised volatility.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>A <em>fixed</em> signed stack of diverse experts forecasts vol well (skill&nbsp;0.34).</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Every adaptive, nested, self-tuning scheme loses to a single fixed fit.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">04</span><span>vol-risk · risk &amp; regimes</span></div>
+        <h3>Size by risk, not by view</h3>
+        <p>Use the volatility forecast — not direction — to detect regimes, size positions, build a book.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>A causal regime detector predicts forward vol at IC&nbsp;0.60; the risk-first stack pays.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Direction bets stay cost-fragile; blind vol-targeting can backfire into rebounds.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">05</span><span>pattern-matching · direction, reframed</span></div>
+        <h3>Ask detection, not average</h3>
+        <p>Stop averaging shape over all windows; ask instead whether a real window is <em>distinguishable</em> from matched noise.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>The reframe finds it: real directional structure <em>exists</em>, beyond volatility (sign-flip control).</span></div>
+          <div class="vr no"><span class="k">fails</span><span>It collapses onto known reversion; the book loses net of costs (Sharpe&nbsp;−0.30).</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">06</span><span>variance-premium · monetising vol</span></div>
+        <h3>Get paid for the forecast</h3>
+        <p>Sell the variance risk premium — implied vol exceeds realised — and use the vol forecast to time it.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>The premium is real (+3.6 pts, 84% of days); short vol earns a <em>modest</em> Sharpe&nbsp;0.36.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Regime-timing was a proxy artefact — on real futures it <em>hurts</em>. The return hides in the recovery.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">07</span><span>factor-rotation · cross-asset</span></div>
+        <h3>Where does the money go?</h3>
+        <p>PCA the cross-asset return structure into segments; ask whether rotating into out-of-favour ones beats holding.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>A clean taxonomy: what is valuation-bounded <em>reverts</em> (asset classes, currencies).</span></div>
+          <div class="vr no"><span class="k">fails</span><span>What reflects who's winning <em>trends</em> (equity sectors, regions). No rotation beats buy-and-hold.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">08</span><span>sentiment · news proxy</span></div>
+        <h3>Does the crowd's fear predict?</h3>
+        <p>Test aggregate fear / risk-appetite gauges as contrarian signals — the free stand-in for news and positioning.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>Extreme fear is contrarian — but only at the tail, and it <em>is</em> VIX (IC 0.15).</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Real news / retail positioning is data-locked; the free proxies add nothing beyond VIX.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">09</span><span>fx-carry · currencies</span></div>
+        <h3>What actually pays in FX?</h3>
+        <p>Value, momentum and carry across sixteen currencies — and whether risk-management tames carry's crash.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>Carry pays a real Sharpe&nbsp;0.36 — the variance premium in FX clothing. Currencies revert (taxonomy holds).</span></div>
+          <div class="vr no"><span class="k">fails</span><span>You can't time the premium for free — the timed Sharpe of 0.64 was a look-ahead; causally, 0.37.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx"><span class="n">10</span><span>quick-flip-scalper · direction, both signs</span></div>
+        <h3>A scalper from a video — fade, then follow</h3>
+        <p>An opening-range fade sold as a &ldquo;very good&rdquo; strategy — box the first 15 minutes, short the liquidity-grab reversal — and its mirror image, breakout momentum, tested across the S&amp;P 500 at 5-minute resolution.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>Both effects are <em>real</em>: a faint ~2&nbsp;bps gross reversion, and a large opening candle that <em>ignites</em> momentum (a monotonic filter).</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Fade dies on costs (<span class="mono">0/36</span> configs); follow was beta plus three trend days. Direction fails in <em>both</em> signs.</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">What all ten agree on</p>
+      <h2>Five through-lines</h2>
+    </div>
+    <div class="lines">
+      <div class="line"><div class="n">01</div><div>
+        <h3>Direction is a mirage — and reframing only sharpened the negative</h3>
+        <p>Across bootstraps, chart patterns, a neural net, a term-structure of drift, cross-sectional selection, and finally a detection reframe, the information on direction never cleared the ~1% ceiling. Project 05 <em>did</em> prove that faint directional structure genuinely exists and is detectable — but it is reversion-shaped, mostly already known, and dies on contact with trading costs. Project 10 made the point from the other side: an intraday scalper failed as a fade (costs) <em>and</em> as its opposite, momentum (beta and three lucky days) — direction refuses to pay in either sign.</p>
+      </div></div>
+      <div class="line"><div class="n">02</div><div>
+        <h3>The only edges are risk premia — never forecasts</h3>
+        <p>Volatility is forecastable, regime-structured (IC&nbsp;0.60), and the same series that hide their direction wear it openly. But the durable, <em>tradeable</em> edges the programme found — the variance premium (Sharpe&nbsp;0.36) and FX carry (0.37) — turned out to be the <em>same trade in two markets</em>: sell insurance, collect a thin steady premium, and get run over in the crash. Never once did predicting direction pay. You are compensated for bearing risk, not for foresight.</p>
+      </div></div>
+      <div class="line"><div class="n">03</div><div>
+        <h3>Bounded reverts; fundamental divergence trends</h3>
+        <p>When you rotate between things — asset classes, sectors, regions, currencies — a single rule decides whether contrarian or momentum pays. What is anchored to a value (commodity prices, yields, currencies vs purchasing-power parity) <em>reverts</em>, so buying the beaten-down works. What reflects who is genuinely winning (which sectors, which countries) <em>trends</em>, so momentum works. The same idea flips sign depending on whether prices are tethered to something that pulls them back.</p>
+      </div></div>
+      <div class="line"><div class="n">04</div><div>
+        <h3>The real split is robust versus overfit — not complex versus simple</h3>
+        <p>Sophistication paid for volatility (high signal-to-noise) and failed for direction (low). Everywhere the signal was thin, the plain thing won: a fixed fit beat every adaptive scheme, equal weights beat fitted ones, a one-line VIX gate matched a fitted forecaster, a move-size filter matched a machine-learned detector, and equal-weighting beat every clever sector rotation. Complexity is a tax you can only afford where the signal is loud.</p>
+      </div></div>
+      <div class="line"><div class="n">05</div><div>
+        <h3>Every edge was smaller, and stranger, than intuition insisted</h3>
+        <p>The patterns that "complete" actually <em>reverse</em>. Short volatility and carry are paid not for dodging the storm but for holding <em>through</em> it. And a risk premium cannot be timed for free — you choose how much crash to bear, you don't earn extra for foreseeing it. More than once the exciting number was an artefact — a look-ahead, a data glitch, a proxy — and the honest answer was always the quieter one.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The programme in numbers</p>
+      <h2>Where the signal is, and isn't</h2>
+      <p class="muted">One gradient runs through every project: information rises as you move from the first moment (direction) to the second (volatility), and method should follow it.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n lim">~1%</div><div class="stat-l">Direction IC ceiling — every route, every domain</div></div>
+      <div class="stat"><div class="stat-n">0.60</div><div class="stat-l">Volatility-regime forecast IC (causal)</div></div>
+      <div class="stat"><div class="stat-n">0.36</div><div class="stat-l">Tradeable Sharpe — the risk premia (vol &amp; carry, net)</div></div>
+      <div class="stat"><div class="stat-n lim">0</div><div class="stat-l">Direction forecasts that survived costs</div></div>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <caption>The signal-to-noise gradient — sophistication helps only at the top</caption>
+        <thead><tr><th>Target</th><th class="num">Signal</th><th>What wins</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr class="hi"><td>Volatility / variance</td><td class="num">high</td><td>a fixed, diverse expert stack</td><td class="up">forecastable · IC 0.60 · tradeable at Sharpe 0.36</td></tr>
+          <tr><td>Volatility regime</td><td class="num">high</td><td>a causal state detector</td><td class="up">calm↔turbulent, flagged early</td></tr>
+          <tr><td>Amplitude / reversion</td><td class="num">faint</td><td>a one-line move-size filter</td><td class="dn">real but ~0.05 IC · untradeable alone</td></tr>
+          <tr><td>Direction / shape</td><td class="num">~zero</td><td>nothing — the plainest baseline</td><td class="dn">a mirage; detectable, not predictable</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The two doors that opened — and they are one door</p>
+    <h2>The variance premium and FX carry — the same trade twice</h2>
+    <p class="muted">Two edges survived every attempt to break them, and they turned out to be a single idea in two markets. <strong>Selling variance</strong>: implied volatility runs above realised ~84% of the time, worth Sharpe <strong>0.36</strong> on real VIX futures. <strong>FX carry</strong>: long high-yielding currencies, short low, worth Sharpe <strong>0.37</strong>. Both are <em>sell-insurance</em> premia — a thin steady income, and a violent loss in risk-off, when they crash <em>together</em>.</p>
+    <div class="callout">
+      <p class="eyebrow">You are paid to hold through the storm — not to dodge it</p>
+      <p>The variance premium's entire return comes from the 10% of days the curve is inverted — the violent recovery just after a spike (a single such day earns a Sharpe of <strong>2.1</strong>). Carry pays for holding high-yielders <em>through</em> the risk-off that punishes them. In both, every sensible-looking timing rule backfires, and a premium cannot be timed for extra return: risk-management only <em>reshapes the tail</em> — it halved carry's drawdown at an unchanged Sharpe — it never lifts the reward. You choose how much crash to bear; you are never paid for foreseeing it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap col">
+    <p class="eyebrow lim">The discipline that kept it honest</p>
+    <h2>A good result is a bug until proven otherwise</h2>
+    <p class="muted">The programme's most valuable habit was distrust of its own good news. Four times the exciting number was an artefact — and the method caught each one.</p>
+    <div class="rules">
+      <div class="rule"><div class="k">look-ahead</div><p>A defensive-stack Sharpe of <strong class="l">1.14</strong> was a one-day leak in a regime filter. Corrected, it landed at <strong class="l">0.59</strong>.</p></div>
+      <div class="rule"><div class="k">bad data</div><p>Part of a reversion signal was <strong class="l">corrupt prices</strong> mechanically bouncing. A spike-and-reversal audit cut it from 0.033 to 0.023 — the conclusions held, the edge shrank.</p></div>
+      <div class="rule"><div class="k">proxy</div><p>A variance-timing Sharpe of <strong class="l">1.3</strong> was an artefact of monthly proxy accounting. Rebuilt on the real instrument, it fell to <strong class="l">0.36</strong> — and the timing edge reversed sign.</p></div>
+      <div class="rule"><div class="k">look-ahead</div><p>A VIX-timed carry Sharpe of <strong class="l">0.64</strong> had sized each month by that month's <em>own</em> fear reading. Lag it one month — only what you'd have known — and it fell to <strong class="l">0.37</strong>, no better than naive.</p></div>
+    </div>
+    <p class="muted small" style="margin-top:1.6rem">Each catch cost a favourite result. Each one made the surviving result trustworthy. The negatives are half the value — and the discipline is the other half.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow lim">The benchmark that outlived every strategy</p>
+    <h2>And buy-and-hold beat all of it</h2>
+    <p class="muted">Set the risk-adjusted bookkeeping aside and ask the plainest question a saver would: <em>would any of this have left me richer than simply holding the index?</em> Across ten projects, no. Every attempt to <em>forecast direction and trade on it</em> lost outright to buy-and-hold — the swing trend-line method returned a median <strong class="l">−83%</strong> where holding returned <strong>+251%</strong>; no cross-asset rotation beat holding US equities; and the intraday scalper never cleared its costs to enter the race at all. The market's own drift is the benchmark nothing we predicted could clear.</p>
+    <div class="callout">
+      <p class="eyebrow">Two honest exceptions — and why they don't overturn it</p>
+      <p><strong>Risk-adjusted, one book did beat its market.</strong> The defensive stack reached Sharpe <strong>0.59</strong> against a UK-market <strong>0.22</strong>, at a shallower drawdown — buy-and-hold did <em>not</em> win on those axes. But it buys a smoother ride, not more terminal wealth, and even that edge faded across the sample: Sharpe by thirds ran <strong>+1.49&nbsp;→&nbsp;+0.29&nbsp;→&nbsp;−0.16</strong>.</p>
+      <p><strong>The surviving edges were never racing buy-and-hold.</strong> The variance premium (<span class="mono">0.36</span>), FX carry (<span class="mono">0.37</span>) and market-neutral momentum (<span class="mono">0.34</span>) are near-zero-beta return <em>streams</em> — diversifiers and drawdown-shapers, not substitutes for a long equity position. Blended, they lift a portfolio's Sharpe; on raw return, holding still wins.</p>
+    </div>
+    <p class="muted small">So the defensible top line is sharper than &ldquo;nothing worked&rdquo;: <strong>every direction forecast we tried to trade was beaten by buy-and-hold, and the only edges that survived were risk premia and risk-management tools — winning, at most, on risk-adjusted terms, never on raw return, and visibly decaying.</strong></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The one-line version</p>
+    <p class="pull"><span class="l">Direction</span> is a mirage no machinery beats — <span class="l">buy-and-hold</span> outran every strategy we traded on it. The only edges that pay are <span class="s">risk premia</span> — sell insurance, hold through the crash — modest, honest, never a forecast, and beating the index on risk-adjusted terms at best. At every turn the true answer was smaller and stranger than the exciting one.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p class="eyebrow">Provenance</p>
+    <div class="foot">
+      <dl><dt>The ten projects</dt><dd><span class="mono">monte-carlo</span> · calibration &amp; FHS<br><span class="mono">pattern-discovery</span> · direction<br><span class="mono">adaptive-filter</span> · volatility<br><span class="mono">vol-risk</span> · risk &amp; regimes<br><span class="mono">pattern-matching</span> · the detection reframe<br><span class="mono">variance-premium</span> · monetising vol<br><span class="mono">factor-rotation</span> · cross-asset &amp; the taxonomy<br><span class="mono">sentiment</span> · fear as a news proxy<br><span class="mono">fx-carry</span> · currencies &amp; carry<br><span class="mono">quick-flip-scalper</span> · intraday direction, both signs</dd></dl>
+      <dl><dt>Discipline</dt><dd>Strict walk-forward · held-out out-of-sample · permutation and sign-flip nulls · matched surrogates · spike-and-reversal data audit · lagged every timing signal · a standing assumption that any good result is a bug until it survives all of them.</dd></dl>
+      <dl><dt>Data</dt><dd>~150 UK equities daily, 2000–2026 (audited; a corrupt index file and a few scrambled series excluded) · S&amp;P 500, VIX &amp; VIX3M, Treasuries, commodities, 16 currencies &amp; their rates from FRED · Ken French industry &amp; regional total returns, 1926–2026 · S&amp;P 500 5-minute candles (Yahoo, 60-day cross-section).</dd></dl>
+      <dl><dt>Standing</dt><dd>A validated <em>research</em> programme, honestly caveated — not investment advice. The tradeable edges are real, small, kindred risk premia, and demand surviving drawdowns to collect.</dd></dl>
+    </div>
+    <p class="note">Every figure is out-of-sample and cost-aware where a strategy is claimed; where a result did not survive that scrutiny it is recorded as a negative. Supersedes the earlier four-project synthesis, <em>The Volatility Axis</em>.</p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var cv=document.getElementById("axes"); if(!cv) return;
+    var ctx=cv.getContext("2d");
+    function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+    function draw(){
+      var host=cv.parentElement,w=host.clientWidth,h=host.clientHeight,dpr=Math.min(devicePixelRatio||1,2);
+      cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+      var sig=css("--signal")||"#0c757f",lim=css("--limit")||"#a8631a";
+      var n=320,seed=19;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280-0.5;}
+      // volatility axis: clustered regimes, a widening structured band (teal, the axis that pays)
+      var vy=[],turb=false,run=0,v=0;
+      for(var i=0;i<n;i++){
+        if(run<=0){turb=!turb;run=turb?16+Math.floor((rnd()+0.5)*26):30+Math.floor((rnd()+0.5)*46);}
+        run--; v+=(turb?2.6:0.85)*rnd()-v*0.010; vy.push(v);
+      }
+      // direction axis: flat, noisy, going nowhere (ochre, the mirage)
+      var dy=[],d=0;for(var j=0;j<n;j++){d+=0.7*rnd()-d*0.05;dy.push(d);}
+      var all=vy.concat(dy),lo=Math.min.apply(null,all),hi=Math.max.apply(null,all);
+      var x=function(i){return (i/(n-1))*w;},y=function(val){return h*0.62-((val-lo)/(hi-lo)-0.5)*h*0.62;};
+      // volatility regime shading (turbulent = faint teal)
+      ctx.globalAlpha=0.05;ctx.fillStyle=sig;var s=0,run2=false,rc=0,tb=false;
+      // recompute regime segments for shading from vy slope magnitude
+      for(var k=1;k<n;k++){if(Math.abs(vy[k]-vy[k-1])>1.1){ctx.fillRect(x(k-1),0,x(k)-x(k-1)+2,h);}}
+      ctx.globalAlpha=1;
+      function path(a,color,width,alpha){ctx.beginPath();for(var i=0;i<n;i++){var px=x(i),py=y(a[i]);i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.strokeStyle=color;ctx.globalAlpha=alpha;ctx.lineWidth=width;ctx.stroke();ctx.globalAlpha=1;}
+      path(dy,lim,1,0.42);            // direction: faint, flat
+      path(vy,sig,1.7,0.85);          // volatility: bold, structured
+      ctx.beginPath();ctx.arc(x(n-1),y(vy[n-1]),3.1,0,7);ctx.fillStyle=sig;ctx.fill();
+    }
+    draw();var t;addEventListener("resize",function(){clearTimeout(t);t=setTimeout(draw,140);});
+    if(window.matchMedia)matchMedia("(prefers-color-scheme:dark)").addEventListener("change",draw);
+    new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+  })();
+</script>

@@ -1,0 +1,422 @@
+<!-- content only; wrapped at publish -->
+<title>The Volatility Axis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground: #eef1f2;
+    --surface: #ffffff;
+    --surface-2: #f7f9f9;
+    --ink: #14181b;
+    --ink-soft: #4a575e;
+    --ink-faint: #7f8d94;
+    --line: #dbe2e4;
+    --line-strong: #c3ccce;
+    --signal: #0c757f;
+    --signal-ink: #095e66;
+    --signal-wash: #e2eff0;
+    --limit: #a8631a;
+    --limit-ink: #8a5115;
+    --limit-wash: #f3e8da;
+    --shadow: 0 1px 2px rgba(20,24,27,.05), 0 8px 26px -14px rgba(20,24,27,.22);
+    --measure: 65ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0e1315;
+      --surface: #151c1f;
+      --surface-2: #1a2226;
+      --ink: #e7eef0;
+      --ink-soft: #a2b0b6;
+      --ink-faint: #6f8188;
+      --line: #26312f;
+      --line-strong: #33403f;
+      --signal: #3bb2bd;
+      --signal-ink: #63c6cf;
+      --signal-wash: #12292c;
+      --limit: #d8983f;
+      --limit-ink: #e5ac57;
+      --limit-wash: #2a2117;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px -16px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0e1315;
+    --surface: #151c1f;
+    --surface-2: #1a2226;
+    --ink: #e7eef0;
+    --ink-soft: #a2b0b6;
+    --ink-faint: #6f8188;
+    --line: #26312f;
+    --line-strong: #33403f;
+    --signal: #3bb2bd;
+    --signal-ink: #63c6cf;
+    --signal-wash: #12292c;
+    --limit: #d8983f;
+    --limit-ink: #e5ac57;
+    --limit-wash: #2a2117;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px -16px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 1.18rem;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    font-optical-sizing: auto;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 56px); }
+  .col { max-width: var(--measure); }
+  h1, h2, h3, .eyebrow, .mono, th, .stat-n, .tag, nav, .foot-grid dt { font-family: "Archivo", system-ui, sans-serif; }
+  .mono, .stat-n, .tick, td.num, th.num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  .eyebrow {
+    font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--signal-ink); margin: 0 0 1.1rem;
+  }
+  .eyebrow.lim { color: var(--limit-ink); }
+
+  h1 { font-weight: 800; font-size: clamp(2.6rem, 6.4vw, 4.5rem); line-height: 1.02;
+       letter-spacing: -.02em; text-wrap: balance; margin: 0; }
+  h2 { font-weight: 700; font-size: clamp(1.7rem, 3.4vw, 2.35rem); line-height: 1.1;
+       letter-spacing: -.015em; text-wrap: balance; margin: 0 0 .6rem; }
+  h3 { font-weight: 700; font-size: 1.16rem; letter-spacing: .005em; margin: 0 0 .35rem; }
+  p { margin: 0 0 1.15rem; }
+  a { color: var(--signal-ink); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  strong { font-weight: 500; color: var(--ink); background: linear-gradient(transparent 62%, var(--signal-wash) 62%); padding: 0 .06em; }
+  em { font-style: italic; }
+
+  /* ---- hero ---- */
+  header.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--surface), var(--ground)); }
+  #envelope { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero-inner { position: relative; z-index: 2; padding: clamp(3.4rem, 9vh, 6.5rem) 0 clamp(2.6rem, 6vh, 4rem); }
+  .hero-inner .col { max-width: 20ch; }
+  h1 + .lede { max-width: 46ch; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.4;
+    color: var(--ink-soft); margin-top: 1.5rem; }
+  .credit { margin-top: 2.4rem; font-size: .82rem; color: var(--ink-faint); letter-spacing: .02em; }
+  .credit .mono { color: var(--ink-soft); }
+
+  section { padding: clamp(3rem, 8vh, 5.5rem) 0; }
+  section + section { border-top: 1px solid var(--line); }
+  .band { background: var(--surface); }
+
+  .lede-lg { font-size: 1.34rem; line-height: 1.5; color: var(--ink); }
+  .muted { color: var(--ink-soft); }
+  .small { font-size: .96rem; }
+
+  /* ---- project cards ---- */
+  .arc { display: grid; gap: 1.1rem; margin-top: 2.2rem; }
+  @media (min-width: 720px) { .arc { grid-template-columns: 1fr 1fr; } }
+  .proj { background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    padding: 1.5rem 1.6rem 1.6rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: .2rem; }
+  .proj .idx { font-family: "IBM Plex Mono", monospace; font-size: .8rem; color: var(--ink-faint);
+    letter-spacing: .05em; margin-bottom: .5rem; }
+  .proj p { font-size: 1.02rem; line-height: 1.5; margin: .3rem 0 0; color: var(--ink-soft); }
+  .verdict { margin-top: 1.1rem; display: flex; flex-direction: column; gap: .5rem; }
+  .vr { display: flex; gap: .6rem; align-items: baseline; font-family: "Archivo", sans-serif;
+    font-size: .93rem; line-height: 1.35; }
+  .vr .k { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    padding: .16em .5em; border-radius: 3px; white-space: nowrap; flex: none; }
+  .vr.yes .k { color: var(--signal-ink); background: var(--signal-wash); }
+  .vr.no .k { color: var(--limit-ink); background: var(--limit-wash); }
+  .vr span:last-child { color: var(--ink); }
+
+  /* ---- through-line list ---- */
+  .lines { display: grid; gap: 0; margin-top: 2rem; border-top: 1px solid var(--line); }
+  .line { display: grid; grid-template-columns: auto 1fr; gap: 1.4rem; padding: 1.5rem 0;
+    border-bottom: 1px solid var(--line); align-items: start; }
+  .line .n { font-family: "IBM Plex Mono", monospace; font-size: .85rem; color: var(--signal-ink);
+    font-weight: 500; padding-top: .35rem; }
+  .line h3 { font-size: 1.28rem; letter-spacing: -.01em; }
+  .line p { margin: .35rem 0 0; font-size: 1.05rem; color: var(--ink-soft); max-width: 62ch; }
+
+  /* ---- stat row ---- */
+  .stats { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line);
+    border-radius: 6px; overflow: hidden; margin: 2.2rem 0 .5rem; }
+  @media (min-width: 620px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+  .stat { background: var(--surface); padding: 1.3rem 1.4rem; }
+  .stat-n { font-size: 1.9rem; font-weight: 600; letter-spacing: -.02em; color: var(--signal-ink); line-height: 1; }
+  .stat-n.lim { color: var(--limit-ink); }
+  .stat-l { font-family: "Archivo", sans-serif; font-size: .82rem; color: var(--ink-soft);
+    margin-top: .5rem; line-height: 1.3; }
+
+  /* ---- table ---- */
+  .tbl-scroll { overflow-x: auto; margin: 1.8rem 0 .6rem; border: 1px solid var(--line);
+    border-radius: 6px; }
+  table { width: 100%; border-collapse: collapse; font-family: "IBM Plex Mono", monospace;
+    font-size: .92rem; background: var(--surface); }
+  caption { text-align: left; font-family: "Archivo", sans-serif; font-size: .82rem;
+    color: var(--ink-faint); letter-spacing: .04em; padding: .9rem 1rem .2rem; }
+  th, td { padding: .62rem 1rem; text-align: left; border-bottom: 1px solid var(--line); }
+  th { font-size: .74rem; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint);
+    font-weight: 600; }
+  td.num, th.num { text-align: right; }
+  tbody tr:last-child td { border-bottom: none; }
+  tr.hi td { background: var(--signal-wash); }
+  tr.hi td:first-child { font-weight: 600; color: var(--signal-ink); }
+  .up { color: var(--signal-ink); } .dn { color: var(--limit-ink); }
+
+  /* ---- callout ---- */
+  .callout { border-left: 3px solid var(--limit); background: var(--limit-wash);
+    padding: 1.2rem 1.4rem; border-radius: 0 6px 6px 0; margin: 2rem 0; }
+  .callout .eyebrow { margin-bottom: .5rem; }
+  .callout p { margin: 0; font-size: 1.04rem; color: var(--ink); }
+
+  .pull { font-family: "Archivo", sans-serif; font-weight: 600; font-size: clamp(1.4rem, 3vw, 2rem);
+    line-height: 1.24; letter-spacing: -.015em; text-wrap: balance; max-width: 24ch; margin: 0; }
+  .pull .s { color: var(--signal-ink); } .pull .l { color: var(--limit-ink); }
+
+  footer { background: var(--surface); border-top: 1px solid var(--line); padding: 3.4rem 0 4rem; }
+  .foot-grid { display: grid; gap: 1.5rem 2rem; margin: 1.8rem 0 2.4rem; }
+  @media (min-width: 640px) { .foot-grid { grid-template-columns: repeat(2, 1fr); } }
+  .foot-grid dl { margin: 0; }
+  .foot-grid dt { font-size: .74rem; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700; margin-bottom: .3rem; }
+  .foot-grid dd { margin: 0; font-size: .98rem; color: var(--ink-soft); }
+  .foot-grid dd .mono { font-family: "IBM Plex Mono", monospace; font-size: .86rem; color: var(--ink); }
+  .rule-note { font-size: .9rem; color: var(--ink-faint); border-top: 1px solid var(--line);
+    padding-top: 1.4rem; max-width: var(--measure); }
+
+  :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; border-radius: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<header class="hero">
+  <canvas id="envelope" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">A quantitative research retrospective · FTSE &amp; UK equities</p>
+    <div class="col"><h1>The Volatility Axis</h1></div>
+    <p class="lede">Four projects asked whether markets can be predicted. They agree on the answer — and on where the value actually is.</p>
+    <p class="credit">Monte-Carlo envelopes · pattern discovery · adaptive filters · risk &amp; regimes &nbsp;·&nbsp; <span class="mono">~40 experiments, 193 series, one thesis</span></p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The question</p>
+    <p class="lede-lg">We set out to predict share-price movements — first with Monte-Carlo simulation, then chart patterns, adaptive filters, and volatility regimes. Each project was built to be fooled as little as possible: strict walk-forward evaluation, held-out data, permutation nulls, and a habit of assuming any positive result is a bug until proven otherwise.</p>
+    <p class="muted">What emerged wasn't the strategy we went looking for. It was a sharper understanding of what these series will and won't tell you — and a concrete way to use the half that talks.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The arc · four investigations</p>
+      <h2>Every route led to the same wall</h2>
+      <p class="muted">Each project attacked prediction from a different angle. All four hit the same ceiling on <em>direction</em> — and all four found the same open door on <em>volatility</em>.</p>
+    </div>
+    <div class="arc">
+      <article class="proj">
+        <div class="idx">01 · monte-carlo-experiment</div>
+        <h3>Calibrated envelopes</h3>
+        <p>Bootstrap recent returns into forward price envelopes; judge them by whether reality lands inside, not by drift.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>Filtered Historical Simulation gives honestly-calibrated tails, validated across 193 series.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Naïve resampling never beats a one-line EWMA-vol Gaussian. Direction is pinned to zero — and stays there.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx">02 · pattern-discovery</div>
+        <h3>Do chart patterns predict?</h3>
+        <p>Discover price-shape patterns directly from data rather than hand-drawing triangles; test them out-of-sample.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>Patterns carry a <em>statistically real</em> signal (z&nbsp;=&nbsp;2.4) — and pattern <em>amplitude</em> beats pattern <em>shape</em>.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>The signal is economically negligible (IC&nbsp;≈&nbsp;0.006); unsupervised chart patterns are provably meaningless.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx">03 · adaptive-filter (haf)</div>
+        <h3>Adaptive volatility filters</h3>
+        <p>A hierarchy of self-tuning filters and a mixture of experts, forecasting realised volatility.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>A fixed <em>signed stack</em> of diverse experts forecasts vol well (skill&nbsp;0.34) — and upgrades the calibration envelope.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Every adaptive, nested, and self-tuning scheme loses to a single fixed fit. Mean return: unpredictable.</span></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="idx">04 · vol-risk-experiment</div>
+        <h3>Risk, regimes &amp; sizing</h3>
+        <p>Use the volatility forecast — not direction — to detect regimes, size positions, and build a portfolio.</p>
+        <div class="verdict">
+          <div class="vr yes"><span class="k">works</span><span>A causal regime detector predicts forward vol at IC&nbsp;0.60; the low-vol tilt and the pieces stacked deliver the payoff.</span></div>
+          <div class="vr no"><span class="k">fails</span><span>Market-neutral direction bets stay cost-fragile; blind vol-targeting can backfire into rebounds.</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">What all four agree on</p>
+      <h2>Three through-lines</h2>
+    </div>
+    <div class="lines">
+      <div class="line">
+        <div class="n">01</div>
+        <div>
+          <h3>Direction is a one-percent mirage</h3>
+          <p>Across bootstraps, chart patterns, a neural net, a term-structure of drift, and cross-sectional selection, the information coefficient on direction never cleared ~0.01–0.03. Five independent routes, one ceiling — and nothing built on top of it survived transaction costs.</p>
+        </div>
+      </div>
+      <div class="line">
+        <div class="n">02</div>
+        <div>
+          <h3>Volatility is forecastable — and regime-structured</h3>
+          <p>The same series that hide their direction wear their volatility openly: it clusters, mean-reverts, and switches between calm and turbulent states a causal filter can flag before the moves arrive (IC 0.60). Every piece of durable value in the whole programme sits on this axis.</p>
+        </div>
+      </div>
+      <div class="line">
+        <div class="n">03</div>
+        <div>
+          <h3>The real split is robust versus overfit — not complex versus simple</h3>
+          <p>Sophistication paid handsomely for volatility (high signal-to-noise) and failed for direction (low). But even on volatility, a six-parameter fit estimated <em>per-instrument</em> overfit and lost, while the <em>same</em> model fit robustly across many series won. Adaptive schemes self-cancelled; equal weights beat fitted weights whenever the signal was thin.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The one thing that generalised</p>
+      <h2>Filtered Historical Simulation</h2>
+      <p class="muted">Standardise each return by its own conditional volatility, resample the residuals, and propagate the clustering forward. It was the single method that improved on the trivial baseline and held up out-of-sample across markets.</p>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <caption>99% envelope coverage, out-of-sample (nominal = 0.990)</caption>
+        <thead>
+          <tr><th>Vol filter</th><th class="num">FTSE tail</th><th class="num">193-series mean</th><th class="num">Beats EWMA on CRPS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>EWMA (single)</td><td class="num">0.980</td><td class="num">0.983</td><td class="num">—</td></tr>
+          <tr class="hi"><td>Expert stack (pooled)</td><td class="num">0.990</td><td class="num">0.989</td><td class="num up">94%</td></tr>
+          <tr><td>Expert stack (per-series)</td><td class="num dn">0.94</td><td class="num dn">0.94</td><td class="num dn">overfits</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted col">The richer vol filter wins — but only when its coefficients are pooled across series. Fit per-instrument, the very same model overfits its training regime and under-covers. Robust-versus-overfit, in one table.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The payoff</p>
+      <h2>A better way to hold equities — no forecast of direction anywhere in it</h2>
+      <p class="muted">The programme's tools are complementary: low-vol <em>selection</em> (cross-sectional), vol-<em>targeting</em> (time-series), and regime-based <em>de-risking</em> each attack risk differently. Stacked, on 122 UK equities (data current to Aug 2026), they roughly double the market's risk-adjusted return and cut its worst drawdown by more than half.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">0.25</div><div class="stat-l">Market Sharpe (equal-weight)</div></div>
+      <div class="stat"><div class="stat-n">0.59</div><div class="stat-l">Stacked defensive book Sharpe</div></div>
+      <div class="stat"><div class="stat-n lim">−63%</div><div class="stat-l">Market max drawdown</div></div>
+      <div class="stat"><div class="stat-n">−27%</div><div class="stat-l">Defensive book max drawdown</div></div>
+    </div>
+    <div class="col">
+      <div class="callout">
+        <p class="eyebrow lim">Kept honest</p>
+        <p>The first run of this showed a Sharpe of 1.14 — until a one-day look-ahead in the regime filter was caught and corrected, landing at 0.59 on the refreshed data. The edge is also crisis-concentrated: it earns its keep in 2008 and 2020, and adds little in calm years. A real result, reported with its asterisks intact.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap col">
+    <p class="eyebrow">The one-line version</p>
+    <p class="pull"><span class="l">Direction</span> is a mirage no machinery beats. <span class="s">Volatility</span> is real, forecastable, and regime-structured — and that is exactly what lets you calibrate risk, size it, and build a steadier portfolio.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p class="eyebrow">The programme</p>
+    <div class="foot-grid">
+      <dl><dt>Projects</dt><dd><span class="mono">monte-carlo-experiment</span> · calibration &amp; FHS<br><span class="mono">pattern-discovery</span> · direction<br><span class="mono">heirarchical-adaptive-filter</span> · volatility<br><span class="mono">vol-risk-experiment</span> · risk &amp; regimes</dd></dl>
+      <dl><dt>Discipline</dt><dd>Strict walk-forward · held-out out-of-sample · permutation nulls · shuffled controls · a standing assumption that a good result is a bug until it survives all of them.</dd></dl>
+      <dl><dt>Data</dt><dd>FTSE 100 daily, 1990–2021 · ~150 UK equities, 2000–2026 · FX &amp; metals, 2010–2017.</dd></dl>
+      <dl><dt>Still open</dt><dd>Intraday microstructure · a three-state regime model · higher-premium markets · variance-risk-premium trades (needs options data).</dd></dl>
+    </div>
+    <p class="rule-note">Every figure here is out-of-sample and cost-aware where a strategy is claimed. Where a result didn't survive that scrutiny, it's recorded as a negative — the negatives are half the value.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var cv = document.getElementById("envelope");
+    if (!cv) return;
+    var ctx = cv.getContext("2d");
+    function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+    function draw() {
+      var host = cv.parentElement, w = host.clientWidth, h = host.clientHeight;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      var signal = css("--signal") || "#0c757f", limit = css("--limit") || "#a8631a",
+          faint = css("--ink-faint") || "#7f8d94";
+      var n = 220, mid = h * 0.52, base = Math.min(h, 520) * 0.017;
+      // deterministic-ish latent path + regime segments
+      var path = [], reg = [], seed = 7;
+      function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 - 0.5; }
+      var v = 0, turb = false, run = 0;
+      for (var i = 0; i < n; i++) {
+        if (run <= 0) { turb = !turb; run = turb ? 14 + Math.floor((rnd()+0.5)*22) : 26 + Math.floor((rnd()+0.5)*40); }
+        run--;
+        var step = (turb ? 2.7 : 0.9) * rnd();
+        v += step - v * 0.008;
+        path.push(v); reg.push(turb);
+      }
+      var x = function (i) { return (i / (n - 1)) * w; };
+      var y = function (val) { return mid - val * (base * 3.1); };
+      // regime shading (turbulent = ochre wash)
+      ctx.globalAlpha = 0.10;
+      var s = 0;
+      while (s < n) {
+        if (reg[s]) {
+          var e = s; while (e < n && reg[e]) e++;
+          ctx.fillStyle = limit;
+          ctx.fillRect(x(s), 0, x(e) - x(s), h);
+          s = e;
+        } else s++;
+      }
+      ctx.globalAlpha = 1;
+      // widening confidence envelope
+      function band(k, alpha) {
+        ctx.beginPath();
+        for (var i = 0; i < n; i++) {
+          var spread = base * (1.2 + Math.sqrt(i / n) * 8) * (reg[i] ? 1.7 : 1) * k;
+          var px = x(i), py = y(path[i]) - spread;
+          i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+        }
+        for (var j = n - 1; j >= 0; j--) {
+          var sp = base * (1.2 + Math.sqrt(j / n) * 8) * (reg[j] ? 1.7 : 1) * k;
+          ctx.lineTo(x(j), y(path[j]) + sp);
+        }
+        ctx.closePath();
+        ctx.fillStyle = signal; ctx.globalAlpha = alpha; ctx.fill(); ctx.globalAlpha = 1;
+      }
+      band(1, 0.06); band(0.55, 0.08);
+      // central path
+      ctx.beginPath();
+      for (var i2 = 0; i2 < n; i2++) { var p = [x(i2), y(path[i2])]; i2 ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.strokeStyle = signal; ctx.globalAlpha = 0.9; ctx.lineWidth = 1.6; ctx.stroke(); ctx.globalAlpha = 1;
+      // endpoint
+      ctx.beginPath(); ctx.arc(x(n - 1), y(path[n - 1]), 3.2, 0, 7); ctx.fillStyle = signal; ctx.fill();
+    }
+    draw();
+    var t; window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(draw, 120); });
+    if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+    new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  })();
+</script>

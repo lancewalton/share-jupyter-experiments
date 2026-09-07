@@ -1,0 +1,11 @@
+=== AUTHOR-FAITHFUL PURE SAFETY-LINE EXIT (k=0.5) ===
+config      cost   trades   win%    mean%    PF   hold   medTot%  %prof
+pure  S=0   gross   11859   16.3   -0.083  0.74    1.2     -39.8      5
+pure  S=0   net     11859   14.4   -0.299  0.40    1.2     -83.2      0
+
+pure  S=20  gross    5620   31.0   -0.625  0.72   17.2     -87.5      5
+pure  S=20  net      5620   28.3   -1.061  0.57   17.2     -96.2      0
+
+floor S=20  gross    5839   30.0   -0.620  0.72   15.8     -89.8      5
+floor S=20  net      5839   27.3   -1.038  0.57   15.8     -97.1      0
+

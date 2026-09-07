@@ -1,0 +1,304 @@
+<title>The Defensive Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground:#eef1f2; --surface:#fff; --surface-2:#f7f9f9;
+    --ink:#14181b; --ink-soft:#4a575e; --ink-faint:#7f8d94;
+    --line:#dbe2e4; --signal:#0c757f; --signal-ink:#095e66; --signal-wash:#e2eff0;
+    --limit:#a8631a; --limit-ink:#8a5115; --limit-wash:#f3e8da;
+    --shadow:0 1px 2px rgba(20,24,27,.05),0 8px 26px -14px rgba(20,24,27,.22);
+    --measure:65ch;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#0e1315; --surface:#151c1f; --surface-2:#1a2226;
+    --ink:#e7eef0; --ink-soft:#a2b0b6; --ink-faint:#6f8188;
+    --line:#26312f; --signal:#3bb2bd; --signal-ink:#63c6cf; --signal-wash:#12292c;
+    --limit:#d8983f; --limit-ink:#e5ac57; --limit-wash:#2a2117;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -16px rgba(0,0,0,.6);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#0e1315; --surface:#151c1f; --surface-2:#1a2226;
+    --ink:#e7eef0; --ink-soft:#a2b0b6; --ink-faint:#6f8188;
+    --line:#26312f; --signal:#3bb2bd; --signal-ink:#63c6cf; --signal-wash:#12292c;
+    --limit:#d8983f; --limit-ink:#e5ac57; --limit-wash:#2a2117;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -16px rgba(0,0,0,.6);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;font-size:1.18rem;line-height:1.62;
+    -webkit-font-smoothing:antialiased;font-optical-sizing:auto}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+  .col{max-width:var(--measure)}
+  h1,h2,h3,.eyebrow,.mono,th,.stat-n,.k,.foot dt{font-family:"Archivo",system-ui,sans-serif}
+  .mono,.stat-n,td.num,th.num,.tick{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--signal-ink);margin:0 0 1.1rem}
+  .eyebrow.lim{color:var(--limit-ink)}
+  h1{font-weight:800;font-size:clamp(2.6rem,6.2vw,4.3rem);line-height:1.02;letter-spacing:-.02em;text-wrap:balance;margin:0}
+  h2{font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);line-height:1.1;letter-spacing:-.015em;text-wrap:balance;margin:0 0 .6rem}
+  h3{font-weight:700;font-size:1.14rem;margin:0 0 .35rem}
+  p{margin:0 0 1.15rem}
+  strong{font-weight:500;color:var(--ink);background:linear-gradient(transparent 62%,var(--signal-wash) 62%);padding:0 .06em}
+  em{font-style:italic}
+  a{color:var(--signal-ink)}
+
+  header.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,var(--surface),var(--ground))}
+  #curve{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hero-inner{position:relative;z-index:2;padding:clamp(3.2rem,9vh,6rem) 0 clamp(2.4rem,6vh,3.6rem)}
+  .hero-inner .col{max-width:22ch}
+  .lede{max-width:44ch;font-size:clamp(1.18rem,2.1vw,1.45rem);line-height:1.4;color:var(--ink-soft);margin-top:1.4rem}
+  .credit{margin-top:2.2rem;font-size:.82rem;color:var(--ink-faint)}
+  .credit .mono{color:var(--ink-soft)}
+
+  section{padding:clamp(3rem,8vh,5rem) 0}
+  section+section{border-top:1px solid var(--line)}
+  .band{background:var(--surface)}
+  .lede-lg{font-size:1.32rem;line-height:1.5}
+  .muted{color:var(--ink-soft)} .small{font-size:.96rem}
+
+  /* layer cards */
+  .layers{display:grid;gap:1rem;margin-top:2rem;counter-reset:layer}
+  .layer{background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:1.4rem 1.5rem;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:1.2rem;align-items:start}
+  .layer .num{counter-increment:layer;font-family:"IBM Plex Mono",monospace;font-size:1.5rem;
+    font-weight:600;color:var(--signal-ink);line-height:1}
+  .layer .num::before{content:counter(layer,decimal-leading-zero)}
+  .layer h3{margin-bottom:.3rem}
+  .layer p{margin:.2rem 0 0;font-size:1.02rem;line-height:1.5;color:var(--ink-soft)}
+  .layer .ev{margin-top:.7rem;font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--signal-ink)}
+  .layer.drop{border-style:dashed;opacity:.9}
+  .layer.drop .num{color:var(--limit-ink)} .layer.drop .ev{color:var(--limit-ink)}
+  .layer.drop .num::before{content:"×"}
+
+  .stats{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:2rem 0 .6rem}
+  @media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:var(--surface);padding:1.3rem 1.4rem}
+  .stat-n{font-size:1.85rem;font-weight:600;letter-spacing:-.02em;color:var(--signal-ink);line-height:1}
+  .stat-n.lim{color:var(--limit-ink)}
+  .stat-l{font-family:"Archivo",sans-serif;font-size:.82rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.3}
+
+  .tbl-scroll{overflow-x:auto;margin:1.8rem 0 .6rem;border:1px solid var(--line);border-radius:6px}
+  table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.9rem;background:var(--surface)}
+  caption{text-align:left;font-family:"Archivo",sans-serif;font-size:.82rem;color:var(--ink-faint);letter-spacing:.04em;padding:.9rem 1rem .2rem}
+  th,td{padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  td.num,th.num{text-align:right}
+  tbody tr:last-child td{border-bottom:none}
+  tr.hi td{background:var(--signal-wash)} tr.hi td:first-child{font-weight:600;color:var(--signal-ink)}
+  tr.dim td{color:var(--ink-faint)}
+
+  .callout{border-left:3px solid var(--limit);background:var(--limit-wash);padding:1.2rem 1.4rem;border-radius:0 6px 6px 0;margin:2rem 0}
+  .callout .eyebrow{margin-bottom:.5rem} .callout p{margin:0;font-size:1.03rem;color:var(--ink)}
+  .callout p+p{margin-top:.7rem}
+
+  .two{display:grid;gap:1.2rem;margin-top:1.6rem}
+  @media(min-width:700px){.two{grid-template-columns:1fr 1fr}}
+  .box{border:1px solid var(--line);border-radius:6px;padding:1.3rem 1.4rem;background:var(--surface)}
+  .box h3{color:var(--signal-ink)} .box.no h3{color:var(--limit-ink)}
+  .box ul{margin:.4rem 0 0;padding-left:1.1rem} .box li{margin:.3rem 0;font-size:1rem;color:var(--ink-soft)}
+
+  .rules{display:grid;gap:0;margin-top:1.6rem;border-top:1px solid var(--line)}
+  .rule{padding:1.1rem 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:1.1rem}
+  .rule .k{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--signal-ink);padding-top:.15rem}
+  .rule p{margin:0;font-size:1.02rem;color:var(--ink-soft)}
+
+  footer{background:var(--surface);border-top:1px solid var(--line);padding:3rem 0 4rem}
+  .foot{display:grid;gap:1.4rem 2rem;margin:1.6rem 0 2rem}
+  @media(min-width:640px){.foot{grid-template-columns:repeat(2,1fr)}}
+  .foot dt{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:.3rem}
+  .foot dd{margin:0;font-size:.96rem;color:var(--ink-soft)}
+  .note{font-size:.9rem;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:1.3rem;max-width:var(--measure)}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="hero">
+  <canvas id="curve" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Portfolio strategy · extracted from the research</p>
+    <div class="col"><h1>The Defensive Stack</h1></div>
+    <p class="lede">A risk-first equity strategy that harvests the premia efficiently and controls drawdowns — with no forecast of direction anywhere in it.</p>
+    <p class="credit"><span class="mono">Sharpe 0.25 → 0.51 · max drawdown −63% → −38% · market-beta 0.41</span> &nbsp;·&nbsp; net of costs, no look-ahead</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The premise</p>
+    <p class="lede-lg">Four projects established two things: the <em>direction</em> of returns is unpredictable at the horizons that matter, and <em>volatility</em> is not — it clusters, mean-reverts, and switches regimes a causal model can flag before the moves land.</p>
+    <p class="muted">A strategy honestly built on that can't time the market. What it can do is hold equities more <em>efficiently</em>: tilt toward the calm names, add the one genuine cross-sectional edge, size by forecast risk, and let the volatility structure — not a direction call — do the work. Each layer below is something the research validated on its own; here they are assembled, and stress-tested together.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The architecture</p>
+      <h2>Three layers that earn their place — and one that's optional</h2>
+      <p class="muted">Assembled in order; each row shows what it does and the evidence behind it.</p>
+    </div>
+    <div class="layers">
+      <div class="layer">
+        <div class="num"></div>
+        <div>
+          <h3>Core — a low-volatility equity tilt</h3>
+          <p>Hold equities weighted toward the lowest-volatility names rather than the cap- or equal-weight market. The workhorse: it captures the equity premium at materially lower risk, long-only and low-turnover.</p>
+          <div class="ev">evidence — same return as market at ⅔ the volatility; drawdown roughly halved</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num"></div>
+        <div>
+          <h3>Sleeve — a market-neutral momentum overlay</h3>
+          <p>Add cross-sectional 12-minus-1-month momentum as a <em>separate</em> long/short sleeve. It is the one genuine directional edge — but longer-horizon, and market-neutral, so it diversifies the core's equity beta rather than doubling it.</p>
+          <div class="ev">evidence — IC t = 2.0, net Sharpe 0.34, ≈uncorrelated with the core (−0.03), −0.31 to market</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num"></div>
+        <div>
+          <h3>Sizing — vol-target the combined book</h3>
+          <p>Scale total exposure inversely to forecast volatility to hold roughly constant risk — lever up in calm, cut in turbulence. This is where most of the risk-adjusted improvement comes from.</p>
+          <div class="ev">evidence — lifted the book to Sharpe 0.51; on the S&amp;P alone, 0.70 → 0.82</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num"></div>
+        <div>
+          <h3>Optional — the systemic regime overlay</h3>
+          <p>De-risking in market-wide crises is, on the corrected data, roughly <em>Sharpe-neutral</em> for the stack (0.51 → 0.53) while cutting drawdown and beta — a defensive layer to add when the mandate prizes stability over a little return. <em>An earlier verdict rejected it outright; that was an artifact of stale data, since fixed.</em></p>
+          <div class="ev">evidence — maxDD −38% → −31%, beta 0.41 → 0.27, at ann. return 6.2% → 5.2%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">The evidence</p>
+      <h2>Assembled and stress-tested together</h2>
+      <p class="muted">122 UK equities, 2001–2026 (data current to Aug 2026), monthly rebalance, net of 10 bps turnover, regime signal lagged one day. Each stage adds a layer.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">0.51</div><div class="stat-l">Strategy Sharpe (market 0.25)</div></div>
+      <div class="stat"><div class="stat-n">−38%</div><div class="stat-l">Max drawdown (market −63%)</div></div>
+      <div class="stat"><div class="stat-n">0.41</div><div class="stat-l">Market beta — much its own risk</div></div>
+      <div class="stat"><div class="stat-n">0</div><div class="stat-l">Direction forecasts used</div></div>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <caption>Composed backtest — net Sharpe / max drawdown / market-beta by stage</caption>
+        <thead><tr><th>Stage</th><th class="num">Sharpe</th><th class="num">max DD</th><th class="num">beta</th></tr></thead>
+        <tbody>
+          <tr class="dim"><td>Market (equal-weight)</td><td class="num">0.25</td><td class="num">−63%</td><td class="num">1.00</td></tr>
+          <tr><td>Low-vol core</td><td class="num">0.28</td><td class="num">−36%</td><td class="num">0.54</td></tr>
+          <tr><td>+ momentum sleeve</td><td class="num">0.41</td><td class="num">−32%</td><td class="num">0.45</td></tr>
+          <tr class="hi"><td>+ vol-target &nbsp;— the stack</td><td class="num">0.51</td><td class="num">−38%</td><td class="num">0.41</td></tr>
+          <tr><td>+ regime overlay (optional)</td><td class="num">0.53</td><td class="num">−31%</td><td class="num">0.27</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted col">The layers compound: 0.28 → 0.41 → 0.51, doubling the market's Sharpe and cutting its worst drawdown from −63% to −38% — with a market beta of 0.41, so much of it is genuinely the strategy's own, not disguised equity exposure. The optional regime overlay trims drawdown and beta further still, for a little return.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap col">
+    <p class="eyebrow">What it is</p>
+    <div class="two">
+      <div class="box">
+        <h3>Earns</h3>
+        <ul>
+          <li>the equity premium, harvested at lower risk and shallower drawdowns</li>
+          <li>a modest, diversifying momentum premium (market-neutral)</li>
+          <li>genuine downside protection — far shallower than the market's worst drawdown</li>
+        </ul>
+      </div>
+      <div class="box no">
+        <h3>Does not earn</h3>
+        <ul>
+          <li>anything from predicting direction or timing the market</li>
+          <li>anything from chart patterns or short-horizon signals — mirages</li>
+          <li>a standalone-fund Sharpe — this is efficiency and risk control, not alpha magic</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <p class="eyebrow">The discipline it comes wrapped in</p>
+    <h2>Rules as much as layers</h2>
+    <div class="rules">
+      <div class="rule"><div class="k">robust</div><p>Estimate every signal <strong>pooled / cross-sectional</strong>, never fit per-instrument — over-fitting one series was what turned a better model into a worse result, repeatedly.</p></div>
+      <div class="rule"><div class="k">simple</div><p>Combine low-signal-to-noise inputs with <strong>equal weights</strong>. Optimised weights fit noise; the moment we let a regression choose them, out-of-sample performance fell.</p></div>
+      <div class="rule"><div class="k">systemic</div><p>De-risk on <strong>market-wide</strong> turbulence, hold through <strong>idiosyncratic</strong> wobbles — 80% of single stocks rebound from their own turbulence, so per-stock de-risking sells the bottom.</p></div>
+      <div class="rule"><div class="k">cheap</div><p>Favour <strong>low turnover</strong>. Every edge here is modest and cost-fragile; the core and sleeve are chosen partly because they trade slowly.</p></div>
+      <div class="rule"><div class="k">honest</div><p>Assume a good result is a <strong>look-ahead bug</strong> until proven otherwise. One inflated this very strategy from 0.61 to 1.14 before it was caught.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap col">
+    <p class="eyebrow lim">Read before believing</p>
+    <div class="callout">
+      <p class="eyebrow lim">Honest caveats</p>
+      <p>The edge is <strong>decaying</strong>: split into thirds, the strategy's Sharpe runs +1.49 / +0.29 / −0.16 — most of it earned in the first third, little since. Momentum's contribution has faded (a well-documented post-publication effect) and the crisis-driven benefits are concentrated in 2008 and 2020.</p>
+      <p>Momentum carries <strong>crash risk</strong> — its worst single month here was −15%, a five-sigma move, and vol-scaling lifts its Sharpe without taming that tail. And this is one market over one sample (UK equities, 2001–2026); a real deployment needs its own out-of-sample, its own cost model, and its own borrow and capacity assumptions. This is a *better way to hold equities with controlled risk* — not a money machine.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p class="eyebrow">Provenance</p>
+    <div class="foot">
+      <dl><dt>Built from</dt><dd>the four-project programme summarised in <em>The Volatility Axis</em> — calibration, direction, volatility, and risk &amp; regimes.</dd></dl>
+      <dl><dt>Data</dt><dd>~150 UK equities daily, 2000–2026 (refreshed to Aug 2026, source-linked); S&amp;P 500 (FRED) for the premium test; FX/metals intraday kept strictly separate.</dd></dl>
+      <dl><dt>Method</dt><dd>walk-forward, net of 10 bps turnover, regime signal lagged one day, look-ahead checked explicitly.</dd></dl>
+      <dl><dt>Standing</dt><dd>a validated <em>research</em> portfolio, honestly caveated — not investment advice.</dd></dl>
+    </div>
+    <p class="note">Every figure is net of costs where a strategy is claimed, and the optional layer (regime overlay) is shown with its trade-off, not hidden. The negatives are half the value.</p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var cv=document.getElementById("curve"); if(!cv) return;
+    var ctx=cv.getContext("2d");
+    function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+    function draw(){
+      var host=cv.parentElement,w=host.clientWidth,h=host.clientHeight,dpr=Math.min(devicePixelRatio||1,2);
+      cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+      var sig=css("--signal")||"#0c757f",faint=css("--ink-faint")||"#7f8d94";
+      var n=260,seed=11;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280-0.5;}
+      // market: volatile with deep drawdowns; strategy: smoother, higher, shallow drawdowns
+      var mk=[],st=[],vm=0,vs=0,dm=0.00045,ds=0.0006;
+      for(var i=0;i<n;i++){
+        var shock=(i>90&&i<108)||(i>210&&i<220)?-0.9:0; // crisis windows
+        vm+=dm+(2.4*rnd())+shock*1.7; vs+=ds+(0.9*rnd())+shock*0.5;
+        mk.push(vm);st.push(vs);
+      }
+      var lo=Math.min.apply(null,mk.concat(st)),hi=Math.max.apply(null,mk.concat(st));
+      var x=function(i){return (i/(n-1))*w;},y=function(v){return h*0.9-((v-lo)/(hi-lo))*h*0.82;};
+      function path(a,color,width,alpha){ctx.beginPath();for(var i=0;i<n;i++){var p=[x(i),y(a[i])];i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}
+        ctx.strokeStyle=color;ctx.globalAlpha=alpha;ctx.lineWidth=width;ctx.stroke();ctx.globalAlpha=1;}
+      path(mk,faint,1,0.5);
+      // strategy fill
+      ctx.beginPath();for(var i=0;i<n;i++){var p=[x(i),y(st[i])];i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}
+      ctx.lineTo(x(n-1),h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle=sig;ctx.globalAlpha=0.07;ctx.fill();ctx.globalAlpha=1;
+      path(st,sig,1.8,0.95);
+      ctx.beginPath();ctx.arc(x(n-1),y(st[n-1]),3.2,0,7);ctx.fillStyle=sig;ctx.fill();
+    }
+    draw();var t;addEventListener("resize",function(){clearTimeout(t);t=setTimeout(draw,120);});
+    if(window.matchMedia)matchMedia("(prefers-color-scheme:dark)").addEventListener("change",draw);
+    new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+  })();
+</script>
