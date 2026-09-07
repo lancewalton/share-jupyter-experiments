@@ -183,6 +183,31 @@ survivorship inflates both sides (the *relative* edge is the trustworthy part).
 So the selection edge is the decayed momentum premium, concentrated in ~3 names; it is **not a live,
 exploitable edge** and does not beat buy-and-hold out-of-sample.
 
+### Rolling-window & breadth: correcting the "2012 vol-suppression" story (`rolling_window.py`, `us_selector.py`, `download_us.py`)
+
+A trailing-3-year rolling view refutes the clean narrative. It is **not** a sharp 2012 break: the FTSE
+selector edge was front-loaded 2003–08 (+8 to +36%/yr, including sitting out the 2008 crash), ~flat 2009–17,
+sharply **negative 2018–24** (−6 to −15%/yr, worst in the 2020–22 COVID/bear whipsaw), and **recovered in
+2025–26** (+6 to +11%).
+
+Crucially, **corr(rolling edge, market vol) = −0.39 (FTSE), −0.45 (US) — negative.** This **refutes the
+vol-suppression hypothesis**: the selector does *worse* when volatility is higher, not better. It is a
+long-only equity trend filter that thrives in smooth persistent trends and gets **whipsawed by sharp vol
+spikes / V-shaped recoveries** (it exits at the crash low and misses the snap-back) — the opposite vol
+relationship to a long/short CTA. Vols were similar pre/post-2013 (16.5% vs 15.3%), so suppression isn't the
+driver; the post-2013 shortfall is mostly the 2020–22 whipsaw plus an extremely strong B&H benchmark.
+
+**Breadth — not UK-specific.** The US large-cap selector (30 names, 2000–26) shows the same shape: loses to
+EW B&H at w_min=0/0.25 (only the 2-name w_min=0.15 cell "wins"), negative edge–vol corr (−0.45), and the
+same 2020–22 whipsaw damage (−12 to −13%/yr). It loses *more* clearly in the US because US B&H post-2013 was
+extraordinary (+15.5%/yr). So the phenomenon is cross-market. Bonds untested here (no cross-section), but
+note bonds ran their own secular bull that broke violently in 2020–22 — a different regime.
+
+**Correction:** "decayed momentum, dead since 2012" was too strong. The selector is a long-only trend filter
+whose relative edge is regime-dependent (good in smooth trends, badly negative in volatile whipsaws),
+cross-market, and recovering since 2023 in the UK. Buy-and-hold still wins over the full sample — but the
+mechanism is whipsaw-sensitivity plus a strong benchmark, **not** vol suppression.
+
 ## Reframed conclusion
 
 The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*
