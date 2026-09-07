@@ -23,6 +23,11 @@ it.*
   defensive low-vol + momentum + vol-targeting stack) beat its market on a
   *risk-adjusted* basis (Sharpe 0.59 vs 0.22), but not on terminal wealth, and
   even that edge decayed across the sample.
+- **Filtering a direction signal only steers *hit-rate*, never *payoff*.** Later
+  studies fed the trend-line breakout extra information — line geometry, volume,
+  breakout extent, relative line age, and the volatility regime — and every filter
+  (and every combination) raised how *often* a breakout wins, never how *much*.
+  Strong breakouts revert rather than continue; the method stays net-negative.
 
 The full write-ups are the `synthesis-*.html` / `strategy.html` documents at the
 repo root, plus a `WRITEUP.md` / `RESULTS.md` inside most experiment folders.
@@ -44,6 +49,27 @@ spec.
 | `fx-rotation-experiment` | FX value / momentum / carry |
 | `swing-trading-trend-lines-experiment` | A support/resistance trend-line breakout method |
 | `quick-flip-scalper-experiment` | An intraday opening-range strategy (fade, then follow) |
+
+### Follow-up studies
+
+Later work re-tested the two trading strategies with extra information, all as
+cost-aware, stress-tested post-processing over the cached trades:
+
+- **Volatility-regime gating** — use the forecastable vol regime to steer
+  fade-vs-follow. `quick-flip-scalper-experiment/regime_and_costs.py` (also a
+  futures-cost re-run) and `swing-trading-trend-lines-experiment/regime_gate_ftse.py`.
+  Intraday it nudges the breakout to beta-neutral-positive but unproven; on daily
+  FTSE it fails and the regime steers the *wrong* way.
+- **The fade leg** — `swing-trading-trend-lines-experiment/fade_leg_ftse.py`: a
+  daily mean-reversion entry gated to compression. The one real, significant,
+  beta-neutral *gross* edge in the daily work — but dealing costs erase the net.
+- **Line-duration & breakout anatomy** — `line_duration_study.py`,
+  `duration_regime_cross.py`, `continuation_study.py`: relative action/safety line
+  duration, breakout extent, volume, and their combinations each predict *win
+  probability* but not *payoff*; strong breakouts revert rather than continue.
+
+Conclusions live in each experiment's `RESULTS.md`, with raw output in the
+`*_results.txt` files.
 
 ## Data
 
