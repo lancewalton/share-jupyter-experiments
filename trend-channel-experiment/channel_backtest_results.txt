@@ -1,0 +1,37 @@
+Loading 120 FTSE names...
+120 usable.
+
+####################################################################
+# CHANNEL TRADING vs BUY & HOLD  (L=250, G_MIN=0.1, R2_MIN=0.8)
+####################################################################
+
+GROSS (no costs): 120 names traded, 7918 trades
+  per-trade: gross +0.452%  net +0.452%  win 42.1%  PF 1.37
+  total return (median): strategy +19.6%  vs buy&hold +160.1%
+  % names beating B&H:  on total return 28%   on Sharpe 20%
+  Sharpe (median): strategy +0.13  vs buy&hold +0.28
+  time in market (median): 8%
+
+NET (10bps/side + 5%/yr): 120 names traded, 7918 trades
+  per-trade: gross +0.452%  net +0.088%  win 37.9%  PF 1.06
+  total return (median): strategy -4.0%  vs buy&hold +160.1%
+  % names beating B&H:  on total return 24%   on Sharpe 10%
+  Sharpe (median): strategy +0.02  vs buy&hold +0.28
+  time in market (median): 9%
+
+  top 8 names by net strategy total (strat% / B&H% / trades / TIM%):
+    RR         +512 /    +2159 /  79 / 19
+    BARC       +170 /       +3 /  43 / 9
+    AEP        +126 /    +4226 /  80 / 12
+    NXT        +116 /    +1872 / 102 / 20
+    STAN       +105 /     +186 /  47 / 10
+    HILS       +104 /    +4675 /  43 / 21
+    STJ         +80 /     +208 /  90 / 13
+    BATS        +73 /     +719 /  65 / 13
+
+####################################################################
+# WINDOW-LENGTH SENSITIVITY (net) — median totals & % beating B&H
+####################################################################
+  L=120: names 120  median strat -8% vs B&H +168%  beat-ret 21%  beat-Sharpe 8%  medSharpe -0.01/+0.29
+  L=250: names 120  median strat -4% vs B&H +160%  beat-ret 24%  beat-Sharpe 10%  medSharpe +0.02/+0.28
+  L=500: names 120  median strat -10% vs B&H +180%  beat-ret 20%  beat-Sharpe 8%  medSharpe -0.02/+0.31
