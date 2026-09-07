@@ -34,14 +34,35 @@ one-parameter change (§6.3).
 
 ## 1. Scope and assumptions
 
+### 1.0 Two contexts: the live loop vs. validation (read this first)
+This document specifies a **live automated trading system**. That system stands in the present: it
+can only ever see and trade **currently listed** names, and it inherently **cannot see the future**.
+Two consequences follow, and they are the source of most potential confusion:
+
+- **"Point-in-time" is automatic live.** The live universe on any date is just the names listed and
+  tradeable *that day*. There is nothing to reconstruct and no survivorship bias to avoid — a
+  company that has delisted simply isn't in the market any more.
+- **"No lookahead" is automatic live.** You physically don't have tomorrow's prices. The elaborate
+  anti-lookahead discipline exists to stop the *historical simulation* from cheating, not the live
+  system.
+
+So a distinct set of requirements — **survivorship-free history, point-in-time reconstruction,
+enforced no-lookahead** — belongs to **validation**: building the backtest that proved this works,
+and periodically re-checking it on fresh data. Those are collected in **§15** and tagged
+**[VALIDATION]** where they appear. Everything else is the **live loop**. Two genuine live remnants
+of the lookahead question survive into §5/§7 and are called out there: the momentum **skip-month**
+(a signal feature, not a data rule) and **point-in-time fundamentals** (filing-date gating, which
+matters live because vendor data is often keyed to fiscal-period-end).
+
 - **Market:** London Stock Exchange, GBP- and GBX-quoted common stock. The edge was validated on
   UK equities only; do not assume it transfers unchanged to other markets (US equities show the
   same effect; extend only after re-validation).
 - **Instrument type:** cash equities, long-only. No derivatives, no shorting. (A market-neutral
   long/short version exists but carries momentum-crash tails — out of scope here.)
-- **Reference data vendor:** EODHD "All-In-One" was used to build the research dataset
-  (survivorship-free EOD OHLCV, dividends, splits, fundamentals). Any vendor providing the same
-  point-in-time, delisting-inclusive data is acceptable; §3 lists the requirements vendor-agnostically.
+- **Data vendor:** The *live* system needs only a feed of the **current** LSE universe (EOD OHLCV,
+  corporate actions, filed fundamentals) — see §3. The *validation* dataset additionally needs
+  **survivorship-free** history including delisted names ([VALIDATION], §15); EODHD "All-In-One"
+  supplied this for the research. §3 lists requirements vendor-agnostically.
 - **Rebalance cadence:** monthly. The edge is **robust to the day of the month** you rebalance on
   (validated across 10 calendar phases — see `momentum_phase_robustness.py`), so the exact day is
   an operational choice, not a source of edge.
@@ -74,9 +95,15 @@ one-parameter change (§6.3).
 
 ## 3. Data requirements
 
-All series must be **survivorship-free**: they must include companies that later delisted,
-merged, or went bankrupt, with data up to their last trading day. Using only current constituents
-inflates every backtest and will not reproduce live behaviour.
+**Live feed:** a daily feed covering the **current** LSE universe — the names listed and tradeable
+now — is all the live loop consumes. It needs enough *trailing history per current name* to compute
+the signals (≈13 months of prices for momentum; the latest filed fundamentals), which is ordinary
+back-history for a live name, not a survivorship-free archive.
+
+**[VALIDATION]** The dataset used to *build and re-check* the backtest is different: it must be
+**survivorship-free** — including companies that later delisted, merged, or went bankrupt, with data
+to their last trading day — or it will overstate returns. That requirement lives in §15; it does
+**not** constrain the live universe (a delisted name is simply gone, §4).
 
 ### 3.1 Price / volume (daily, per name)
 | Field | Use |
@@ -105,9 +132,14 @@ keeping.
 | net income | income statement | ROE numerator |
 | gross profit | income statement | gross-profitability numerator |
 
-**Availability date rule:** use `filing_date` if present, else `fiscal_period_end + 120 days` as
-a conservative proxy. A fundamental value must **never** enter a signal before its availability
-date. (The research parser `parse_fundamentals.py` implements exactly this.)
+**Availability date rule (matters live, not only in backtest):** use `filing_date` if present, else
+`fiscal_period_end + 120 days` as a conservative proxy. A fundamental value must **never** enter a
+signal before its availability date. This is a genuine *live* requirement, not merely a backtest
+nicety: vendors commonly key a figure to its **fiscal-period end**, which is weeks or months before
+it was actually published — act on it then and you are trading on information the market did not yet
+have. Also store fundamentals **as first published** and beware later **restatements** silently
+overwriting the original (that reintroduces lookahead even in a live system that re-pulls history).
+(The research parser `parse_fundamentals.py` implements the filing-date rule.)
 
 **Currency note:** the recommended build's quality factor is built entirely from **ratios**
 (ROE = net income / book equity; GP/A = gross profit / total assets), which are **currency-neutral**.
@@ -119,16 +151,20 @@ a subset of names.)
 
 ## 4. Universe construction (per rebalance date `t`)
 
-1. **Base universe:** all LSE common stocks (GBP/GBX), live **and** delisted, that have a valid
-   adjusted close on `t`. A name that has stopped trading has no price on `t` and is automatically
-   excluded — do **not** carry a stale/last price forward (that resurrects dead companies; it was a
-   bug caught during research — see the note in `momentum_phase_robustness.py`).
+1. **Base universe:** every LSE common stock (GBP/GBX) that is **currently listed and has a valid
+   recent price** on `t`. Live this is simply the tradeable market as it stands — a name that has
+   delisted or is suspended has no price and is naturally absent; there is no list of "dead names"
+   to include or exclude. ([VALIDATION] the backtest reconstructs this same set historically from
+   survivorship-free data, and must **not** carry a delisted name's last price forward — doing so
+   resurrects dead companies as flat-price zombies, a bug caught during research; see
+   `momentum_phase_robustness.py`. Live, this cannot happen, because a delisted name has no live
+   quote.)
 2. **Liquidity ranking:** for each name compute trailing **12-month mean daily turnover** (mean of
    daily GBP turnover over the trailing ~252 trading days, requiring at least ~60 valid days).
 3. **Eligible set:** the **top `N = 350`** names by that liquidity measure. This is the tradeable
    universe for date `t`. All subsequent cross-sectional calculations are over this set.
-4. **Minimum breadth:** require at least **30** eligible names with a valid signal and a valid
-   forward return; otherwise skip the rebalance (relevant only to early history / cold start).
+4. **Minimum breadth:** require at least **30** eligible names with a valid signal; otherwise skip
+   the rebalance (relevant only to a cold start on a thin market).
 
 ---
 
@@ -141,6 +177,15 @@ mom_raw = adj_close[t − 1 month] / adj_close[t − 12 months] − 1
 ```
 Then standardise cross-sectionally: `z_mom = zscore(mom_raw)` over the eligible set
 (`zscore(x) = (x − mean) / std`).
+
+**Why skip the most recent month (the "1" in 12-1).** This is a **signal feature, not a
+data-availability rule** — it is retained unchanged live. The most recent month exhibits short-term
+**reversal** (last month's biggest movers tend to snap back), which is noise for a 12-month
+momentum signal, so the standard construction excludes it. A useful side effect: the signal depends
+only on prices **through one month ago**, so it is comfortably causal and needs no just-executed
+data — the live system computes it with no timing pressure, which is also why the strategy is so
+insensitive to *which* day of the month you rebalance (§5.5 / phase robustness). You still need a
+**current** price on `t`, but only for order sizing and execution (§7), never for the signal.
 
 ### 5.2 Quality factor
 Using the latest fundamentals **available on or before `t`** (by availability date, §3.3):
@@ -162,8 +207,8 @@ present. (A name with momentum but no quality is ranked on momentum alone — th
 matches the validated build.)
 
 ### 5.4 Selection
-Rank the eligible names with a valid composite and a valid forward-return capability. Let `M` be
-their count. Select the **top quintile**:
+Rank the eligible names that have a valid composite (i.e. a valid `z_mom`). Let `M` be their count.
+Select the **top quintile**:
 ```
 k = max(1, floor(0.2 × M))          # ≈ 69 names for M ≈ 347
 targets = the k names with the highest composite
@@ -257,10 +302,13 @@ limits support it before enabling.
 - **Day:** any fixed, operationally convenient day (e.g. first business day of the month, or a
   fixed month-end). The edge is calendar-phase robust, so pick one and keep it stable. Prefer a day
   on which a clean, validated closing cross-section is available.
-- **Timing / lookahead discipline:** compute signals from prices/fundamentals known **strictly
-  before** the execution point. A safe pattern: use data through close of day `D`, generate target
-  weights, execute at or after the open of day `D+1`. Never compute a signal from the same print
-  you then trade on.
+- **Execution sequencing (the one live "lookahead" concern):** a live system cannot see the future,
+  so there is no future data to guard against — but you must not assume you can *trade at the very
+  price you computed the signal from*. Safe pattern: compute target weights from data through the
+  close of day `D`, then execute at or after the **open of day `D+1`**. (The momentum signal already
+  uses only prices through a month ago, §5.1, so it is never the binding constraint here; this rule
+  is really about the *current* price you use for sizing versus the price you actually get filled at.
+  Point-in-time fundamentals gating is covered in §3.3.)
 
 ### 7.2 Order generation
 1. Compute target weights `w` (§6).
@@ -280,7 +328,9 @@ limits support it before enabling.
   continuity.
 - **Delisting or suspension of a held name:** exit via the corporate-action mechanism (cash
   received, or write-off at last traded price). Do not assume you can sell at a model price. This is
-  a real, expected event in a survivorship-free universe and must be handled operationally.
+  a real, expected event when trading a broad equity universe live, and must be handled
+  operationally. (It is also the live counterpart of the backtest's survivorship handling: a name
+  leaves your book by dying, exactly as it leaves the historical panel.)
 
 ### 7.4 Share granularity and minimum NAV
 Each position targets `p ≈ exposure × (1/k) × NAV ≈ 0.0136 × NAV` (for `exposure ≈ 0.94`, `k ≈ 69`).
@@ -387,13 +437,13 @@ must be replaced by real machinery live.
 ## 12. End-to-end algorithm (pseudocode)
 
 ```
-# Nightly / pre-rebalance data pipeline
-maintain daily survivorship-free panel: raw_close, adj_close, volume, currency  (validate ticks)
+# Nightly / pre-rebalance data pipeline (LIVE: current universe only)
+maintain daily panel for currently-listed names: raw_close, adj_close, volume, currency (validate ticks)
 maintain corporate-actions ledger
-maintain point-in-time fundamentals keyed by filing date
+maintain fundamentals keyed by filing date (use only figures already published)
 
 # On each rebalance date t:
-elig      = top 350 names by trailing-12m mean daily GBP turnover, having a valid adj_close at t
+elig      = top 350 currently-listed names by trailing-12m mean daily GBP turnover (valid price at t)
 if count(elig) < 30: skip
 
 mom_raw   = adj_close[t-1m] / adj_close[t-12m] - 1                 # over elig
@@ -445,3 +495,35 @@ Full results in `trend-channel-experiment/RESULTS.md`; narrative in `momentum.ht
 period 2001–2026, net of tiered costs, on a 3,237-name survivorship-free LSE universe.
 
 **Not investment advice. Backtested performance is not a guarantee of future results.**
+
+---
+
+## 15. Validation and re-validation [VALIDATION]
+
+This section collects the requirements that belong to **proving the strategy**, not to running it.
+They are what made the historical evidence trustworthy, and what an honest periodic re-check must
+repeat. **None of them constrains the live loop** (§1.0): the live system is automatically
+point-in-time and automatically free of future data.
+
+1. **Survivorship-free history.** The validation dataset must include delisted / merged / bankrupt
+   names with data to their last trading day (the research used 3,237 LSE names: 1,570 live + 1,667
+   delisted). Without this, the backtest overstates returns — most of all it overstates the
+   *benchmark*, which is what makes the true alpha visible. This is the requirement that §3's live
+   feed does **not** need.
+2. **Point-in-time reconstruction.** Rebuild the eligible universe and every signal *as it would
+   have been known* on each historical date: liquidity from trailing data only; fundamentals by
+   filing date (§3.3); and never carry a delisted name's last price forward (the flat-price-zombie
+   bug — see §4 and `momentum_phase_robustness.py`).
+3. **Enforce no-lookahead mechanically.** In the sim, signals must use only data strictly before the
+   holding period. Sanity check: shift every input back one period and confirm the edge degrades as
+   expected (§13). This is a property of the *simulation*; live it is automatic.
+4. **Data-cleaning caveats that are not trading rules.** The backtest winsorises cross-sectional
+   returns (1st/99th pct) to neutralise bad ticks in the archive; live, that becomes real-time tick
+   validation, not a return clip (§10.1). Keep both facts in view when comparing live PnL to the
+   backtest.
+5. **Re-validation cadence.** Periodically re-run the whole chain on fresh survivorship-free data,
+   including the calendar-phase test (§13) and the breadth/factor sweeps (§5.5), to confirm the edge
+   has not decayed (it is known to be time-varying — §9). Treat a persistent post-period breakdown
+   as a regime change, not noise.
+
+The scripts in §14 are the reference implementation of every item above.
