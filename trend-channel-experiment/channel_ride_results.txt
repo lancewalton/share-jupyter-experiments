@@ -1,0 +1,44 @@
+Loading 120 names; precomputing channels...
+120 names.
+
+equal-weight B&H: total +1068%  CAGR +9.57%  Sharpe +0.65
+
+##########################################################################################
+# RIDE-THE-WINNER portfolio vs B&H  (exit on lower-band break by BREAK_FRAC of height)
+##########################################################################################
+ break  gradExit  slots    total%   CAGR%  Sharpe   expo  medHold_d  vs B&H
+   0.0      True      5       139    3.29    0.26    92%          1  loses
+   0.0      True     10        67    1.93    0.20    91%          1  loses
+   0.0      True     20        35    1.13    0.15    86%          1  loses
+   0.5      True      5       317    5.45    0.38    89%        182  loses
+   0.5      True     10       301    5.30    0.42    86%        182  loses
+   0.5      True     20       195    4.10    0.37    79%        182  loses
+   1.0      True      5       259    4.87    0.36    87%        241  loses
+   1.0      True     10       187    4.00    0.35    84%        241  loses
+   1.0      True     20       187    3.99    0.37    76%        241  loses
+   0.0     False      5       242    4.68    0.33    94%          1  loses
+   0.0     False     10        83    2.27    0.22    92%          1  loses
+   0.0     False     20       100    2.61    0.25    89%          1  loses
+   0.5     False      5       461    6.62    0.44    95%        821  loses
+   0.5     False     10       310    5.38    0.40    95%        821  loses
+   0.5     False     20       176    3.85    0.32    95%        821  loses
+   1.0     False      5        56    1.67    0.18    96%       9107  loses
+   1.0     False     10       104    2.69    0.24    96%       9107  loses
+   1.0     False     20       145    3.38    0.30    96%       9107  loses
+
+Best: break=0.5, gradExit=False, slots=5 (total +461% vs B&H +1068%)
+
+##########################################################################
+# Winner capture under the RIDE exit (break=0.5, gradExit=False) — top-10 B&H names
+##########################################################################
+    name        B&H%    strat%  capture
+    GDWN       23828     11584     0.49
+    CKN         5222      1828     0.35
+    HILS        4707      3246     0.69
+    ANTO        4099       616     0.15
+    AEP         3823      1531     0.40
+    GFRD        3724       330     0.09
+    CWK         3387      1033     0.30
+    HLMA        2807       794     0.28
+    DOM         2475      1098     0.44
+    NXT         2456      2368     0.96

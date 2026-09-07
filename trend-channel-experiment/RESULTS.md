@@ -91,11 +91,32 @@ Is the shortfall because channel-forming names grow slowly, or because selling a
 - Secondary: equal-weight B&H earns a large rebalancing/diversification bonus (portfolio CAGR +9.57% vs mean
   single-name +4.13%) that a part-time rotating book does not capture.
 
+### Ride-the-winner exit (hold until the BOTTOM breaks) — best variant, still loses (`channel_ride.py`)
+
+The fix for winner-capping: don't sell at the top — hold until price breaks below the lower band by
+BREAK_FRAC of the channel height (optionally also exit if the gradient turns negative), then rotate the cash.
+
+**Winner-capping is largely fixed.** Capture of the big winners jumps from ~0.00 to a median ~0.4: GDWN
++23,828% B&H → strat +11,584% (capture 0.49), HILS 0.69, NXT 0.96, AEP 0.40, DOM 0.44. Median hold ~2.2
+years at break=0.5 — it genuinely rides trends now.
+
+**But it still loses to B&H.** Best config (break=0.5, no gradient exit, 5 slots): total +461% (CAGR 6.62%,
+Sharpe 0.44), exposure 95% — vs B&H +1068% (CAGR 9.57%, Sharpe 0.65). Every config loses on both return and
+Sharpe, though the gap narrowed (CAGR 5.4% → 6.6%). Two residual reasons the decomposition predicted: (1) it
+still captures only ~half the big winners, because entry needs an *established* 250-day qualifying channel
+plus a dip, so it misses each winner's initial launch and loses chunks to break-and-re-enter; (2) the
+equal-weight-B&H rebalancing/diversification bonus (portfolio CAGR 9.57% vs mean single-name 4.13%) can't be
+matched by a 5–20-name rotating book. Tuning: break=0.5 is the sweet spot (0.0 whipsaws out in a day since
+entry sits on the band; 1.0 holds too long); not exiting on gradient is better.
+
 ## Final conclusion
 
-Both proposed fixes fail, for complementary reasons. The **ratchet** is worse than selling at the top because
-a genuine channel reverts at its upper band. **Rotation** removes the idle-cash drag (exposure ~85%) but the
-channel oscillation (~4–5%/yr while deployed) is slower than the market drift (~9.6%/yr) it forgoes.
+The proposed fixes progressively improved the strategy but none beats buy-and-hold. The **ratchet** (trail
+below resistance) is worse than selling at the top because a genuine channel reverts at its upper band.
+**Rotation** removes the idle-cash drag (exposure ~85–95%) but the sell-at-top oscillation (~4–5%/yr while
+deployed) is slower than the market drift (~9.6%/yr). The **ride-the-winner** exit largely fixes
+winner-capping (capture 0.04 → ~0.4, CAGR 6.6%) — the best variant — yet still loses because entry is late
+(needs an established channel) and a selective rotating book can't match the equal-weight rebalancing bonus.
 
 The decomposition pins down *why*: **not** slow instruments (there is zero selection — every name forms
 channels), but **winner-capping** — taking profits at every channel top clips the right tail of big
