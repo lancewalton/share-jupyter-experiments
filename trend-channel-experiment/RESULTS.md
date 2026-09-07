@@ -251,6 +251,31 @@ selector is speculative (high variance); the reversion fade is in its *adverse* 
 regime-timing caveat still applies — small sample, and the programme repeatedly found premia can't be timed
 for free.
 
+### 12-1 momentum, full rigour (`momentum_backtest.py`) — the programme's best result, caveated
+
+Monthly-rebalanced cross-sectional momentum on the FTSE universe, net of turnover-based spread-bet costs.
+
+**Long-only top-quintile tilt (net 10 bps):** CAGR **13.0%** vs universe B&H 8.3%; Sharpe **0.83** vs 0.58;
+consistent across eras (pre-2013 13.5%/Sh 0.77, post-2013 12.6%/Sh 0.91 — *no decay*); 2023–26 CAGR 16.9%,
+Sharpe 1.21; year-block bootstrap +13.7%/yr, 95% CI **[+6.2%, +20.8%] — clears zero**; robust to 20 bps
+(12.4%), turnover ~5.8×/yr. Beta 0.85, so most of the return is equity beta and the **alpha over beta is
++5.75%/yr** (still significant), with equity-sized drawdowns (−47%).
+
+**Market-neutral long-short (the pure factor):** CAGR 2.8%, Sharpe **0.25**, maxDD **−66%** (momentum
+crashes), beta ≈ 0; bootstrap +5.1%/yr CI **[−5.7%, +14.1%] — spans zero** (not significant); *did* decay
+(rolling 36m negative 2021–24) and is only mildly recovering (+3.8/+3.6% 2025–26). So the regime/revival
+story fits the long-short; the long-only tilt was robustly good throughout.
+
+**Two caveats.** (1) The tilt is a high-beta long book, not market-neutral alpha. (2) **Survivorship bias**
+— the universe is *current* FTSE constituents, and delisted losers (exactly what momentum avoids/shorts) are
+missing, inflating momentum's measured edge more than most factors. The +5.75% alpha is very likely
+overstated; confirming the magnitude needs a point-in-time (survivorship-free) universe we don't have.
+
+**Verdict:** 12-1 long-only momentum is the strongest, most robust, cost-surviving, era-consistent,
+significant result in the whole programme — the one idea that beats buy-and-hold net and keeps doing so
+out-of-sample and today. But it's a high-beta tilt with real-but-smaller alpha, inflated by survivorship —
+"the best candidate to actually build," not "a proven 13% edge."
+
 ## Reframed conclusion
 
 The channel is worthless as a **timer** but useful as a **selector**. Every dip-buy/top-sell/ride *timing*
