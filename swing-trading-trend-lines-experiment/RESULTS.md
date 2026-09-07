@@ -284,3 +284,23 @@ net-positive on a robust plateau, in both eras, with significant beta-neutral gr
 configuration in the daily-FTSE work to clear its own window. But the net edge is small, its bootstrap CI
 crosses zero, and it leans on a subset of names. This is the first result that honestly earns out-of-sample
 confirmation on fresh data (a wider universe or a new window) rather than being refuted in-sample.
+
+### Out-of-sample: the full FTSE universe — REFUTED (2026-09-07)
+
+Applied the *same* pre-registered hold=8d compression fade (TH=2, MA/SD 20) to every FTSE name we have,
+the decisive test being the **~100 names never used before** (`fade_full_universe.py`, output
+`fade_full_universe_results.txt`).
+
+**It fails out-of-sample — the 20-name edge was a selection effect.** On the 100 held-out names (n=20,191):
+gross −0.037%/tr (CI [−0.24, +0.17] — indistinguishable from zero), net −0.395% (CI excludes 0), and the
+beta-neutral alpha collapses from +0.340% (20 names) to **+0.055% (CI [−0.05, +0.16], not significant)**.
+Only 25/100 names net-positive; both eras net-negative; the hold plateau is negative at every hold. The
+full 120-name book is the same (net −0.312%, beta-neutral +0.094%, CI crosses 0). The original 20 reproduce
+the earlier positive numbers exactly — so the edge lived entirely in those hand-picked liquid large-caps,
+not in FTSE stocks generally.
+
+**Final status: refuted.** The longer-hold lever genuinely amortises the spread (mechanism confirmed), but
+the underlying reversion edge does not generalise beyond the 20 most-liquid names — and even there it was
+net-insignificant. There is at most a faint reversion tendency (strongest in the most liquid, mean-reverting
+mega-caps) that is too small to trade net and vanishes across a wider universe. The rigour bar did its job:
+one clean out-of-sample test, and the candidate is gone.

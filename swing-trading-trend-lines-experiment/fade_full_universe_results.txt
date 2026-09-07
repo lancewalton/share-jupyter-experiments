@@ -1,0 +1,38 @@
+FTSE universe: 120 CSVs. Loading (repairing bad ticks)...
+loaded 120 usable; skipped 0 (short/failed).
+
+===== HELD-OUT names (never used before) -- TRUE OUT-OF-SAMPLE  (names=100, hold=8d, n=20191) =====
+  headline: gross n=20191  win=49.8%  mean/tr=-0.037%  PF=0.98
+            net10 n=20191  win=47.1%  mean/tr=-0.395%  PF=0.84
+  year-block bootstrap gross           : mean/tr -0.037%  95% CI [-0.238%, +0.167%]
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.395%  95% CI [-0.592%, -0.186%]  <-- CI excludes 0
+  beta-neutral alpha (gross)      : mean/tr +0.055%  95% CI [-0.049%, +0.162%]
+  concentration (net): names +25/-75, top-3 names -5% of total; years +5/-22, top-3 years -17%
+  era split @ 2013: pre  net10 n= 9738  win=45.5%  mean/tr=-0.502%  PF=0.82
+                      post net10 n=10453  win=48.6%  mean/tr=-0.295%  PF=0.87
+  per-ticker compound (net): median -56.8%  %profitable 16%  |  median buy&hold +178.6%
+  hold plateau net/tr: 5d -0.357%  8d -0.395%  15d -0.573%
+
+===== FULL universe  (names=120, hold=8d, n=24094) =====
+  headline: gross n=24094  win=50.4%  mean/tr=+0.045%  PF=1.02
+            net10 n=24094  win=47.5%  mean/tr=-0.312%  PF=0.87
+  year-block bootstrap gross           : mean/tr +0.045%  95% CI [-0.138%, +0.232%]
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.312%  95% CI [-0.496%, -0.131%]  <-- CI excludes 0
+  beta-neutral alpha (gross)      : mean/tr +0.094%  95% CI [-0.011%, +0.198%]
+  concentration (net): names +39/-81, top-3 names -5% of total; years +7/-20, top-3 years -21%
+  era split @ 2013: pre  net10 n=11618  win=46.1%  mean/tr=-0.392%  PF=0.85
+                      post net10 n=12476  win=48.9%  mean/tr=-0.237%  PF=0.89
+  per-ticker compound (net): median -49.9%  %profitable 22%  |  median buy&hold +180.4%
+  hold plateau net/tr: 5d -0.289%  8d -0.312%  15d -0.463%
+
+===== Original 20 (reference)  (names=20, hold=8d, n=3903) =====
+  headline: gross n= 3903  win=53.3%  mean/tr=+0.472%  PF=1.30
+            net10 n= 3903  win=49.7%  mean/tr=+0.114%  PF=1.07
+  year-block bootstrap gross           : mean/tr +0.472%  95% CI [+0.303%, +0.630%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr +0.114%  95% CI [-0.052%, +0.276%]
+  beta-neutral alpha (gross)      : mean/tr +0.340%  95% CI [+0.178%, +0.490%]  <-- CI excludes 0
+  concentration (net): names +14/-6, top-3 names 65% of total; years +18/-9, top-3 years 65%
+  era split @ 2013: pre  net10 n= 1880  win=48.8%  mean/tr=+0.174%  PF=1.10
+                      post net10 n= 2023  win=50.5%  mean/tr=+0.059%  PF=1.03
+  per-ticker compound (net): median +1.1%  %profitable 55%  |  median buy&hold +250.8%
+  hold plateau net/tr: 5d +0.069%  8d +0.114%  15d +0.103%
