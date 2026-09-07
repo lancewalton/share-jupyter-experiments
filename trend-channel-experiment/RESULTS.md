@@ -75,9 +75,29 @@ only ~4–5%/yr — slower than simply holding through the drift. Selling at the
 faster-drifting hold for a slower oscillation-capture; fully deployed or not, you cannot out-compound a
 drift you are capturing more slowly.
 
+### Decomposition: selection vs winner-capping (`channel_decompose.py`)
+
+Is the shortfall because channel-forming names grow slowly, or because selling at the top caps winners?
+
+- **Selection: none.** All 120 names form ≥1 qualifying rising channel over the 27 years — "channel-formers"
+  *is* the whole universe (median single-name B&H CAGR +3.95%, equal-weight-hold +9.57%). The channel names
+  are not a slow subset; they are everything.
+- **Winner-capping: the whole story.** The strategy captures a tiny fraction of the big winners — median
+  capture ratio **0.04** on the top B&H quartile (median B&H +1465% → strat +38%), and ~0 or negative on the
+  top-10 winners (GDWN +23,828% B&H → strat −3%; ANTO +4,099% → −9%; best was HLMA at 0.22). On the two
+  smallest-growth quartiles the strategy is net-negative (costs + time out). After a channel-top exit the
+  name is still **+2.37% higher 60 trading days later (58% still rising)** — continuation systematically left
+  on the table.
+- Secondary: equal-weight B&H earns a large rebalancing/diversification bonus (portfolio CAGR +9.57% vs mean
+  single-name +4.13%) that a part-time rotating book does not capture.
+
 ## Final conclusion
 
 Both proposed fixes fail, for complementary reasons. The **ratchet** is worse than selling at the top because
 a genuine channel reverts at its upper band. **Rotation** removes the idle-cash drag (exposure ~85%) but the
 channel oscillation (~4–5%/yr while deployed) is slower than the market drift (~9.6%/yr) it forgoes.
-Buy-and-hold wins on both total return and Sharpe. Experiment closed.
+
+The decomposition pins down *why*: **not** slow instruments (there is zero selection — every name forms
+channels), but **winner-capping** — taking profits at every channel top clips the right tail of big
+multi-year winners, which is exactly where buy-and-hold's return lives. Buy-and-hold wins on both total
+return and Sharpe. Experiment closed.

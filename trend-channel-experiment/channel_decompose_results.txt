@@ -1,0 +1,35 @@
+Loading 120 names; precomputing channels...
+120 names processed.
+
+##########################################################################
+# (1) SELECTION — do channel-forming names grow slower than the universe?
+##########################################################################
+  ALL names        n=120  median single-name B&H CAGR +3.95%  mean +4.13%  |  equal-weight-hold CAGR +9.57%
+  channel FORMERS  n=120  median single-name B&H CAGR +3.95%  mean +4.13%  |  equal-weight-hold CAGR +9.57%
+  NON-formers     : none
+
+  top-10 B&H winners — do they form tradeable channels?
+    name        B&H%  trades    strat%  capture
+    GDWN       23828      26        -3    -0.00
+    CKN         5222      23        10     0.00
+    HILS        4707      25       174     0.04
+    ANTO        4099      18        -9    -0.00
+    AEP         3823      20       402     0.11
+    GFRD        3724      22       342     0.09
+    CWK         3387      24       361     0.11
+    HLMA        2807      31       605     0.22
+    DOM         2475      23       108     0.04
+    NXT         2456      29       179     0.07
+
+##########################################################################
+# (2) WINNER-CAPPING — capture of B&H by the size of the winner (formers)
+##########################################################################
+      B&H quartile    n   med B&H%  med strat%  med capture
+     Q1 (smallest)   23         38         -10        -0.36
+                Q2   23        194         -15        -0.06
+                Q3   23        501          40         0.07
+      Q4 (biggest)   23       1465          38         0.04
+
+  continuation after a channel-top exit (60 trading days later):
+    median +2.37%  mean +2.18%  share still rising 58%  (n=2404)
+  (positive => the strategy sold and the name kept climbing — capped upside)
