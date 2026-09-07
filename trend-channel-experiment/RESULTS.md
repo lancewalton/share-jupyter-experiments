@@ -40,4 +40,22 @@ In an unbroken uptrend the right move is to *hold*, not to sell each channel top
 
 **Conclusion.** Selling near the top of a rising channel is systematically the wrong side of a name that
 keeps trending; buy-and-hold wins on both return and Sharpe, across the universe and every window length.
-Closed.
+
+## Fix attempts (2026-09-07)
+
+### Ratchet exit (let winners ride) — makes it WORSE, not better
+
+Replaced the sell-at-the-top exit with a trailing ratchet (`channel_ratchet.py`): arm near resistance and
+track the rising resistance line at a fraction of the channel width below it (sweep 0.25/0.5/0.75), or a
+Chandelier stop (highest close − M·ATR, M∈{2,3,4}). Channels precomputed once; policies swept cheaply.
+
+Every ratchet variant **underperforms the sell-at-top baseline**: median strat total −15% to −26% (vs +8%
+for "top"), beats B&H on 9–12% of names (vs 22%), per-trade net +0.13% (vs +1.56%). Reason: in a *genuine*
+channel the upper band is where price reverts, so selling there is correct — trailing past it gives the
+gains back on the down-swing. Ratchets help in *unbounded* trends; "qualifying channel" selects for
+boundedness, so a ratchet is the wrong tool.
+
+*Correction to the first backtest:* the original `c < lo` disaster stop sat inside the entry zone (you buy
+near the lower band), so it often exited one bar after entry. Removing it lifts the fair channel baseline
+from −4% to **+8% median (TIM 32%, net +1.56%/trade)** — still a decisive loss to B&H +160%, but with a
+healthy per-trade edge, which motivates the portfolio test below.

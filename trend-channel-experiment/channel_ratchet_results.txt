@@ -1,0 +1,13 @@
+Loading 120 names; precomputing rolling channels (L=250)...
+120 usable.
+
+################################################################################################
+# EXIT POLICY COMPARISON (net 10bps+5%), per-name vs buy-and-hold
+################################################################################################
+  top (baseline)         | med strat     +8% vs B&H   +160%  beat-ret  22%  beat-Sh  12%  medSh +0.11/+0.28  TIM  32%  net/tr +1.564%
+  ratchet_width sf=0.25  | med strat    -26% vs B&H   +160%  beat-ret   9%  beat-Sh   2%  medSh -0.00/+0.28  TIM  31%  net/tr -0.027%
+  ratchet_width sf=0.5   | med strat    -25% vs B&H   +160%  beat-ret  12%  beat-Sh   3%  medSh +0.02/+0.28  TIM  35%  net/tr +0.006%
+  ratchet_width sf=0.75  | med strat    -15% vs B&H   +160%  beat-ret  12%  beat-Sh   3%  medSh +0.04/+0.28  TIM  40%  net/tr +0.133%
+  ratchet_atr M=2.0      | med strat    -26% vs B&H   +160%  beat-ret   9%  beat-Sh   2%  medSh -0.01/+0.28  TIM  29%  net/tr -0.053%
+  ratchet_atr M=3.0      | med strat    -26% vs B&H   +160%  beat-ret  10%  beat-Sh   2%  medSh +0.01/+0.28  TIM  32%  net/tr -0.020%
+  ratchet_atr M=4.0      | med strat    -21% vs B&H   +160%  beat-ret  11%  beat-Sh   4%  medSh +0.02/+0.28  TIM  35%  net/tr +0.035%
