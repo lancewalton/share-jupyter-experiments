@@ -45,6 +45,7 @@ class Trade:
     safety_touches: int = 0
     safety_touch_first: int = -1
     safety_touch_last: int = -1
+    break_extent: float = float("nan")  # how far the signal bar cleared the action ray, in ATR units
 
 
 def _line_duration(line: Line, series: np.ndarray, band: np.ndarray,
@@ -157,6 +158,9 @@ def simulate(df: pd.DataFrame, k: float = 0.5, atr_period: int = 14,
         act_series, saf_series = (highs, lows) if direction == "LONG" else (lows, highs)
         aa, ab, at_n, at_f, at_l = _line_duration(al, act_series, band, i)
         sa, sb, st_n, st_f, st_l = _line_duration(sl, saf_series, band, i)
+        action_ray_i = float(np.exp(al.value_at(i)))
+        gap = (highs[i] - action_ray_i) if direction == "LONG" else (action_ray_i - lows[i])
+        break_extent = gap / a[i] if a[i] and np.isfinite(a[i]) else float("nan")
         trades.append(Trade(
             df.index[entry_idx], df.index[exit_idx], direction,
             entry_price, exit_price, days,
@@ -168,6 +172,7 @@ def simulate(df: pd.DataFrame, k: float = 0.5, atr_period: int = 14,
             signal_bar=i, action_a=aa, action_b=ab, safety_a=sa, safety_b=sb,
             action_touches=at_n, action_touch_first=at_f, action_touch_last=at_l,
             safety_touches=st_n, safety_touch_first=st_f, safety_touch_last=st_l,
+            break_extent=break_extent,
         ))
         i = exit_idx + 1
     return trades

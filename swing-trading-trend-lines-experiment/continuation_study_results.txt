@@ -1,0 +1,71 @@
+Collecting continuation-instrumented trades (20 names)...
+11859 trades. break_extent coverage 100%, rel_volume 87%.  aligned rate 12%.
+OOS base: win 16.8%  gross/tr -0.037%
+
+########################################################################
+# Spearman vs PAYOFF (gross) and win, IS -> OOS
+########################################################################
+feature          IS rho(gross)  OOS rho(gross)  OOS rho(win)
+break_extent      -0.008(p0.52)    -0.016(p0.23)       +0.048   n_OOS=5930
+rel_volume        +0.005(p0.76)    -0.003(p0.79)       +0.042   n_OOS=5923
+align_slope       +0.027(p0.04)    +0.010(p0.43)       -0.021   n_OOS=5930
+aligned             +nan(p nan)      +nan(p nan)         +nan   n_OOS=5930
+rel_age_from_a    -0.015(p0.25)    +0.005(p0.68)       -0.046   n_OOS=5930
+
+OOS payoff by break_extent decile (10 = strongest):
+ dec     n   win%  gross/tr%   net/tr%      med
+   1   593   15.2     -0.034    -0.250     0.53
+   2   593   15.2     -0.023    -0.239     0.57
+   3   593   14.8     -0.026    -0.242     0.64
+   4   593   14.5     -0.039    -0.255     0.71
+   5   593   16.5     -0.048    -0.265     0.78
+   6   593   16.4      0.033    -0.184     0.87
+   7   593   16.4     -0.041    -0.258     0.97
+   8   593   18.9     -0.069    -0.286     1.11
+   9   593   18.9     -0.052    -0.268     1.33
+  10   593   21.1     -0.070    -0.287     1.85
+
+OOS payoff by rel_volume decile (10 = strongest):
+ dec     n   win%  gross/tr%   net/tr%      med
+   1   593   14.0     -0.043    -0.259     0.59
+   2   592   16.2     -0.016    -0.232     0.75
+   3   592   15.7     -0.076    -0.292     0.86
+   4   598   15.9     -0.014    -0.231     0.95
+   5   587   16.4     -0.013    -0.230     1.05
+   6   592   15.7     -0.069    -0.285     1.16
+   7   592   15.9     -0.045    -0.261     1.29
+   8   592   19.1     -0.015    -0.231     1.46
+   9   592   18.8     -0.083    -0.300     1.74
+  10   593   20.2      0.002    -0.215     2.47
+
+########################################################################
+# Combined score = z(break_extent) + z(rel_volume), IS-standardised
+########################################################################
+
+OOS payoff by score decile (10 = strongest):
+ dec     n   win%  gross/tr%   net/tr%      med
+   1   593   12.8     -0.057    -0.273    -1.36
+   2   592   15.2     -0.021    -0.237    -1.09
+   3   592   15.9      0.009    -0.208    -0.87
+   4   592   16.4     -0.054    -0.271    -0.66
+   5   593   14.2     -0.065    -0.281    -0.45
+   6   592   15.5     -0.019    -0.235    -0.18
+   7   592   19.3     -0.038    -0.254     0.11
+   8   592   18.4     -0.053    -0.269     0.52
+   9   592   20.1     -0.072    -0.288     1.15
+  10   593   20.1     -0.001    -0.218     2.67
+
+OOS Spearman(score, gross) = -0.009 (p0.47)
+
+########################################################################
+# TRIPLE GATE: break_extent top third AND rel_volume top third AND aligned
+########################################################################
+  gross n=  155  win=25.8%  mean/tr=-0.012%  PF=0.97
+  net10 n=  155  win=23.2%  mean/tr=-0.229%  PF=0.55
+  [strong+high-vol only, no alignment] gross n= 1695  win=19.8%  mean/tr=-0.075%  PF=0.82  |  net10 n= 1695  win=18.0%  mean/tr=-0.292%  PF=0.51
+
+===== STRESS: triple gate (strong + high-vol + aligned)  (n=155, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr -0.012%  95% CI [-0.198%, +0.179%]
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.229%  95% CI [-0.421%, -0.041%]  <-- CI excludes 0
+  beta-neutral alpha (gross)      : mean/tr -0.003%  95% CI [-0.189%, +0.201%]
+  per-ticker compound (net): median -1.0%  %profitable 15%  |  median buy&hold +250.8%

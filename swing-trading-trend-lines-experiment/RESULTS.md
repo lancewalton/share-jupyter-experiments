@@ -217,7 +217,26 @@ the two lines, and the touch-based definition is best — but like every other g
 *still* does not predict payoff (OOS Spearman vs gross ≈ 0, |rho| ≤ 0.03, p > 0.11), and the doubly-gated
 book (compression AND action-line shorter-lived) is still significantly negative — gross −0.049%/tr
 (CI [−0.095, −0.003]), net −0.266%, beta-neutral −0.060% (CI excludes 0), 5% of names profitable. Stacking
-two hit-rate levers raises the win rate to ~19% but never the payoff. **The trend-line breakout is closed:
-no geometry, volume, min-span, exit rule, vol regime, relative line duration, or combination makes it
-net-positive.** The only real gross edge in the daily FTSE work remains the mean-reversion fade in
-compression — which costs still erase.
+two hit-rate levers raises the win rate to ~19% but never the payoff. The only real gross edge in the
+daily FTSE work remains the mean-reversion fade in compression — which costs still erase.
+
+## Breakout extent + volume + alignment — does a strong breakout continue? (2026-09-07)
+
+Instrumented breakout **extent** (how far the signal bar cleared the action ray, in ATR units;
+`Trade.break_extent`, added via TDD) and combined it with `rel_volume` and "aligned with the longer
+line" (`continuation_study.py`, output `continuation_study_results.txt`). Hypothesis: a strong breakout
+on high volume in the direction of the longer line continues (bigger payoff).
+
+**Same wall, sharper — it refutes the continuation thesis for payoff.** Extent and volume each predict
+**win probability** (OOS Spearman vs win +0.048 and +0.042; win rate climbs to ~20–21% in the top
+deciles) but **not payoff** (OOS Spearman vs gross ≈ 0 for both; combined score −0.009, p 0.47).
+Tellingly, the *strongest-extent* decile has among the *worst* gross returns — strong breakouts do **not**
+continue, they revert (the mean-reversion signature again). Only 12% of breakouts are even aligned with
+the longer line, and the alignment tilt (`align_slope`) did not survive OOS. The triple gate
+(strong + high-volume + aligned) is the best-behaved corner — gross breakeven (−0.012%/tr, CI crosses 0),
+win 26% — but only **155 trades in 27 years**, net significantly negative (−0.229%), 15% of names
+profitable. These are hit-rate levers, not payoff levers.
+
+**The trend-line breakout is closed:** no geometry, volume, min-span, exit rule, vol regime, relative
+line duration, breakout extent, direction-alignment, or any combination makes it net-positive. Across
+every filter the pattern is identical — you can raise *how often* it wins, never *how much*.

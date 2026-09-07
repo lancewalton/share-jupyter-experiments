@@ -88,9 +88,9 @@ def test_simulate_records_line_duration_fields(monkeypatch):
     op[30] = 99.0
     df = pd.DataFrame({"open": op, "high": high, "low": low, "close": close}, index=idx)
 
-    # Action line rides the highs (100.5), safety line rides the lows (99.5), so
-    # every structure bar is a touch: one continuous episode starting at bar 0.
-    action = Line(0, 2, float(np.log(100.5)), float(np.log(100.5)))
+    # Action ray at 100.0 sits below the flat high (100.5): the break clears it by
+    # 0.5, and ATR is 1.0 here, so break_extent = 0.5 ATR. Safety rides the lows.
+    action = Line(0, 2, float(np.log(100.0)), float(np.log(100.0)))
     safety = Line(0, 5, float(np.log(99.5)), float(np.log(99.5)))
     dummy = Signal("LONG", action, safety, 100.0, 3)
     calls = {"n": 0}
@@ -105,12 +105,41 @@ def test_simulate_records_line_duration_fields(monkeypatch):
     # Act
     tr = simulate(df, stop_atr=2.0, warmup=20, costs=CostModel())[0]
 
-    # Assert: endpoints and signal bar recorded, touches detected on the right series.
+    # Assert: endpoints, signal bar, touches, and breakout extent (in ATR units).
     assert (tr.action_a, tr.action_b) == (0, 2)
     assert (tr.safety_a, tr.safety_b) == (0, 5)
     assert tr.signal_bar == 20
     assert tr.action_touches == 1 and tr.action_touch_first == 0 and tr.action_touch_last == 0
     assert tr.safety_touches == 1 and tr.safety_touch_first == 0 and tr.safety_touch_last == 0
+    assert np.isclose(tr.break_extent, 0.5)
+
+
+def test_simulate_records_break_extent_for_short(monkeypatch):
+    # Arrange: flat highs 100.5, lows 99.5; a SHORT breaks a support ray at 100.0
+    # by 0.5 below the flat low? No -> low is 99.5, ray 100.0, so extent = 0.5 ATR.
+    n = 40
+    idx = pd.date_range("2020-01-01", periods=n, freq="D")
+    df = pd.DataFrame({"open": np.full(n, 100.0), "high": np.full(n, 100.5),
+                       "low": np.full(n, 99.5), "close": np.full(n, 100.0)}, index=idx)
+
+    action = Line(0, 2, float(np.log(100.0)), float(np.log(100.0)))  # support ray at 100.0
+    safety = Line(0, 5, float(np.log(100.5)), float(np.log(100.5)))
+    dummy = Signal("SHORT", action, safety, 100.0, 3)
+    calls = {"n": 0}
+
+    def fake_signal(_df, **_kw):
+        calls["n"] += 1
+        return dummy if calls["n"] == 1 else None
+
+    monkeypatch.setattr(backtest, "latest_signal", fake_signal)
+    monkeypatch.setattr(backtest, "_current_safety", lambda *a, **k: None)
+
+    # Act: SHORT extent = (action ray - signal-bar low) / ATR = (100.0 - 99.5)/1.0.
+    tr = simulate(df, stop_atr=2.0, warmup=20, costs=CostModel())[0]
+
+    # Assert
+    assert tr.direction == "SHORT"
+    assert np.isclose(tr.break_extent, 0.5)
 
 
 def test_pure_safety_exit_ignores_atr_floor(monkeypatch):
