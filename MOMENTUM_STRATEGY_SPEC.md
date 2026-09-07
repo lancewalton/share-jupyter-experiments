@@ -169,6 +169,36 @@ k = max(1, floor(0.2 × M))          # ≈ 69 names for M ≈ 347
 targets = the k names with the highest composite
 ```
 
+### 5.5 Selection breadth is a deliberate lever
+The ~69 names is **not a tuned number** — it is `floor(0.2 × M)`, the conventional top quintile.
+Sweeping the holding count (`momentum_breadth_sweep.py`, net tiered costs) shows a smooth
+concentration/diversification trade-off, and the quintile sits on the **Sharpe peak** (a plateau,
+not a knife-edge):
+
+| # held | CAGR | Sharpe | maxDD | turn/yr |
+|---:|---:|---:|---:|---:|
+| 20  | +12.9% | 0.75 | −55% | 6.8× |
+| 30  | +12.2% | 0.76 | −54% | 6.0× |
+| 50  | +11.4% | 0.77 | −51% | 5.0× |
+| **69** | +11.4% | **0.80** | −47% | 4.3× |
+| 100 | +10.8% | 0.77 | −45% | 3.5× |
+| 150 | +9.8%  | 0.71 | −45% | 2.7× |
+| 200 | +8.9%  | 0.66 | −47% | 2.1× |
+
+- **Concentrating raises CAGR but deepens drawdown and turnover.** 20–30 names reaches ~12–13%
+  CAGR (comparable to the value+leverage route, with fewer moving parts) at the cost of a ~−55%
+  drawdown and higher turnover/capacity strain.
+- **The quintile (~69) maximises Sharpe** (~0.80). Choose ~69 for the smoothest risk-adjusted
+  ride; concentrate to 20–30 only with the drawdown tolerance to match.
+- **Interaction with granularity (§7.4):** a smaller book is *easier* to hold accurately at small
+  NAV with whole shares — so at low capital, a 20–30 name concentrated build is both more feasible
+  and higher-returning, trading the deeper drawdown for it. This is the natural small-account
+  configuration if fractional dealing is unavailable.
+
+Do not fine-tune the count to a single in-sample optimum; the plateau across 50–100 names is the
+robust choice, with concentration a deliberate return-for-drawdown trade rather than an
+optimisation.
+
 ---
 
 ## 6. Portfolio construction
@@ -317,7 +347,7 @@ must be replaced by real machinery live.
 | Liquidity window | — | ~252 trading days (12m), ≥60 valid | mean daily GBP turnover |
 | Momentum lookback | — | 12 months | total return … |
 | Momentum skip | — | 1 month | … skipping the most recent month |
-| Selection quantile | `FRAC` | 0.20 | top quintile long-only (~69 names) |
+| Selection quantile | `FRAC` | 0.20 | top quintile long-only (~69 names); Sharpe-optimal, but a deliberate lever — §5.5 |
 | Min breadth | — | 30 | else skip rebalance |
 | Quality blend | — | 0.5·ROE + 0.5·GP/A (percentile) | currency-neutral ratios |
 | Factor combine | — | equal-weight z-scores; momentum mandatory | |

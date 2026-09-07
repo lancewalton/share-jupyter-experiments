@@ -495,3 +495,33 @@ date catching bad ticks that survive the per-month 1/99 winsorisation), inflatin
 *level* not the *edge*: the edge there is +3.3pp, the smallest of all phases, so even the
 anomalous phase clears the bar. It is the conservative case, not a failure. (Robustness is
 inherited by the vol-targeted builds, which are a monotone re-scaling of these same series.)
+
+---
+
+## Is 69 names optimal? Holding-count sweep (`momentum_breadth_sweep.py`)
+
+The default holds ~69 names -- not a chosen number, but `floor(0.20 x ~347 eligible)`, the
+conventional top quintile. Sweeping the holding count directly (top-M of the mom+quality
+composite, long-only, net tiered costs):
+
+```
+ #held  ~pctile     CAGR  Sharpe   maxDD  turn/yr
+    20       6%  +12.86%    0.75    -55%     6.8x
+    30       9%  +12.15%    0.76    -54%     6.0x
+    50      14%  +11.37%    0.77    -51%     5.0x
+    69      20%  +11.40%    0.80    -47%     4.3x
+   100      29%  +10.84%    0.77    -45%     3.5x
+   150      43%   +9.81%    0.71    -45%     2.7x
+   200      58%   +8.91%    0.66    -47%     2.1x
+```
+
+**Verdict: 69 is emergent, not chosen -- but well-placed.** Two clean monotonic effects:
+concentrating RAISES CAGR (20 names 12.9% -> 200 names 8.9%) but DEEPENS drawdown (-55% ->
+~-45%) and RAISES turnover (6.8x -> 2.1x). Sharpe is single-peaked at the quintile (~69, 0.80)
+and forms a plateau (0.77-0.80 across 50-100 names), so it is not a fragile in-sample optimum.
+
+The count is a deliberate return-for-drawdown lever: concentrate to 20-30 names for ~12-13%
+CAGR (same as the value+leverage route, fewer moving parts) if you can stomach ~-55% drawdown;
+stay at the quintile for max Sharpe. A smaller book is also easier to hold accurately at small
+NAV with whole shares (see spec 7.4), making a 20-30 name build the natural small-account
+configuration. Do not fine-tune to a single number -- the plateau is the robust choice.

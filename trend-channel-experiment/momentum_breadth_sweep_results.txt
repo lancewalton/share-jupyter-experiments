@@ -1,0 +1,17 @@
+Building panel + quality raster...
+universe top-350; sweeping holding counts [20, 30, 50, 69, 100, 150, 200]
+
+##################################################################################
+# HOLDING-COUNT SWEEP -- mom+quality long-only tilt (net tiered costs)
+##################################################################################
+ #held  ~pctile     CAGR  Sharpe   maxDD  turn/yr
+    20       6%  +12.86%    0.75    -55%     6.8x
+    30       9%  +12.15%    0.76    -54%     6.0x
+    50      14%  +11.37%    0.77    -51%     5.0x
+    69      20%  +11.40%    0.80    -47%     4.3x
+   100      29%  +10.84%    0.77    -45%     3.5x
+   150      43%   +9.81%    0.71    -45%     2.7x
+   200      58%   +8.91%    0.66    -47%     2.1x
+
+  (reference: eligible-universe EW B&H CAGR +5.65%, Sharpe 0.42)
+  default build holds ~69 (= floor(0.20 x ~347 eligible)).
