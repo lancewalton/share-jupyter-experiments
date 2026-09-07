@@ -1,0 +1,31 @@
+Loading cached duration trades...
+11859 trades; 7075 in compression (vol_state<1.0).
+compression base: gross n= 7075  win=16.8%  mean/tr=-0.065%  PF=0.78
+compression base: net10 n= 7075  win=14.7%  mean/tr=-0.281%  PF=0.40
+
+split within compression: IS 3537 (to 2013-09-12), OOS 3538 (from 2013-09-12)
+
+##########################################################################
+# Within COMPRESSION: does relative duration predict PAYOFF (gross)?
+##########################################################################
+feature            IS rho(gross)   OOS rho(gross)   OOS rho(win)
+rel_span_ab          -0.003(p0.85)      +0.007(p0.70)         -0.024
+rel_age_from_a       -0.005(p0.77)      +0.008(p0.63)         -0.022
+rel_age_from_b         +nan(p nan)        +nan(p nan)           +nan
+rel_touch_span       -0.044(p0.13)      +0.017(p0.56)         -0.013
+rel_age_since_last     -0.011(p0.51)      -0.027(p0.11)         +0.043
+rel_n_touches        -0.023(p0.18)      -0.001(p0.94)         -0.002
+
+##########################################################################
+# Doubly-gated book: compression AND action shorter-lived (rel_age_from_a bottom third)
+##########################################################################
+  gross n= 2296  win=18.6%  mean/tr=-0.049%  PF=0.83
+  net10 n= 2296  win=16.2%  mean/tr=-0.266%  PF=0.43
+  [touch-span bottom third within compression] net10 n=  799  win=15.0%  mean/tr=-0.278%  PF=0.41
+  [age-from-a bottom third within compression] net10 n= 2361  win=16.1%  mean/tr=-0.270%  PF=0.42
+
+===== STRESS: compression x rel_age_from_a bottom third  (n=2296, names=20, years 2000-2026) =====
+  year-block bootstrap gross           : mean/tr -0.049%  95% CI [-0.095%, -0.003%]  <-- CI excludes 0
+  year-block bootstrap net(10bps+5%)   : mean/tr -0.266%  95% CI [-0.311%, -0.218%]  <-- CI excludes 0
+  beta-neutral alpha (gross)      : mean/tr -0.060%  95% CI [-0.112%, -0.009%]  <-- CI excludes 0
+  per-ticker compound (net): median -26.2%  %profitable 5%  |  median buy&hold +250.8%

@@ -212,3 +212,12 @@ negative gross (−0.051%/tr, CI [−0.092, −0.014]) and net (−0.268%, CI ex
 **Takeaway:** the relative-duration idea is *real* — signal validity does differ with the relative age of
 the two lines, and the touch-based definition is best — but like every other geometry feature it sorts
 *whether* a trade wins, not *how much*, so it cannot turn the method net-positive.
+
+*Cross with the vol regime (`duration_regime_cross.py`):* within compression regimes relative duration
+*still* does not predict payoff (OOS Spearman vs gross ≈ 0, |rho| ≤ 0.03, p > 0.11), and the doubly-gated
+book (compression AND action-line shorter-lived) is still significantly negative — gross −0.049%/tr
+(CI [−0.095, −0.003]), net −0.266%, beta-neutral −0.060% (CI excludes 0), 5% of names profitable. Stacking
+two hit-rate levers raises the win rate to ~19% but never the payoff. **The trend-line breakout is closed:
+no geometry, volume, min-span, exit rule, vol regime, relative line duration, or combination makes it
+net-positive.** The only real gross edge in the daily FTSE work remains the mean-reversion fade in
+compression — which costs still erase.
