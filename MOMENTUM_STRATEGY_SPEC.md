@@ -716,3 +716,73 @@ and a ruin path.
 - **Never add open-endedly** ("more as it falls, funded by whatever I can find") — bounded reserve only.
 - **Never use leverage that can trigger a margin call** — it removes your ability to hold, the one
   thing the whole discipline depends on.
+
+---
+
+## 18. Reference implementation: Trading 212 (ISA)
+
+The chosen deployment target. It is the rare broker that satisfies all three hard requirements at
+once: **fractional UK-equity dealing** (§7.4), a **Stocks & Shares ISA** wrapper (the best tax route,
+§16), and a **REST API** for automated execution — and it is commission-free. *Not an endorsement or
+advice; verify current terms yourself. Facts below marked "confirmed" were checked against the cited
+sources; anything else is to be settled on the demo account (§18.4).*
+
+### 18.1 Confirmed fit
+- **API places orders inside the ISA** (not only the taxable Invest account) — confirmed:
+  `https://docs.trading212.com/api` (quickstart). This is the make-or-break item and it passes.
+- **Fractional shares are ISA-eligible** — confirmed: HMRC reversed its earlier position, see
+  `https://www.ukfinance.org.uk/news-and-insight/blog/hmrc-reverses-position-isa-fractional-shares`.
+  Trading 212 supports fractional holdings in the ISA.
+- **Order types** — the API supports **limit orders** for the ISA. Fractional orders are placed by
+  specifying the **share quantity** (a fraction), not a cash value — so the pipeline computes
+  `quantity = target_weight × NAV / raw_price` (§7.2) and sends that.
+- **Commission-free**, and turnover is low (~4–6×/yr, ~69 names), so API rate limits are not a
+  constraint for a monthly rebalance.
+
+### 18.2 Architecture — data vs execution are separate
+Trading 212 is the **execution and custody layer only**. It does not supply the survivorship-free
+history or point-in-time fundamentals needed to *compute* the signals. The live pipeline is:
+
+```
+EODHD (or equivalent)  ->  signal engine (§4–§6)  ->  target weights
+                                                        |
+                                    reconcile vs current positions (T212 API)
+                                                        |
+                              fractional-quantity limit orders (T212 API, ISA)
+```
+
+Balances and positions are read back from the T212 API each cycle for reconciliation (§13).
+
+### 18.3 The fractional-coverage filter (the one open mechanical detail)
+Not every LSE name is fractionally dealable: FTSE 100 is, but less-liquid mid/small-caps may be
+whole-share-only. The API exposes a per-instrument fractional flag — **use it to restrict the
+eligible universe to fractional-tradeable names** (or whole-share-round / drop the rest). Because the
+edge does not need the illiquid tail (§5.5, universe sweep), this should cost little.
+
+Whole-share impact at **£10,000** was measured (`wholeshare_10k.py`) against the actual held names and
+real prices: at ~69 names (£145/name) only **~5%** of held names are too pricey to hold as one whole
+share — and the highest-priced ones (AZN ≈ £124, RIO ≈ £52) are FTSE 100 and fractional anyway; a
+pessimistic "only top-100 fractional" assumption gives ~6.7% per-name tracking error, which
+diversifies down at book level and is lower in reality (T212 fractional-izes more than 100 names).
+**Concentrating to ~20–30 names roughly halves the problem** (£333–500/name; ~1–2% un-holdable) — and,
+per §5.5, a concentrated book also fits a small NAV better and returns more (at a deeper drawdown). So
+the **small-account (£10k) configuration is: fractional-filtered universe + a ~20–30 name book.**
+
+### 18.4 Demo account = the go/no-go gate
+Trading 212 offers a **practice (demo) account with its own API key**. Validate the entire integration
+there before any real capital — this is the concrete form of §13 and §17.2's "prove it first":
+1. Pull the **live instrument list + fractional flags** — this replaces the top-100 assumption with the
+   *true* fractional universe, settling §18.3.
+2. Place **test limit orders in fractional quantity** and confirm fills, precision, and rejections.
+3. Confirm the API reads/writes the **ISA** account; reconcile balances and positions against the model.
+4. Run **one full demo rebalance end-to-end** and reconcile modelled vs actual holdings — treat a clean
+   reconciliation as the go/no-go gate.
+
+### 18.5 Costs and caveats
+- **Commission-free ≠ free:** 0.5% UK **stamp duty** still applies on purchases (~1.2pp/yr, the largest
+  friction — §8, unavoidable in any wrapper), plus the bid/offer spread and any current platform/FX
+  fees (check T212's live schedule; FX is irrelevant for GBP/GBX LSE names).
+- **ISA subscription cap** (~£20k/yr) fits the regular-contribution discipline (§17.3) but limits how
+  fast the sheltered pot can grow.
+- **Counterparty/platform:** a newer platform; FSCS protection is £85k. A consideration at larger NAV,
+  not at £10k.
