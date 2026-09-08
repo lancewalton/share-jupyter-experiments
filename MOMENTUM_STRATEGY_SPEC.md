@@ -585,3 +585,28 @@ tax-free but losses **not** deductible, i.e. the opposite of the goal.
 **Rough tax-efficiency ladder:** ISA/SIPP shares → taxable shares (loss offset) → CFDs (only if you
 want leverage or native fractional exposure). Spread bets suit only someone who values the tax-free
 gain more than loss-deductibility and accepts the financing spread.
+
+### 16.1 Measured: IG "forward" (quarterly) spread bets — examined 2026-09-08
+We checked real IG forward quotes on three large-cap UK shares (Barclays, Tesco, HSBC) across the
+SEP-26 / DEC-26 / MAR-27 expiries to see whether front-loading the financing into a quarterly forward
+is cheaper than a rolling daily-funded bet. It is **not** — the financing is simply embedded in the
+price, and the measured cost is *higher* than the earlier estimate:
+
+- **Embedded net carry ≈ 4.25%/yr**, remarkably consistent across all three names (the forward mid
+  rises ~1.06%/quarter: Barclays +5.3 on ~497, Tesco +5.1 on ~480, HSBC +16.7 on ~1569). This is
+  (financing − dividend yield); adding back a ~3.5% yield implies **gross financing ≈ SONIA + ~3.75%**
+  — wider than an index because these are single stocks. A long buys above spot and, absent a price
+  move, settles lower by the carry.
+- **Front-contract dealing spread ≈ 0.42–0.44%** round-trip (competitive — *cheaper* than a stamped
+  cash-share round trip of ~0.65%, and tax-free on gains). The spread widens with tenor
+  (~2 → ~4 → ~6 points for Barclays), so longer-dated contracts cost more to deal.
+
+**Consequence for this (fully-invested, year-round) strategy:** the ~0.2pp per-trade spread advantage
+is swamped by ~4.25pp/yr of carry. That drags a ~10% net share build down to **~5–6% ≈ the market
+B&H** — the edge is essentially gone — and the tax-free-gains benefit (~2%/yr at best, only in
+profitable years, forfeiting loss relief) does not cover a ~4%/yr *certain* drag. **Verdict:
+confirmed — forward spread bets are not more efficient here; carry is the decider. They (and CFDs)
+make sense only if you specifically want leverage.** Measured with `momentum_stamp_duty.py`-style
+cost inputs; the raw quotes are the screenshots dated 2026-09-08. (The auto-close at expiry also
+forces calendar-timed exits, and quarterly rebalancing is already worse than monthly — 9.35% / 0.63
+vs 10.58% / 0.72, §8 / `momentum_tradeability.py`.)
