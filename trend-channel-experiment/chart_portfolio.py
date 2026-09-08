@@ -100,8 +100,8 @@ def chart_month(adj, holds):
 
     fig, ax = plt.subplots(figsize=(11, 6.5))
     rng = np.random.default_rng(0)
-    for i in rng.choice(len(paths), size=min(1500, len(paths)), replace=False):
-        v = P[i]; ax.plot(days, v, color=SIG, lw=.4, alpha=.02)
+    for i in rng.choice(len(paths), size=min(350, len(paths)), replace=False):
+        v = P[i]; ax.plot(days, v, color=SIG, lw=.4, alpha=.03)
     ax.fill_between(days, p10, p90, color=SIG, alpha=.12, label="10–90th percentile")
     ax.fill_between(days, p25, p75, color=SIG, alpha=.22, label="25–75th percentile")
     ax.plot(days, med, color=LIM, lw=2.4, label="median held share")
@@ -115,7 +115,7 @@ def chart_month(adj, holds):
     ax.legend(loc="upper left", fontsize=9, frameon=False); ax.grid(True, alpha=.15)
     fig.text(.5, -.01, f"median share ends the month at {med[np.isfinite(med)][-1]:.2f} "
              f"(≈ {med[np.isfinite(med)][-1]-100:+.2f}% over the month)", ha="center", fontsize=9, color=INK)
-    fig.tight_layout(); fig.savefig(CH / "held_shares_monthly_paths.png", dpi=130, bbox_inches="tight"); plt.close(fig)
+    fig.tight_layout(); fig.savefig(CH / "held_shares_monthly_paths.png", dpi=105, bbox_inches="tight"); plt.close(fig)
 
 
 def drawdown_episodes(eq):
