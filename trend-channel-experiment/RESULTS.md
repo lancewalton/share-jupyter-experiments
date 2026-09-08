@@ -660,3 +660,24 @@ weakly matches the intuition, but nowhere near enough to help. Scope caveat: thi
 CROSS-SECTIONAL, SELECTION -- vol-change may still have value at daily frequency or as a
 risk/exit signal (the latter is already covered by portfolio vol-targeting). The only vol-based
 refinement that helped remains the LEVEL (lowvol, 0.84).
+
+---
+
+## Recommended build promoted: mom + quality + LOW-VOL (`momentum_lowvol_build.py`)
+
+Following the vol-overlay result (low-vol level lifts mom+quality 0.80->0.84 as a selection
+factor), low-vol is promoted into the recommended build. Full numbers (fixed 69 names):
+
+```
+                                       net spread        net spread + stamp
+tilt (equal-weight)                  11.64% / 0.85 / -49%   10.47% / 0.77 / -51%
++ vol-target, no leverage  (default) 11.17% / 0.89 / -40%   10.10% / 0.81 / -41%
++ vol-target, lev<=1.5               13.81% / 0.90 / -43%   12.46% / 0.83 / -44%
+```
+
+Low-vol and vol-targeting compound (both vol-aware): the recommended unlevered build's Sharpe
+rises 0.83 -> 0.89 (net spread) / 0.76 -> 0.81 (net stamp) vs the old mom+quality build, higher
+CAGR too, same ~-40% drawdown. Low-vol is currency-neutral, needs only return history (no new
+data), and matches value's Sharpe contribution without value's currency restriction or deeper
+drawdown -- so it, not value, is the default third factor. MOMENTUM_STRATEGY_SPEC.md updated
+(sections 0, 5.2b, 5.3, 5.5, 8, 9, 11, 12, 14).

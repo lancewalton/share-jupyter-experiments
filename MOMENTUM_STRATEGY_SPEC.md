@@ -1,7 +1,7 @@
 # Momentum Strategy — Implementation Specification
 
-**Strategy:** quality-tilted 12-1 cross-sectional momentum, long-only, volatility-targeted, on
-survivorship-free UK equities.
+**Strategy:** quality- and low-volatility-tilted 12-1 cross-sectional momentum, long-only,
+volatility-targeted, on survivorship-free UK equities.
 **Status:** research-validated (see `trend-channel-experiment/RESULTS.md` and `momentum.html`);
 this document specifies how to build it as an automated system.
 **This is not investment advice.** It is a specification of a backtested strategy, with its
@@ -14,19 +14,20 @@ appropriate risk/compliance review.
 
 | | Value |
 |---|---|
-| **Signal** | Equal-weight composite of 12-1 momentum + quality (ROE + gross-profitability) |
+| **Signal** | Equal-weight composite of 12-1 momentum + quality (ROE + gross-profitability) + low-volatility |
 | **Universe** | Survivorship-free LSE common stock (GBP/GBX), top 350 by trailing liquidity |
 | **Selection** | Long the top quintile of the composite (~69 names) |
 | **Weighting** | Equal weight, then scaled by a volatility target |
 | **Vol target** | 15% annualised, exposure cap 1.0 (unlevered) |
 | **Rebalance** | Monthly |
-| **Backtest result** | CAGR ≈ 10.9%, Sharpe ≈ 0.83, max drawdown ≈ −39% (net of tiered spread); **≈ 9.8% / 0.76 / −40% after UK stamp duty** on a taxable share account (§8) |
+| **Backtest result** | CAGR ≈ 11.2%, Sharpe ≈ 0.89, max drawdown ≈ −40% (net of tiered spread); **≈ 10.1% / 0.81 / −41% after UK stamp duty** on a taxable share account (§8) |
 
-**Optional leverage variant:** raise the exposure cap to 1.5. Backtest: CAGR ≈ 12.9%, Sharpe ≈
-0.82, max drawdown ≈ −42% net of spread (**≈ 11.6% / 0.75 after stamp duty**) — roughly +2pp/yr of
-return for +3pp of drawdown, the most efficient point on the frontier. Everything else is identical.
-Do not add the *value* factor to a levered book: value has a much deeper standalone drawdown (−61%)
-and levering it is expensive.
+**Optional leverage variant:** raise the exposure cap to 1.5. Backtest: CAGR ≈ 13.8%, Sharpe ≈
+0.90, max drawdown ≈ −43% net of spread (**≈ 12.5% / 0.83 / −44% after stamp duty**) — roughly
++2–2.5pp/yr of return for +3pp of drawdown, the most efficient point on the frontier. Everything
+else is identical. Do not add the *value* factor: it needs breadth to help (§5.5), has a much
+deeper standalone drawdown (−61%), and is currency-restricted; low-volatility reaches the same or
+better Sharpe while being currency-neutral and fully covered.
 
 The rest of this document specifies the **default (unlevered)** build; the leverage variant is a
 one-parameter change (§6.3).
@@ -196,16 +197,27 @@ GPA = gross_profit / total_assets     (only where total_assets > 0)
 quality_pct = 0.5 · rank_pct(ROE) + 0.5 · rank_pct(GPA)   (percentile ranks over eligible set)
 z_qual = zscore(quality_pct)
 ```
-Names with no available fundamentals have `z_qual = NaN` (they contribute only their momentum
-score — see 5.3).
+Names with no available fundamentals have `z_qual = NaN` (they contribute only the other factor
+scores — see 5.3).
+
+### 5.2b Low-volatility factor
+Prefer calmer names — the low-volatility premium, and a defensive complement to momentum. Uses only
+return history (no fundamentals, currency-neutral, effectively full coverage):
+```
+vol = trailing 12-month standard deviation of the name's monthly returns, lagged 1 month (causal)
+z_lowvol = zscore(-vol)                                   # higher score = lower volatility
+```
+This is the volatility **level**, not its change — we tested vol *change* (as both a factor and a
+gate, signed and absolute) and it consistently *hurt* (`momentum_vol_change.py`), so it is not used.
 
 ### 5.3 Composite
 ```
-composite = mean( [z_mom, z_qual] , skipping NaNs )
+composite = mean( [z_mom, z_qual, z_lowvol] , skipping NaNs )
 ```
-**Momentum is mandatory:** drop any name without a valid `z_mom`. Quality is additive where
-present. (A name with momentum but no quality is ranked on momentum alone — this is intentional and
-matches the validated build.)
+**Momentum is mandatory:** drop any name without a valid `z_mom`. Quality and low-vol are additive
+where present (both are; low-vol needs only price history). A name with momentum but no quality is
+ranked on the factors it has — intentional, and matches the validated build. Adding low-vol lifts
+the tilt's Sharpe 0.80 → 0.85 and, once vol-targeted, 0.83 → 0.89 (§8), at ~no drawdown cost.
 
 ### 5.4 Selection
 Rank the eligible names that have a valid composite (i.e. a valid `z_mom`). Let `M` be their count.
@@ -267,6 +279,10 @@ book is:
 - **Maximum-aggression corner:** 20-name `mom+value+quality`, vol-targeted at lev ≤1.5, reaches the
   programme's highest CAGR (**15.2%**) at Sharpe 0.77 / maxDD −53% — a raw-return extreme, not a
   well-run default.
+- **The chosen third factor is low-vol, not value** (§5.2b). Low-vol matches or beats value's Sharpe
+  as an addition to mom+quality while being currency-neutral (full coverage), shallower on drawdown,
+  and it compounds with the portfolio vol-target — so it, not value, is in the recommended build.
+  Value stays an *optional* wide-book return-chaser with the caveats above.
 
 ---
 
@@ -370,8 +386,9 @@ error per name is up to `(0.5 × raw_price) / p ≈ 37 × raw_price / NAV`.
   |---|---|---|
   | momentum only | 10.6% / 0.72 | **9.0% / 0.63** |
   | mom + quality | 11.4% / 0.80 | **10.2% / 0.73** |
-  | mom + quality + vol-target (no lev) | 10.9% / 0.83 / −39% | **9.8% / 0.76 / −40%** |
-  | mom + quality + vol-target (lev ≤1.5) | 12.9% / 0.82 | **11.6% / 0.75** |
+  | mom + quality + low-vol (the tilt) | 11.6% / 0.85 | **10.5% / 0.77** |
+  | **+ vol-target (no lev) — recommended** | 11.2% / 0.89 / −40% | **10.1% / 0.81 / −41%** |
+  | + vol-target (lev ≤1.5) | 13.8% / 0.90 / −43% | **12.5% / 0.83 / −44%** |
 
   SDRT is avoided only by CFDs / spread bets (which carry other costs — §16), **not** by an ISA or
   SIPP (both still pay it on UK share purchases).
@@ -392,7 +409,7 @@ error per name is up to `(0.5 × raw_price) / p ≈ 37 × raw_price / NAV`.
 
 - **This is a high-beta long equity tilt** (market β ≈ 0.84), **not** market-neutral. Roughly
   two-thirds of the return is equity-market beta; the value-add over that is ≈ +6%/yr.
-- **Expect deep drawdowns.** Backtested max drawdown is ≈ **−39%** (unlevered) / **−42%** (levered
+- **Expect deep drawdowns.** Backtested max drawdown is ≈ **−40%** (unlevered) / **−43%** (levered
   1.5×). The worst months are **market crashes** (e.g. 2008, the 2020 COVID crash), not
   idiosyncratic blow-ups. Vol-targeting *reduces* but does **not** remove this.
 - **Position/exposure limits (recommended):** per-name weight cap (e.g. 2× the equal weight,
@@ -441,7 +458,8 @@ must be replaced by real machinery live.
 | Selection quantile | `FRAC` | 0.20 | top quintile long-only (~69 names); Sharpe-optimal, but a deliberate lever — §5.5 |
 | Min breadth | — | 30 | else skip rebalance |
 | Quality blend | — | 0.5·ROE + 0.5·GP/A (percentile) | currency-neutral ratios |
-| Factor combine | — | equal-weight z-scores; momentum mandatory | |
+| Low-vol factor | — | z(−trailing 12m return vol) | currency-neutral; needs only returns |
+| Factor combine | — | equal-weight z-scores of momentum + quality + low-vol; momentum mandatory | |
 | Weighting | — | equal weight | before vol scaling |
 | Vol target | `TARGET_VOL` | 0.15 annualised | ≈ the book's natural vol |
 | Vol window | — | 12 months, lagged 1 month | causal |
@@ -468,7 +486,8 @@ mom_raw   = adj_close[t-1m] / adj_close[t-12m] - 1                 # over elig
 z_mom     = zscore(mom_raw)
 ROE, GPA  = latest PIT fundamentals available <= t                # over elig
 z_qual    = zscore( 0.5*rank_pct(ROE) + 0.5*rank_pct(GPA) )
-composite = nanmean([z_mom, z_qual]); drop names with NaN z_mom
+z_lowvol  = zscore( -std(monthly_returns[t-12 .. t-1]) )          # low-vol factor, over elig
+composite = nanmean([z_mom, z_qual, z_lowvol]); drop names with NaN z_mom
 
 k         = max(1, floor(0.20 * count(valid composite)))
 targets   = top-k names by composite
@@ -508,7 +527,11 @@ Derived from the research programme in this repository. Core scripts:
 `momentum_survivorship_free.py` (survivorship-free confirmation), `momentum_tradeability.py`
 (universe/liquidity/cost engine), `parse_fundamentals.py` (point-in-time fundamentals),
 `momentum_multifactor.py` (quality/value overlay), `vol_target_momentum.py` (vol targeting),
-`momentum_combined.py` (the combined build), `momentum_phase_robustness.py` (calendar robustness).
+`momentum_combined.py` (the combined build), `momentum_phase_robustness.py` (calendar robustness),
+`momentum_lookback_sweep.py` (12-1 confirmed optimal), `momentum_universe_sweep.py` (universe size),
+`momentum_vol_overlay.py` (low-vol level helps; inverse-vol weighting does not),
+`momentum_vol_change.py` (vol change does not help — negative result),
+`momentum_stamp_duty.py` (UK SDRT), `momentum_lowvol_build.py` (the recommended build's numbers).
 Full results in `trend-channel-experiment/RESULTS.md`; narrative in `momentum.html`. Backtest
 period 2001–2026, net of tiered costs, on a 3,237-name survivorship-free LSE universe.
 

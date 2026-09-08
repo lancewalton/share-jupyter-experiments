@@ -1,0 +1,15 @@
+Building panel + rasters...
+##############################################################################
+# RECOMMENDED BUILD: mom + quality + low-vol (~69 names)
+##############################################################################
+eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+
+TILT (top quintile, equal-weight):
+  net spread                               CAGR +11.64%  Sharpe  0.85  maxDD  -49%
+  net spread + stamp duty                  CAGR +10.47%  Sharpe  0.77  maxDD  -51%
+
+VOL-TARGETED (own-vol target; tilt series then scaled):
+  no leverage, net spread                  CAGR +11.17%  Sharpe  0.89  maxDD  -40%
+  lev<=1.5, net spread                     CAGR +13.81%  Sharpe  0.90  maxDD  -43%
+  no leverage, net spread + stamp          CAGR +10.10%  Sharpe  0.81  maxDD  -41%
+  lev<=1.5, net spread + stamp             CAGR +12.46%  Sharpe  0.83  maxDD  -44%
