@@ -561,3 +561,33 @@ aggression corner -- 20-name mom+value+quality, vol-targeted lev<=1.5 -- reaches
 programme's highest CAGR (15.2%) at Sharpe 0.77 / maxDD -53%: a raw-return extreme, not a
 well-run default. Ends of the risk dial: Sharpe-best = mom+value+quality @69 (0.84);
 CAGR-best = 20-name three-factor levered (15.2%).
+
+---
+
+## UK stamp duty: the largest single friction for a share account (`momentum_stamp_duty.py`)
+
+The headline cost model charged only the tiered bid/offer spread (15/40/80 bps) and OMITTED
+UK Stamp Duty Reserve Tax (0.5% on purchases, buys only). Re-run with SDRT added:
+
+```
+                                   net spread   net spread+SDRT   drag
+momentum only  (~69)               10.6% / 0.72   9.0% / 0.63     -1.6pp
+mom + quality  (~69)               11.4% / 0.80  10.2% / 0.73     -1.2pp
+mom+quality vol-target (no lev)    10.9%/0.83/-39%  9.8%/0.76/-40% -1.1pp
+mom+quality vol-target (lev<=1.5)  12.9% / 0.82  11.6% / 0.75     -1.3pp
+mom + quality  (20 names)          12.9%         11.0%            -1.9pp
+```
+
+**Verdict: stamp duty is a ~1.2-1.6pp/yr drag at the quintile (~1.9pp concentrated) -- LARGER
+than the spread** (top tier only ~15 bps vs SDRT 50 bps on buys; ~2.1x of NAV bought/yr for
+mom+quality). This walks back the earlier "costs are almost irrelevant" -- true of spread, not
+of the full picture. BUT the edge still clears B&H comfortably (mom+quality 10.2% net-of-
+everything vs market 5.65%, Sharpe 0.73), so it revises the numbers ~1.2pp lower without
+breaking the strategy. The reported figures were mildly optimistic for a taxable share account.
+
+Instrument/tax implication (see MOMENTUM_STRATEGY_SPEC.md section 16): SDRT is avoided only by
+CFDs/spread-bets (NOT by ISA/SIPP, which still pay it), but CFDs pay ~2.5-3pp financing on a
+month+ long hold, so an unlevered CFD book is net worse than shares; CFDs win only for the
+levered variant. Best tax route for a UK investor is usually owning the shares in an ISA/SIPP
+(no CGT/dividend tax). CFDs give NO incremental loss-offset over shares (share losses already
+offset gains); spread bets are tax-free on gains but losses aren't deductible.

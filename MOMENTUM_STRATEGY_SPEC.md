@@ -20,12 +20,13 @@ appropriate risk/compliance review.
 | **Weighting** | Equal weight, then scaled by a volatility target |
 | **Vol target** | 15% annualised, exposure cap 1.0 (unlevered) |
 | **Rebalance** | Monthly |
-| **Backtest result** | CAGR ≈ 10.9%, Sharpe ≈ 0.83, max drawdown ≈ −39%, net of tiered costs |
+| **Backtest result** | CAGR ≈ 10.9%, Sharpe ≈ 0.83, max drawdown ≈ −39% (net of tiered spread); **≈ 9.8% / 0.76 / −40% after UK stamp duty** on a taxable share account (§8) |
 
 **Optional leverage variant:** raise the exposure cap to 1.5. Backtest: CAGR ≈ 12.9%, Sharpe ≈
-0.82, max drawdown ≈ −42% — roughly +2pp/yr of return for +3pp of drawdown, the most efficient
-point on the frontier. Everything else is identical. Do not add the *value* factor to a levered
-book: value has a much deeper standalone drawdown (−61%) and levering it is expensive.
+0.82, max drawdown ≈ −42% net of spread (**≈ 11.6% / 0.75 after stamp duty**) — roughly +2pp/yr of
+return for +3pp of drawdown, the most efficient point on the frontier. Everything else is identical.
+Do not add the *value* factor to a levered book: value has a much deeper standalone drawdown (−61%)
+and levering it is expensive.
 
 The rest of this document specifies the **default (unlevered)** build; the leverage variant is a
 one-parameter change (§6.3).
@@ -356,12 +357,29 @@ error per name is up to `(0.5 × raw_price) / p ≈ 37 × raw_price / NAV`.
 
 - **Turnover:** ≈ **4–6× one-way per year** (≈ 4.3× for the mom+quality build). Low, because
   monthly 12-1 momentum is slow-moving.
-- **Cost model (for expectation-setting):** liquidity-tiered round-trip spreads applied to traded
-  notional — **15 bps** (top liquidity tercile), **40 bps** (mid), **80 bps** (low). Cost per
-  rebalance ≈ `Σ |Δweight_i| × spread_i / 2`.
-- **Break-even:** the long-only edge survives round-trip costs up to ≈ **200 bps** before it stops
-  beating buy-and-hold — an order of magnitude above realistic execution. **Costs are not the
-  binding constraint.**
+- **Cost model (spread):** liquidity-tiered round-trip spreads applied to traded notional —
+  **15 bps** (top liquidity tercile), **40 bps** (mid), **80 bps** (low). Cost per rebalance
+  ≈ `Σ |Δweight_i| × spread_i / 2`.
+- **UK stamp duty (SDRT) — the largest single friction for a share account.** A cash-share
+  purchase pays **0.5% SDRT on buys** (not sells). At the quintile this is a **~1.2–1.6 pp/yr**
+  drag (≈2.1× of NAV bought per year for mom+quality → 0.5%×2.1 ≈ 1.05pp, a bit more for
+  momentum-only); it rises to **~1.9 pp/yr** for a concentrated 20-name book. It is *larger than
+  the spread* (top tier only ~15 bps). Net figures **including** SDRT (`momentum_stamp_duty.py`):
+
+  | build (~69 names) | net spread only | net spread + SDRT |
+  |---|---|---|
+  | momentum only | 10.6% / 0.72 | **9.0% / 0.63** |
+  | mom + quality | 11.4% / 0.80 | **10.2% / 0.73** |
+  | mom + quality + vol-target (no lev) | 10.9% / 0.83 / −39% | **9.8% / 0.76 / −40%** |
+  | mom + quality + vol-target (lev ≤1.5) | 12.9% / 0.82 | **11.6% / 0.75** |
+
+  SDRT is avoided only by CFDs / spread bets (which carry other costs — §16), **not** by an ISA or
+  SIPP (both still pay it on UK share purchases).
+- **Break-even:** even net of spread **and** SDRT, the edge clears buy-and-hold by a wide margin
+  (mom+quality 10.2% vs market 5.65%). The long-only tilt survives round-trip *spread* up to
+  ≈ **200 bps** before losing to B&H, so realistic frictions (spread + SDRT ≈ 65 bps on the buy
+  side of the liquid tier) leave ample headroom. Cost is real but **not the binding constraint —
+  drawdown is** (§9).
 - **Capacity:** ~69 equally weighted names, but the low-liquidity tier caps size. Constrain each
   order to a small fraction of the name's trailing average daily volume (e.g. ≤ 5–10% of 20-day
   ADV) and spread execution over the day (or multiple days) if a target exceeds that. At scale,
@@ -527,3 +545,43 @@ point-in-time and automatically free of future data.
    as a regime change, not noise.
 
 The scripts in §14 are the reference implementation of every item above.
+
+---
+
+## 16. Instrument choice and tax wrapper (UK)
+
+**Not tax advice; UK rules and rates change — confirm with a qualified adviser.** This compares how
+the same strategy can be *held*, on cost and tax, for a UK investor.
+
+The choice is between owning the shares (in a taxable account, or an ISA/SIPP) and taking synthetic
+exposure via CFDs or spread bets. The strategy's shape drives it: **long-only, ~fully invested,
+names held a month or more, ~2–3× of NAV bought per year.**
+
+| | Taxable shares | ISA / SIPP shares | CFDs | Spread bet |
+|---|---|---|---|---|
+| CGT on gains | yes (losses **offsettable** vs gains) | **none** (sheltered) | yes (losses offsettable) | none — but **losses not deductible** |
+| Dividend tax | yes | none | via price adjustment | none |
+| Stamp duty (0.5% buys) | yes (~1.2–1.6pp/yr, §8) | **yes** (not sheltered) | **no** | no |
+| Overnight financing | none | none | **yes, ~SONIA+2–3% on notional** | yes (built into spread) |
+| Leverage | no (or margin loan) | no | **yes, native** | yes, native |
+| Fractional sizing | needs fractional broker (§7.4) | needs fractional broker | **native** | native |
+| Ownership / counterparty | you own it | you own it | broker counterparty risk | broker counterparty risk |
+
+**On the original question — "CFDs to offset losses against tax":** the premise doesn't hold. Share
+losses in a taxable account are **already** offsettable against capital gains, so CFDs give no
+incremental loss-relief. The product that changes the tax character is the **spread bet** — gains
+tax-free but losses **not** deductible, i.e. the opposite of the goal.
+
+**Cost verdict for this strategy:**
+- **CFDs avoid stamp duty (~1.2–1.6pp/yr) but pay financing (~2.5–3pp/yr net) on a long book held
+  for a month+** — so an *unlevered* CFD book is net **worse** than taxable shares. CFDs pull ahead
+  only for the **levered** variant (where you would pay financing either way), and they conveniently
+  solve fractional sizing (§7.4).
+- **The strongest tax route is usually owning the shares in an ISA/SIPP** — no CGT, no dividend tax —
+  for the sheltered portion (ISA subscription is capped, ~£20k/yr; SIPP has its own rules). Stamp
+  duty still applies, but the CGT/dividend saving typically dwarfs it for a taxable investor. Above
+  the shelter, a taxable share account with loss-offsetting is the fallback.
+
+**Rough tax-efficiency ladder:** ISA/SIPP shares → taxable shares (loss offset) → CFDs (only if you
+want leverage or native fractional exposure). Spread bets suit only someone who values the tax-free
+gain more than loss-deductibility and accepts the financing spread.

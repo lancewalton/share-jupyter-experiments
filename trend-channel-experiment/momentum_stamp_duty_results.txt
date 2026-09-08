@@ -1,0 +1,23 @@
+Building panel + quality raster...
+####################################################################################
+# STAMP DUTY IMPACT (0.5% on buys) -- share account, net tiered spread + SDRT
+####################################################################################
+eligible-universe EW B&H: CAGR +5.65%  Sharpe 0.42
+
+momentum only (top quintile, ~69 names):
+  spread only (as reported)          CAGR +10.61%  Sharpe  0.72  maxDD  -47%  buys/yr 2.9x
+  + stamp duty (0.5% on buys)        CAGR  +9.03%  Sharpe  0.63  maxDD  -48%  buys/yr 2.9x
+                                     stamp drag: 1.58 pp/yr
+
+mom + quality (top quintile, ~69 names):
+  spread only (as reported)          CAGR +11.40%  Sharpe  0.80  maxDD  -47%  buys/yr 2.1x
+  + stamp duty (0.5% on buys)        CAGR +10.20%  Sharpe  0.73  maxDD  -48%  buys/yr 2.1x
+                                     stamp drag: 1.19 pp/yr
+
+Concentrated book (20 names, higher turnover -> more stamp drag):
+  momentum only: +9.91% -> +7.95%  (drag 1.97pp, buys 3.6x/yr)
+  mom + quality: +12.86% -> +10.95%  (drag 1.91pp, buys 3.4x/yr)
+
+Best build -- mom+quality vol-targeted (tilt net spread+stamp, then vol-target):
+  no leverage  CAGR  +9.79%  Sharpe 0.76  maxDD -40%
+  lev<=1.5     CAGR +11.56%  Sharpe 0.75  maxDD -44%
