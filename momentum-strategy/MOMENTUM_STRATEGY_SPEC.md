@@ -2,7 +2,7 @@
 
 **Strategy:** quality- and low-volatility-tilted 12-1 cross-sectional momentum, long-only,
 volatility-targeted, on survivorship-free UK equities.
-**Status:** research-validated (see `trend-channel-experiment/RESULTS.md` and `momentum.html`);
+**Status:** research-validated (see `momentum-strategy/RESULTS.md` and `momentum.html`);
 this document specifies how to build it as an automated system.
 **This is not investment advice.** It is a specification of a backtested strategy, with its
 known limitations stated explicitly. Deploy real capital only after independent validation and
@@ -532,7 +532,7 @@ Derived from the research programme in this repository. Core scripts:
 `momentum_vol_overlay.py` (low-vol level helps; inverse-vol weighting does not),
 `momentum_vol_change.py` (vol change does not help — negative result),
 `momentum_stamp_duty.py` (UK SDRT), `momentum_lowvol_build.py` (the recommended build's numbers).
-Full results in `trend-channel-experiment/RESULTS.md`; narrative in `momentum.html`. Backtest
+Full results in `momentum-strategy/RESULTS.md`; narrative in `momentum.html`. Backtest
 period 2001–2026, net of tiered costs, on a 3,237-name survivorship-free LSE universe.
 
 **Not investment advice. Backtested performance is not a guarantee of future results.**
@@ -630,7 +630,7 @@ B&H** — the edge is essentially gone — and the tax-free-gains benefit (~2%/y
 profitable years, forfeiting loss relief) does not cover a ~4%/yr *certain* drag. **Verdict:
 confirmed — forward spread bets are not more efficient here; carry is the decider. They (and CFDs)
 make sense only if you specifically want leverage.** The raw quotes are the
-screenshots in `trend-channel-experiment/charts/ig-forward-quotes-2026-09-08/` (with a README
+screenshots in `momentum-strategy/charts/ig-forward-quotes-2026-09-08/` (with a README
 tabulating them). (The auto-close at expiry also
 forces calendar-timed exits, and quarterly rebalancing is already worse than monthly — 9.35% / 0.63
 vs 10.58% / 0.72, §8 / `momentum_tradeability.py`.)

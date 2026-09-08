@@ -17,10 +17,10 @@ UK stamp duty. Market buy-and-hold for comparison: ≈ 5.65%.
 ## Where everything lives
 | What | File |
 |---|---|
-| Build-ready implementation spec (the source of truth) | `MOMENTUM_STRATEGY_SPEC.md` |
-| Narrative writeup (with embedded charts) | `momentum.html` |
-| Full experiment log / every result | `trend-channel-experiment/RESULTS.md` |
-| All scripts | `trend-channel-experiment/*.py` |
+| Build-ready implementation spec (the source of truth) | `momentum-strategy/MOMENTUM_STRATEGY_SPEC.md` |
+| Narrative writeup (with embedded charts) | `momentum-strategy/momentum.html` |
+| Full experiment log / every result | `momentum-strategy/RESULTS.md` |
+| All scripts | `momentum-strategy/*.py` |
 | Data (survivorship-free, **local-only, gitignored, ~276 MB**) | `data/eodhd/` |
 | Python interpreter with pandas | `heirarchical-adaptive-filter-experiment/bin/python3` |
 | Persistent memory | `~/.claude/projects/-Users-lance-Projects-share-jupyter-experiments/memory/` |
@@ -46,7 +46,7 @@ Key spec sections: §0 recommended build · §5 signals · §6 vol-targeting · 
 1. **Generate the DEMO API key** in the Trading 212 app; export it (direnv, as with EODHD):
    `export T212_API_KEY=...`  (optionally `export T212_HOST=https://demo.trading212.com`).
 2. **Discover the real fractional universe** — run:
-   `heirarchical-adaptive-filter-experiment/bin/python3 -u trend-channel-experiment/t212_instruments.py`
+   `heirarchical-adaptive-filter-experiment/bin/python3 -u momentum-strategy/t212_instruments.py`
    It fetches `/equity/metadata/instruments` and flags fractional names via `minTradeQuantity`
    (<1 = fractional; the *value* is the granularity — a `0.1` min on a £345 share is still coarse).
    If it Cloudflare-403s despite the browser User-Agent, save the JSON from the browser docs

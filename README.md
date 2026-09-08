@@ -40,8 +40,10 @@ it.*
   US equities, and bonds.
 
 The full write-ups are the `synthesis-*.html` / `strategy.html` documents at the
-repo root (and `momentum.html` — the programme's one positive, survivorship-tested
-edge), plus a `WRITEUP.md` / `RESULTS.md` inside most experiment folders.
+repo root, plus a `WRITEUP.md` / `RESULTS.md` inside most experiment folders. The
+programme's one positive, survivorship-tested edge has its own folder,
+`momentum-strategy/` — the implementation spec (`MOMENTUM_STRATEGY_SPEC.md`), the
+narrative (`momentum.html`), and `NEXT_STEPS.md` for resuming deployment.
 `BACKLOG.md` and `STRATEGY.md` are the cross-project idea log and operational
 spec.
 
@@ -60,7 +62,7 @@ spec.
 | `fx-rotation-experiment` | FX value / momentum / carry |
 | `swing-trading-trend-lines-experiment` | A support/resistance trend-line breakout method |
 | `quick-flip-scalper-experiment` | An intraday opening-range strategy (fade, then follow) |
-| `trend-channel-experiment` | Rising-channel trading vs buy-and-hold — timing vs selection, and the drawdown-shape mechanism across UK/US equities and bonds |
+| `momentum-strategy` | **The programme's deployable strategy** (12-1 momentum + quality + low-vol, vol-targeted). Grew out of the trend-channel work (rising-channel timing vs selection, the drawdown-shape mechanism) which lives here as its provenance; now holds the spec, writeup, `NEXT_STEPS.md`, and all code/results |
 
 ### Follow-up studies
 
