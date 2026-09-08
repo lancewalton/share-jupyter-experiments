@@ -782,6 +782,13 @@ there before any real capital — this is the concrete form of §13 and §17.2's
 - **Commission-free ≠ free:** 0.5% UK **stamp duty** still applies on purchases (~1.2pp/yr, the largest
   friction — §8, unavoidable in any wrapper), plus the bid/offer spread and any current platform/FX
   fees (check T212's live schedule; FX is irrelevant for GBP/GBX LSE names).
+- **Deposit fee:** T212 charges **0.7% on deposits above the first £2,000**. Note *what* this is — a
+  one-off toll on capital *as it enters*, not a drag on returns. It reduces invested principal by
+  ~0.7% (so it does **not** lower the IRR — contributions and the terminal they produce scale down
+  together); on a £10k lump it is ~£56 (0.56%, first £2k free), recovered within weeks against a ~10%
+  compounding edge. It is flat on total deposited, so contribution frequency is neutral to it. **Check
+  the deposit *method*:** such fees commonly apply to card/e-wallet while **bank transfer is free** — if
+  so the fee disappears entirely; confirm on the demo/live terms.
 - **ISA subscription cap** (~£20k/yr) fits the regular-contribution discipline (§17.3) but limits how
   fast the sheltered pot can grow.
 - **Counterparty/platform:** a newer platform; FSCS protection is £85k. A consideration at larger NAV,
