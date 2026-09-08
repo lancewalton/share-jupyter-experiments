@@ -1,0 +1,18 @@
+Building + reconstructing held names with real prices...
+sanity check prices @ 2024-06-30 (GBP/share): AZN £123.6, SHEL £28.3, HSBA £6.8, BP £4.8, RIO £52.0, ULVR £41.4
+
+Held-name price distribution (GBP, 21,321 share-months): median £11.3, p90 £345.0, p99 £3019.6, max £32912
+  share of held names priced over £50: 23.2%  over £100: 17.4%
+
+####################################################################################
+# WHOLE-SHARE ROUNDING at £10,000   (per-name £-target shown; equal weight, full invest)
+####################################################################################
+ #held  £/name WS names%  WS drop%  trkerr all-WS  trkerr realistic
+    69    145     73.6%      5.2%         15.7%              6.7%
+    30    333     75.0%      1.9%          9.6%              3.5%
+    20    500     76.3%      1.2%          7.2%              2.7%
+
+  WS names%   = share of held names that are whole-share-only (rank > top-100 by liquidity)
+  WS drop%    = of those whole-share names, the share too pricey to hold (1 share rounds to 0)
+  trkerr all-WS   = mean per-name weight error if EVERY name is whole-share (worst case)
+  trkerr realistic= same but top-100-by-liquidity (~FTSE 100) are fractional, rest whole-share
