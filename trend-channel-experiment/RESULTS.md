@@ -626,3 +626,37 @@ WEIGHTING (1/vol instead of equal): trades ~1pp CAGR for ~4pp shallower DD at un
 but HURTS post-2013 (mom+quality 10.2->8.7) -- dominated by keeping equal-weight + portfolio vol-
 targeting. **Verdict: low-vol as a selection factor is a genuine modest refinement (0.80->0.84);
 inverse-vol weighting is not worth it.**
+
+---
+
+## Vol CHANGE as a selection signal -- tested, does not work (`momentum_vol_change.py`)
+
+Lance's hypothesis: a CHANGE in a name's volatility signals a possible regime shift, so its
+momentum is less likely to continue -- deprioritise it. Tested as a selection factor added to
+mom+quality (short/long vol ratio; signed = penalise increases, absolute = penalise any change;
+3m/12m and 6m/12m windows) and as a GATE (exclude the biggest vol-changers, then rank by
+mom+quality). Equal-weight, net tiered costs, OOS split.
+
+```
+                                CAGR  Sharpe  maxDD  post-13
+mom+quality (incumbent)       +11.38%  0.80   -47%   +10.2%
++ signed change 3m/12m         +7.82%  0.56   -52%    +7.5%
++ signed change 6m/12m         +6.69%  0.50   -51%    +7.0%
++ abs change 3m/12m            +9.55%  0.68   -46%    +8.8%
++ abs change 6m/12m           +10.24%  0.73   -48%    +9.1%
++ FAVOUR increases (opposite)  +6.38%  0.48   -51%    +4.9%
+GATE drop biggest-change 25%   +9.53%  0.69   -47%    +8.3%
+GATE drop biggest-change 33%   +8.65%  0.64   -47%    +7.5%
+GATE drop biggest-change 50%   +7.82%  0.59   -47%    +6.6%
+(ref) + lowvol LEVEL          +11.58%  0.84   -49%   +10.9%
+```
+
+**Verdict: NOT supported -- every form hurts.** Factor and gate, signed and absolute, all
+windows/thresholds lower Sharpe vs the incumbent 0.80; the gate degrades monotonically with the
+drop fraction. Likely mechanism: strong momentum winners often carry RISING vol (big trending
+moves), so penalising vol-change penalises exactly the names you want to hold; and monthly vol-
+change is noisy. The directional hint (penalise-increases beats favour-increases, 0.56 vs 0.48)
+weakly matches the intuition, but nowhere near enough to help. Scope caveat: this is MONTHLY,
+CROSS-SECTIONAL, SELECTION -- vol-change may still have value at daily frequency or as a
+risk/exit signal (the latter is already covered by portfolio vol-targeting). The only vol-based
+refinement that helped remains the LEVEL (lowvol, 0.84).

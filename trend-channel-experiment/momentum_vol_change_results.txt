@@ -1,0 +1,25 @@
+Building panel + rasters...
+                                              CAGR Sharpe  maxDD   OOS split
+##############################################################################################
+# VOL-CHANGE as a selection factor, added to mom+quality (equal-weight, net costs)
+##############################################################################################
+  mom+quality (incumbent)                  +11.38%   0.80   -47%  pre +12.8%  post +10.2%
+  -- signed (penalise vol INCREASES) --
+  + signed change 3m/12m                    +7.82%   0.56   -52%  pre  +8.2%  post  +7.5%
+  + signed change 6m/12m                    +6.69%   0.50   -51%  pre  +6.3%  post  +7.0%
+  -- absolute (penalise ANY change) --
+  + abs change 3m/12m                       +9.55%   0.68   -46%  pre +10.4%  post  +8.8%
+  + abs change 6m/12m                      +10.24%   0.73   -48%  pre +11.6%  post  +9.1%
+  -- reference: vol LEVEL (previous experiment) --
+  + lowvol (level)                         +11.58%   0.84   -49%  pre +12.3%  post +10.9%
+
+  -- sign check: FAVOUR vol increases (opposite of hypothesis) --
+  + FAVOUR increases 3m/12m                 +6.38%   0.48   -51%  pre  +8.1%  post  +4.9%
+
+##############################################################################################
+# GATE: drop the biggest vol-changers, then pick top-69 by mom+quality (matches intent)
+##############################################################################################
+  no gate (top-69 mom+quality)             +11.40%   0.80   -47%  pre +12.8%  post +10.2%
+  drop biggest-change quartile              +9.53%   0.69   -47%  pre +11.0%  post  +8.3%
+  drop biggest-change third                 +8.65%   0.64   -47%  pre  +9.9%  post  +7.5%
+  drop biggest-change half                  +7.82%   0.59   -47%  pre  +9.2%  post  +6.6%
