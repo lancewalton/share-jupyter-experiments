@@ -634,3 +634,85 @@ screenshots in `trend-channel-experiment/charts/ig-forward-quotes-2026-09-08/` (
 tabulating them). (The auto-close at expiry also
 forces calendar-timed exits, and quarterly rebalancing is already worse than monthly — 9.35% / 0.63
 vs 10.58% / 0.72, §8 / `momentum_tradeability.py`.)
+
+---
+
+## 17. Risk posture and operating discipline
+
+The mechanics (§0–§12) define *what* to hold. This section defines *how to run it* — the parts that
+actually determine whether the edge is captured, because the strategy's failure modes are behavioural
+and structural, not analytical.
+
+### 17.1 Leverage — unlevered is the default
+Run the strategy **unlevered** (exposure cap = 1.0). The leverage variant (§0, §6.3) is opt-in only,
+and the reasons to resist it are strong:
+- **It doesn't improve quality.** Leverage lifted CAGR 11.2% → 13.8% but Sharpe barely moved
+  (0.89 → 0.90). It's amplification, not alpha — more risk for proportional return, not better return.
+- **The backtest doesn't charge the borrowing.** The levered figures apply no financing cost on the
+  borrowed portion; a real margin loan (~SONIA + spread) would shave the extra return, narrowing the gap.
+- **Vol-targeting lags a fast crash.** Exposure scales off *trailing* vol, so in a sudden crash
+  (Feb 2020) you are fully — or, levered, over- — exposed for the first leg down before it can de-risk.
+- **The real danger a backtest can't show: forced liquidation.** A paper drawdown you can sit through;
+  a margin call forces a sale at the bottom, converting a temporary loss into a permanent one and
+  knocking you out of the recovery. **Staying unlevered is precisely what preserves your ability to
+  hold through a drawdown** — which is the whole game (§17.2).
+
+### 17.2 Drawdown — pre-commit, don't react
+The ≈ −40% drawdown is **not a flaw; it is the price of the premium.** You earn the alpha *because*
+you endure drawdowns most people can't — if it were comfortable it would be arbitraged away. So:
+- **Decide the rules while calm; follow them mechanically.** In the middle of a −40% drawdown your
+  judgement is at its worst.
+- **Size for worse than backtest.** Treat this as long-horizon money (5–10 yr) sized so that a
+  **−60% drawdown held for years cannot force you to sell** (no leverage, no money you'll need). If
+  nothing external forces a decision, holding through is easy.
+- **The only legitimate exit is model failure, never pain.** A pre-registered kill-criterion based on
+  the strategy *behaving unlike its design* (e.g. live results outside the bootstrap CI for a sustained
+  period), decided in advance. **Drawdown depth is not the signal** — healthy strategies have deep
+  drawdowns; a broken one behaves wrongly.
+- Vol-targeting already automates the "de-risk in turbulence" reflex (it cut −47% → −40%), causally and
+  without emotion. Your job is to **not override it in panic.**
+
+### 17.3 Funding — regular contributions, honestly framed
+Fund the position with **regular, pre-committed contributions** (fixed nominal, or inflation-linked to
+preserve real size). This is the disciplined embodiment of "buy more when it's cheap" — but frame its
+value correctly (`momentum_contributions.py`):
+- **It is NOT a return-enhancer.** The hoped-for dip-buying bonus did not appear: dollar-cost-averaging
+  into the volatile build returned ~12% *less* than into a zero-volatility asset of the same CAGR (you
+  also buy fewer units near tops; sequencing dominates). And the dip-buying power **fades fast** — a
+  fixed contribution is ~3% of the pot at year 2, <1% by year 5, negligible by year 25.
+- **What it genuinely gives:** (a) the optimal, zero-timing-risk way to deploy income as it arrives;
+  (b) a **cushioned experienced drawdown** — the portfolio *value* fell ~−30% under a monthly drip vs
+  the −40% on invested capital, because inflows soften the fall — which materially aids the discipline
+  of §17.2; and (c) it removes the human from the loop (a standing order executes whether you feel
+  euphoric or sick — the #1 failure of any "buy the dip" plan is that people freeze).
+- Contributions are an **accumulation** discipline, **not** a drawdown-management tool for an
+  already-large pot (against £500k invested, a £1k contribution can't offset a −40% fall). Managing the
+  existing pot is §17.1–17.2. Fixed vs inflation-linked are near-identical per pound (IRR 10.38 vs
+  10.30); inflation-linking just preserves real contribution size. Contributions also map naturally onto
+  annual ISA/SIPP allowances (§16).
+
+### 17.4 Reserve deployment — the beta/alpha release rule
+If you additionally hold a **bounded, ring-fenced reserve** to deploy into deep drawdowns, release it by
+rule, not reflex (`momentum_beta_alpha_monitor.py`). When the strategy's drawdown exceeds a trigger
+(e.g. −15%), classify it:
+- **BETA-driven** — the market is *also* down (e.g. market drawdown < −10%). The fall is cheap equity
+  beta, which has historically recovered. **Release a reserve tranche.**
+- **ALPHA-driven** — the market is *not* down but the strategy fell anyway. This is a momentum-specific
+  problem (a momentum crash, or genuine decay). **Freeze and investigate** — do not add.
+
+The monitor also reports the **beta-adjusted (alpha) drawdown**; use its depth as a caution light *even
+inside a beta drawdown*. Historically (2002–26, β ≈ 0.71) **all seven of the strategy's >15% drawdowns
+were beta-driven** — the long-only tilt's drawdowns *are* market drawdowns (momentum-crash risk lives in
+the long-short book, not here), so "release" would have fired each time and bought cheap beta ahead of
+recovery; in the GFC the strategy fell −40% vs the market's −53%. The ALPHA/freeze branch never fired —
+it guards the not-yet-seen case. The one amber flag: Feb 2022 was beta-classified (market −12%) yet had
+the deepest alpha drawdown (−14%, the growth→value rotation), which the alpha-DD gauge catches.
+Reserve adds must be **bounded and pre-committed** — open-ended "add more as it deepens" is a martingale
+and a ruin path.
+
+### 17.5 What not to do
+- **Never bail into a drawdown** out of pain — it converts paper losses to permanent ones, usually near
+  the bottom. The only exit is the §17.2 model-failure rule.
+- **Never add open-endedly** ("more as it falls, funded by whatever I can find") — bounded reserve only.
+- **Never use leverage that can trigger a margin call** — it removes your ability to hold, the one
+  thing the whole discipline depends on.

@@ -189,6 +189,25 @@
 </section>
 
 <section class="band">
+  <div class="wrap">
+    <div class="col">
+      <p class="eyebrow">How to actually run it</p>
+      <h2>Living with the drawdown</h2>
+      <p class="muted">The mechanics decide <em>what</em> to hold; the discipline decides whether you actually capture the edge — because the ways this strategy fails are behavioural, not analytical.</p>
+      <h3 style="margin-top:1.6rem">Stay unlevered</h3>
+      <p class="muted">Leverage is a mirage here: it lifted return but <em>not</em> Sharpe (0.89 → 0.90) — amplification, not alpha — and the backtest never charged the borrowing. Worse, it introduces the one risk a backtest can't show: a <strong class="l">margin call</strong> that forces you to sell at the bottom, turning a paper drawdown into a permanent loss and knocking you out of the recovery. Staying unlevered is exactly what preserves your ability to <em>hold</em> — which is the whole game.</p>
+      <h3 style="margin-top:1.6rem">The drawdown is the price, not a flaw</h3>
+      <p class="muted">You're paid the ~6%/yr <em>because</em> you sit through −40% drawdowns most people can't — if it were comfortable it would be arbitraged away. So decide the rules while calm: hold it as long-horizon money, sized so a worse-than-backtest fall (say −60%, held for years) <strong>cannot force you to sell</strong>, and treat only the strategy <em>misbehaving versus its design</em> — never the pain — as a reason to stop. Depth of drawdown is not the signal; healthy strategies have deep ones.</p>
+      <h3 style="margin-top:1.6rem">Fund it with regular contributions — for the right reasons</h3>
+      <p class="muted">Feeding the position with steady, pre-committed contributions is the disciplined form of "buy more when it's cheap" — but we tested it, and the dip-buying <em>bonus isn't real</em>: averaging into the volatile build slightly <em>underperformed</em> the same money into a smooth asset of equal return, and the effect fades to nothing as the pot grows (a fixed contribution is 3% of the pot at year 2, under 1% by year 5). What contributions genuinely give: the optimal way to deploy income, a <strong>cushioned experienced drawdown</strong> (the portfolio value fell ~−30% under a monthly drip versus −40% on invested capital, because inflows soften the fall), and — most valuable — they take the human out of the loop, so you keep buying through the fear.</p>
+    </div>
+    <div class="col">
+      <div class="callout"><p><strong>If you keep a reserve for the dips, release it by rule.</strong> When the strategy is deep in drawdown, check the market: if the market is <em>also</em> down, it's cheap equity beta that has always recovered — add a pre-set tranche. If the strategy fell while the market didn't, that's a momentum-specific problem — <strong class="l">freeze and investigate</strong>, don't add. Historically all seven of the strategy's drawdowns were the market-driven kind (in the 2008 crash it fell −40% against the market's −53%). The reserve must be <strong>bounded and pre-committed</strong> — open-ended "add more as it falls" is a martingale and a route to ruin.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
   <div class="wrap col">
     <p class="eyebrow lim">What we won't claim</p>
     <h2>Honest caveats</h2>
@@ -196,7 +215,7 @@
   </div>
 </section>
 
-<section>
+<section class="band">
   <div class="wrap col">
     <p class="eyebrow">Where it sits in the programme</p>
     <p class="pull"><span class="l">Direction</span> is a mirage no chart pattern beats. The one exception is <span class="s">momentum</span> — winners keep winning over a year — and it is captured by ranking returns, not by drawing lines.</p>
