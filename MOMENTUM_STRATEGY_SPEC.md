@@ -606,7 +606,8 @@ is swamped by ~4.25pp/yr of carry. That drags a ~10% net share build down to **~
 B&H** — the edge is essentially gone — and the tax-free-gains benefit (~2%/yr at best, only in
 profitable years, forfeiting loss relief) does not cover a ~4%/yr *certain* drag. **Verdict:
 confirmed — forward spread bets are not more efficient here; carry is the decider. They (and CFDs)
-make sense only if you specifically want leverage.** Measured with `momentum_stamp_duty.py`-style
-cost inputs; the raw quotes are the screenshots dated 2026-09-08. (The auto-close at expiry also
+make sense only if you specifically want leverage.** The raw quotes are the
+screenshots in `trend-channel-experiment/charts/ig-forward-quotes-2026-09-08/` (with a README
+tabulating them). (The auto-close at expiry also
 forces calendar-timed exits, and quarterly rebalancing is already worse than monthly — 9.35% / 0.63
 vs 10.58% / 0.72, §8 / `momentum_tradeability.py`.)
