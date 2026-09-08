@@ -112,15 +112,15 @@
 <section>
   <div class="wrap col">
     <p class="eyebrow">Is it tradeable?</p>
-    <h2>Costs are almost irrelevant</h2>
-    <p class="muted">The tilt trades slowly — about 6.3× one-way turnover a year — so realistic frictions barely touch it. Net of a liquidity-tiered spread (15/40/80 bps by size), the long-only tilt earns <strong>10.6% CAGR at Sharpe 0.72</strong>, versus the market's 5.65% / 0.42.</p>
+    <h2>The constraint is drawdown, not cost</h2>
+    <p class="muted">The tilt trades slowly — about 6.3× one-way turnover a year — so the bid/offer spread barely touches it: net of a liquidity-tiered spread (15/40/80 bps), the long-only tilt earns <strong>10.6% CAGR at Sharpe 0.72</strong> versus the market's 5.65% / 0.42. The biggest friction is actually <strong>UK stamp duty</strong> — 0.5% on every purchase, ~1.2pp/yr, larger than the spread — which takes the tilt to ~9.0% / 0.63 on a taxable share account. Even so the edge dwarfs it, and it is avoided entirely inside an ISA or SIPP.</p>
     <div class="stats">
-      <div class="stat"><div class="stat-n">0.72</div><div class="stat-l">net Sharpe (tiered costs) vs market 0.42</div></div>
+      <div class="stat"><div class="stat-n">~1.2pp</div><div class="stat-l">/yr stamp duty — the largest friction, bigger than the spread</div></div>
       <div class="stat"><div class="stat-n">6.3×</div><div class="stat-l">one-way turnover per year</div></div>
-      <div class="stat"><div class="stat-n">~200bp</div><div class="stat-l">break-even round-trip cost (edge dies above)</div></div>
+      <div class="stat"><div class="stat-n">~200bp</div><div class="stat-l">break-even round-trip spread (edge dies above)</div></div>
       <div class="stat"><div class="stat-n lim">−47%</div><div class="stat-l">max drawdown — the real constraint</div></div>
     </div>
-    <p class="muted">The <strong>break-even round-trip cost is ~200 bps</strong> — an order of magnitude above realistic execution (~15–40 bps). The edge dwarfs the frictions. Monthly rebalancing beats quarterly (Sharpe 0.72 vs 0.63): the turnover saving isn't worth the responsiveness lost, because cost was never the binding constraint.</p>
+    <p class="muted">Even net of spread <em>and</em> stamp duty the strategy clears the market by a wide margin, and the <strong>break-even spread is ~200 bps</strong> — an order of magnitude above realistic execution (spread + stamp ≈ 65 bps on a liquid-tier buy). Monthly rebalancing still beats quarterly (Sharpe 0.72 vs 0.63): the turnover saving isn't worth the responsiveness lost, because cost was never the binding constraint — <strong>drawdown is</strong>.</p>
     <div class="callout lim">
       <p class="eyebrow lim" style="margin-bottom:.4rem">The cost of admission is drawdown, not cost</p>
       <p>The long-only tilt is a high-beta long book (β ≈ 0.84), so its worst months are simply <em>market</em> crashes — −20% in 2008, −17% in the 2020 COVID crash — and its max drawdown is ~−47%. The market-neutral version removes the beta but exposes the <strong class="l">momentum crash</strong>: a −48% single month in April 2009 and a −64% max drawdown. Real, but a brutal tail to hold or lever.</p>
@@ -136,25 +136,25 @@
       <p class="muted">If the binding constraint is drawdown rather than cost, there are two independent things to try: <strong>shrink the drawdown</strong>, and <strong>lift the return per unit of it</strong>. One is a position-sizing trick; the other adds orthogonal information. They turn out not to fight.</p>
       <h3 style="margin-top:1.6rem">Vol-targeting — the drawdown lever</h3>
       <p class="muted">Scale exposure inversely to the tilt's own recent volatility (causal 12-month estimate): lean in when it's calm, step back when it's wild. With no leverage this cuts the max drawdown from <strong>−47% to −38%</strong> at essentially no return cost (CAGR 10.6% → 10.3%), and nudges Sharpe up (0.72 → 0.76). Real risk control, modest — position sizing can't manufacture return.</p>
-      <h3 style="margin-top:1.6rem">Quality &amp; value — the return lever</h3>
-      <p class="muted">Overlay two classic cross-sectional factors, built from <strong>point-in-time fundamentals</strong> (each figure dated to when it was actually filed, so the backtest never peeks). Quality = ROE + gross-profitability; value = earnings- and book-yield. Rank, blend with momentum, hold the top quintile.</p>
+      <h3 style="margin-top:1.6rem">Quality, value and low-volatility — the return lever</h3>
+      <p class="muted">Overlay cross-sectional factors and rank names on the blend. Quality (ROE + gross-profitability) and value (earnings- and book-yield) come from <strong>point-in-time fundamentals</strong> — each figure dated to when it was actually filed, so the backtest never peeks. Low-volatility (prefer calmer names) needs only price history. Blend with momentum, hold the top quintile.</p>
     </div>
     <div class="tbl col" style="max-width:none">
       <table>
-        <caption>Factor overlay on the tilt (survivorship-free top-350, net of costs)</caption>
+        <caption>Factor overlay on the tilt (survivorship-free top-350, net of spread)</caption>
         <thead><tr><th>book</th><th class="num">CAGR</th><th class="num">Sharpe</th><th class="num">max DD</th></tr></thead>
         <tbody>
           <tr><td>momentum only</td><td class="num">10.58%</td><td class="num">0.72</td><td class="num dn">−47%</td></tr>
-          <tr class="hi"><td>+ quality</td><td class="num">11.38%</td><td class="num">0.80</td><td class="num">−47%</td></tr>
+          <tr><td>+ quality</td><td class="num">11.38%</td><td class="num">0.80</td><td class="num">−47%</td></tr>
+          <tr class="hi"><td>+ quality + low-vol</td><td class="num">11.64%</td><td class="num">0.85</td><td class="num dn">−49%</td></tr>
           <tr><td>+ value</td><td class="num">10.85%</td><td class="num">0.71</td><td class="num dn">−53%</td></tr>
           <tr><td>+ value + quality</td><td class="num">12.60%</td><td class="num">0.84</td><td class="num dn">−51%</td></tr>
-          <tr><td>quality alone</td><td class="num">10.77%</td><td class="num">0.74</td><td class="num up">−41%</td></tr>
           <tr><td>value alone</td><td class="num">12.86%</td><td class="num">0.74</td><td class="num dn">−61%</td></tr>
         </tbody>
       </table>
     </div>
     <div class="col">
-      <div class="callout"><p><strong>Quality is momentum's natural partner.</strong> Adding it lifts Sharpe 0.72 → 0.80 at the <em>same</em> drawdown; quality alone even has the shallowest drawdown of the lot (−41%) — a genuinely defensive, diversifying premium. <strong class="l">Value is greedier</strong>: the highest standalone return (12.86%) but a brutal −61% drawdown — it buys return with risk, the classic value bargain.</p></div>
+      <div class="callout"><p><strong>Quality and low-volatility are momentum's natural partners.</strong> Quality lifts Sharpe 0.72 → 0.80 at the <em>same</em> drawdown; adding low-vol lifts it again to <strong>0.85</strong> — both are defensive, both currency-neutral, both fully covered. <strong class="l">Value is greedier</strong>: the highest standalone return (12.86%) but a brutal −61% drawdown, and it needs a wide book to help — so it's an optional return-chaser, not the default. We also tested a low-vol <em>level</em> against vol <em>change</em> (a regime-shift idea): change consistently hurt, so only the level is used.</p></div>
     </div>
   </div>
 </section>
@@ -164,27 +164,26 @@
     <div class="col">
       <p class="eyebrow">Where the levers meet</p>
       <h2>The best build</h2>
-      <p class="muted">Because the two levers act on different axes — return versus drawdown — they <strong>stack</strong>. Vol-target the quality-tilted book and you get momentum's best partner and its drawdown control at once.</p>
+      <p class="muted">Because the levers act on different axes — return versus drawdown — they <strong>stack</strong>. Vol-target the quality- and low-vol-tilted book and you get momentum's best partners and its drawdown control at once. And because low-vol and vol-targeting are both volatility-aware, they compound.</p>
     </div>
     <div class="tbl col" style="max-width:none">
       <table>
-        <caption>From plain momentum to the combined build (net of costs)</caption>
+        <caption>From plain momentum to the recommended build (net of spread)</caption>
         <thead><tr><th>build</th><th class="num">CAGR</th><th class="num">Sharpe</th><th class="num">max DD</th></tr></thead>
         <tbody>
           <tr><td>market buy-and-hold</td><td class="num">5.65%</td><td class="num">0.42</td><td class="num">—</td></tr>
           <tr><td>plain momentum</td><td class="num">10.58%</td><td class="num">0.72</td><td class="num dn">−47%</td></tr>
-          <tr><td>+ quality</td><td class="num">11.38%</td><td class="num">0.80</td><td class="num dn">−47%</td></tr>
-          <tr class="hi"><td>+ quality + vol-target (no leverage)</td><td class="num">10.88%</td><td class="num">0.83</td><td class="num">−39%</td></tr>
-          <tr><td>+ quality + vol-target (lev ≤ 1.5)</td><td class="num">12.93%</td><td class="num">0.82</td><td class="num">−42%</td></tr>
-          <tr><td>+ value + quality + vol-target (lev ≤ 1.5)</td><td class="num">13.30%</td><td class="num">0.81</td><td class="num dn">−49%</td></tr>
+          <tr><td>+ quality + low-vol (the tilt)</td><td class="num">11.64%</td><td class="num">0.85</td><td class="num dn">−49%</td></tr>
+          <tr class="hi"><td>+ vol-target (no leverage)</td><td class="num">11.17%</td><td class="num">0.89</td><td class="num">−40%</td></tr>
+          <tr><td>+ vol-target (lev ≤ 1.5)</td><td class="num">13.81%</td><td class="num">0.90</td><td class="num">−43%</td></tr>
         </tbody>
       </table>
     </div>
     <div class="col">
-      <p class="muted">The <strong>risk-controlled pick</strong> is quality-tilted momentum, vol-targeted, unlevered: <span class="mono">10.88% / Sharpe 0.83 / −39%</span>. Versus plain momentum that's more return, a sharp Sharpe jump, and ~8pp less drawdown — all at once, with no borrowing.</p>
-      <div class="callout"><p><strong>Leverage on the quality book is nearly free.</strong> Allowing up to 1.5× lifts CAGR from 10.88% to <strong>12.93%</strong> — a full extra +2pp a year — while the drawdown only widens from −39% to −42% and Sharpe barely moves (0.83 → 0.82). That +2%-for-+3pp trade is the most efficient point on the frontier; the same leverage on the value-heavy book buys return far more expensively (−49% drawdown).</p></div>
+      <p class="muted">The <strong>recommended build</strong> is momentum tilted by quality and low-volatility, vol-targeted, unlevered: <span class="mono">11.2% / Sharpe 0.89 / −40%</span> net of spread (<span class="mono">≈ 10.1% / 0.81</span> after stamp duty on a taxable account). Versus plain momentum that's more return, a big Sharpe jump (0.72 → 0.89), and ~7pp less drawdown — all at once, with no borrowing.</p>
+      <div class="callout"><p><strong>Leverage is nearly free here.</strong> Allowing up to 1.5× lifts CAGR from 11.2% to <strong>13.8%</strong> — a full extra ~2.5pp a year — while the drawdown only widens from −40% to −43% and Sharpe holds (0.89 → 0.90). That's the most efficient point on the frontier; the same leverage on a value-heavy book buys return far more expensively (deeper drawdown).</p></div>
       <h3 style="margin-top:2rem">Not a month-end fluke</h3>
-      <p class="muted">Every rebalance in this study lands on a month-end — so we checked it isn't the reason it works. Shifting the <em>entire</em> monthly cycle across the calendar, so the strategy starts on a different day of the month, leaves the edge intact: across <strong>ten calendar phases</strong> the momentum tilt beats the market in all ten (mean edge +4.6pp a year) and the quality-tilted book in all ten too (+5.4pp), with CAGR clustered at 10–11%. You would have beaten the market starting on any day.</p>
+      <p class="muted">Every rebalance in this study lands on a month-end — so we checked it isn't the reason it works. Shifting the <em>entire</em> monthly cycle across the calendar, so the strategy starts on a different day of the month, leaves the edge intact: across <strong>ten calendar phases</strong> the momentum tilt beats the market in all ten (mean edge +4.6pp a year) and the factor-tilted book in all ten too (+5.4pp), with CAGR clustered at 10–11%. You would have beaten the market starting on any day.</p>
     </div>
   </div>
 </section>
@@ -193,7 +192,7 @@
   <div class="wrap col">
     <p class="eyebrow lim">What we won't claim</p>
     <h2>Honest caveats</h2>
-    <p class="muted">It's a <strong>high-beta tilt with real alpha</strong>, not market-neutral magic — most of the 10.6% is equity beta; the value-add over that is ~+6%/yr. The survivorship-free universe is <em>messy</em> (bad ticks in delisted micro-caps), so returns are winsorised cross-sectionally — a cleaning judgment the exact numbers depend on, though the liquid top-350 is relatively clean. The <strong>value factor is thin</strong>: it needs price and accounts in the same currency, which excludes the USD-reporting mega-caps, so it rests on ~1,300 names against quality's ~2,200. Vol-targeting <em>tames</em> the drawdown (−47% → −39%) but doesn't abolish it — a real edge is not an easy one, and you still sit through deep, beta-driven drops to earn it. Results are one market (UK), one construction.</p>
+    <p class="muted">It's a <strong>high-beta tilt with real alpha</strong>, not market-neutral magic — most of the 10.6% is equity beta; the value-add over that is ~+6%/yr. The survivorship-free universe is <em>messy</em> (bad ticks in delisted micro-caps), so returns are winsorised cross-sectionally — a cleaning judgment the exact numbers depend on, though the liquid top-350 is relatively clean. The <strong>value factor is thin</strong> (currency-restricted to ~1,300 names) — which is why the build uses quality and low-volatility, both currency-neutral and fully covered, rather than value. On a UK <strong>taxable share account, stamp duty costs ~1.2pp/yr</strong> (bigger than the spread) — real, though sheltered inside an ISA/SIPP. Vol-targeting <em>tames</em> the drawdown (−47% → −40%) but doesn't abolish it — a real edge is not an easy one, and you still sit through deep, beta-driven drops to earn it. Results are one market (UK), one construction.</p>
   </div>
 </section>
 
@@ -201,13 +200,13 @@
   <div class="wrap col">
     <p class="eyebrow">Where it sits in the programme</p>
     <p class="pull"><span class="l">Direction</span> is a mirage no chart pattern beats. The one exception is <span class="s">momentum</span> — winners keep winning over a year — and it is captured by ranking returns, not by drawing lines.</p>
-    <p class="muted" style="margin-top:1.6rem">Across a dozen experiments, every repeatable edge was a risk-premium-shaped thing — sell insurance, bear a crash, collect a modest, honest return. Momentum is the directional member of that family: a real, survivorship-robust, cost-insensitive premium whose price is a fat left tail. It is the programme's standout positive result — and, fittingly, the one idea that owes nothing to the trend lines that led us to it.</p>
+    <p class="muted" style="margin-top:1.6rem">Across a dozen experiments, every repeatable edge was a risk-premium-shaped thing — sell insurance, bear a crash, collect a modest, honest return. Momentum is the directional member of that family: a real, survivorship-robust, cost-robust premium whose price is a fat left tail. It is the programme's standout positive result — and, fittingly, the one idea that owes nothing to the trend lines that led us to it.</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap col">
     <p class="eyebrow">Provenance</p>
-    <p class="note">12-1 cross-sectional momentum (12-month return skipping the most recent month), monthly rebalance, top-quintile long-only tilt and top-minus-bottom market-neutral book. Universe: 3,237 GBP/GBX LSE common stocks (1,570 live + 1,667 delisted) from EODHD, full OHLCV; point-in-time top-350 by liquidity. Returns winsorised cross-sectionally (1/99). Costs: liquidity-tiered spread (15/40/80 bps round-trip) applied on turnover; break-even and sensitivity reported. Backtest 2001–2026, net, with year-block bootstrap CI [+4.2%, +19.5%] on the long-only annual mean. Calendar-phase robustness tested by shifting the whole monthly cycle 0–27 days (the index-shift preserves delisting, which a naïve forward-fill would not): the edge holds in all ten phases. Vol-targeting scales exposure to a constant volatility from a causal 12-month estimate. Value/quality factors are built from point-in-time fundamentals dated to each statement's filing date (or fiscal-end + 120 days when the filing date is missing) so nothing is used before it was reported; quality = ½·ROE + ½·gross-profitability (currency-neutral), value = ½·book-yield + ½·earnings-yield (currency-aligned names only). Scripts and full results in <span class="mono">trend-channel-experiment/</span> (<span class="mono">momentum_survivorship_free.py</span>, <span class="mono">momentum_tradeability.py</span>, <span class="mono">vol_target_momentum.py</span>, <span class="mono">parse_fundamentals.py</span>, <span class="mono">momentum_multifactor.py</span>, <span class="mono">momentum_combined.py</span>, <span class="mono">momentum_phase_robustness.py</span>); data in <span class="mono">data/eodhd/</span> (local-only). A validated research programme, honestly caveated — not investment advice.</p>
+    <p class="note">12-1 cross-sectional momentum (12-month return skipping the most recent month), monthly rebalance, top-quintile long-only tilt and top-minus-bottom market-neutral book. Universe: 3,237 GBP/GBX LSE common stocks (1,570 live + 1,667 delisted) from EODHD, full OHLCV; point-in-time top-350 by liquidity. Returns winsorised cross-sectionally (1/99). Costs: liquidity-tiered spread (15/40/80 bps round-trip) applied on turnover, plus 0.5% UK stamp duty on purchases for a taxable share account (~1.2pp/yr, the largest friction); break-even and sensitivity reported. Backtest 2001–2026, net, with year-block bootstrap CI [+4.2%, +19.5%] on the long-only annual mean. Calendar-phase robustness tested by shifting the whole monthly cycle 0–27 days (the index-shift preserves delisting, which a naïve forward-fill would not): the edge holds in all ten phases. Recommended build tilts momentum by quality and low-volatility, then vol-targets exposure to a constant volatility from a causal 12-month estimate. Factors: quality = ½·ROE + ½·gross-profitability and low-volatility = −trailing 12-month return vol (both currency-neutral); value = ½·book-yield + ½·earnings-yield (currency-aligned names only, from point-in-time fundamentals dated to each statement's filing date). The 12-1 window, universe size, holding count and a vol-<em>change</em> factor were all sweep-tested; 12-1, ~350 names and the top quintile hold up, vol-change does not. Scripts and full results in <span class="mono">trend-channel-experiment/</span> and the implementation spec in <span class="mono">MOMENTUM_STRATEGY_SPEC.md</span>; data in <span class="mono">data/eodhd/</span> (local-only). A validated research programme, honestly caveated — not investment advice.</p>
   </div>
 </footer>
