@@ -1,0 +1,21 @@
+Building recommended-build monthly series (mom+quality+low-vol, vol-targeted)...
+297 months (2002-01-31 -> 2026-09-30); build CAGR 11.17%, Sharpe 0.89, per-unit maxDD -40%
+
+############################################################################################
+# CONTRIBUTION SCHEMES (base £1,000/month; lump = same total invested at t0)
+############################################################################################
+scheme            contributed     terminal  multiple   IRR/yr  value maxDD  vs smooth
+lump sum              297,000    4,084,020    13.75x   11.21%         -40%     -0.00%
+fixed                 297,000    1,273,620     4.29x   10.38%         -30%    -12.24%
+inflation-linked      409,030    1,543,065     3.77x   10.30%         -29%    -12.60%
+
+(vs smooth = terminal into the strategy vs into a zero-volatility asset of the SAME CAGR;
+ it isolates the 'buy more units when cheap' effect. Lump = 0 by construction.)
+
+--- how the dip-buying power fades: monthly contribution as % of portfolio NAV (fixed) ---
+  year  2: £1,000 is  3.03% of the £32,965 pot
+  year  5: £1,000 is  0.88% of the £113,171 pot
+  year 10: £1,000 is  0.45% of the £221,842 pot
+  year 15: £1,000 is  0.18% of the £550,197 pot
+  year 20: £1,000 is  0.13% of the £787,205 pot
+  year 25: £1,000 is  0.08% of the £1,273,620 pot

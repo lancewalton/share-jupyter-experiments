@@ -1,0 +1,26 @@
+Building recommended build + market series...
+297 months; strat CAGR 11.2%/Sharpe 0.89, market CAGR 6.2%; beta 0.71
+
+##########################################################################################
+# THE RULE, applied monthly
+##########################################################################################
+  trigger: classify only when strategy drawdown < -15%
+  BETA  (market also down < -10%): drawdown is market-driven -> release a reserve tranche
+  ALPHA (market not down):                    strategy-specific -> freeze, investigate decay
+
+  months in strat drawdown >15%: 49  | classified BETA 49, ALPHA 0
+
+##########################################################################################
+# STRATEGY DRAWDOWN EPISODES (>15%), each classified at its trough
+##########################################################################################
+ trough date  strat DD  market DD  alpha DD  classification
+  2008-01-31      -18%       -18%       -5%  BETA  -> release
+  2008-03-31      -16%       -18%       -3%  BETA  -> release
+  2009-02-28      -40%       -53%       -2%  BETA  -> release
+  2010-06-30      -19%       -22%      -10%  BETA  -> release
+  2020-03-31      -24%       -29%       -3%  BETA  -> release
+  2022-02-28      -16%       -12%      -14%  BETA  -> release
+  2022-09-30      -23%       -29%       -9%  BETA  -> release
+
+(alpha DD = drawdown of the beta-neutralised strategy return; a deep alpha DD with a shallow
+ market DD is the signature of a momentum-specific problem, not a cheap-beta opportunity.)

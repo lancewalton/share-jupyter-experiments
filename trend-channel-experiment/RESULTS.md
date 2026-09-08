@@ -681,3 +681,49 @@ CAGR too, same ~-40% drawdown. Low-vol is currency-neutral, needs only return hi
 data), and matches value's Sharpe contribution without value's currency restriction or deeper
 drawdown -- so it, not value, is the default third factor. MOMENTUM_STRATEGY_SPEC.md updated
 (sections 0, 5.2b, 5.3, 5.5, 8, 9, 11, 12, 14).
+
+---
+
+## Capital-injection schemes + beta/alpha drawdown monitor (2026-09-08)
+
+### Contribution schemes (`momentum_contributions.py`)
+Recommended build monthly series (mom+quality+low-vol vol-targeted, net spread, CAGR 11.2%,
+per-unit maxDD -40%). Base £1,000/month; lump = same total invested at t0.
+```
+scheme            contributed    terminal  multiple  IRR/yr  value maxDD  vs smooth
+lump sum              297,000   4,084,020    13.75x  11.21%      -40%       -0.00%
+fixed                 297,000   1,273,620     4.29x  10.38%      -30%      -12.24%
+inflation-linked      409,030   1,543,065     3.77x  10.30%      -29%      -12.60%
+fade (fixed): £1k contribution is 3.0% of NAV @yr2, 0.9% @yr5, 0.45% @yr10, 0.08% @yr25
+```
+**Findings (partly correcting the earlier intuition):** (1) The hoped-for **dip-buying bonus did
+NOT appear** -- DCA into the volatile strategy returned ~12% LESS than DCA into a zero-vol asset of
+the SAME CAGR ("vs smooth" -12%). "Buy more when cheap" is an unreliable path effect and was a
+small drag here (you also buy fewer units near tops; sequencing dominates). (2) Contributions DO
+**cushion the experienced drawdown** (portfolio value -40% -> ~-30%, because inflows soften the
+fall) -- genuinely helpful for holding discipline. (3) Lump sum (if you HAD it) beats DCA hugely
+(GBP4.08M vs 1.27M, IRR 11.2 vs 10.4) -- the standard result; irrelevant for income you don't yet
+have. (4) Fixed vs inflation-linked: near-identical per-GBP (IRR 10.38 vs 10.30); inflation-linked
+just preserves real contribution size and commits more capital. (5) Dip-buying power **fades fast**
+(<1% of NAV by yr5, negligible by yr25). **So periodic contributions are an ACCUMULATION discipline
+(optimal income deployment + behavioural robustness + drawdown cushioning), NOT a return-enhancer.**
+
+### Beta/alpha drawdown monitor (`momentum_beta_alpha_monitor.py`)
+Rule: when strategy drawdown < -15%, classify BETA (market also down < -10% -> release a reserve
+tranche, buying cheap beta) vs ALPHA (market not down -> freeze, investigate decay). beta = 0.71.
+```
+ trough      strat DD  market DD  alpha DD  class
+ 2008-01       -18%      -18%       -5%    BETA
+ 2009-02       -40%      -53%       -2%    BETA   (strategy held up BETTER than market in the GFC)
+ 2020-03       -24%      -29%       -3%    BETA
+ 2022-02       -16%      -12%      -14%    BETA   (deepest ALPHA DD -- momentum rotation, a yellow flag)
+ 2022-09       -23%      -29%       -9%    BETA
+```
+**Every one of the 7 drawdown episodes (2002-26) was BETA-driven** -- the long-only tilt's
+drawdowns ARE market drawdowns (momentum-crash risk lives in the long-SHORT book, not here), so the
+"release a tranche" signal would have fired each time, buying cheap beta ahead of recovery. The
+"ALPHA -> freeze" branch never fired historically; it guards the not-yet-seen case (strategy falls
+while the market grinds up = momentum crash / decay). The **alpha-DD magnitude is the finer gauge**:
+Feb 2022 was classified BETA (market -12%) but had the deepest alpha DD (-14%, the growth->value
+rotation) -- a yellow flag the binary rule alone misses. Use both: market-concurrency for the
+release decision, alpha-DD depth as a caution light.
