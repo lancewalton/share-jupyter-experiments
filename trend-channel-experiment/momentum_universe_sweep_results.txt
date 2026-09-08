@@ -1,0 +1,27 @@
+Building panel...
+names with a liquidity value: median 1544, max 2271 (so N beyond that just takes all available)
+
+##################################################################################
+# UNIVERSE SIZE SWEEP -- fixed fraction 0.2, momentum-only, net tiered costs
+##################################################################################
+     N  #held     CAGR  Sharpe   maxDD  turn/yr   pre13  post13  margLiq£/day
+   200     39   +8.29%    0.58    -50%     6.0x   +7.8%   +8.7%    7,250,765
+   350     69  +10.58%    0.72    -47%     5.8x  +10.8%  +10.4%    1,885,857
+   500     98  +11.08%    0.73    -50%     5.7x  +12.0%  +10.3%      649,185
+   750    143  +11.54%    0.77    -47%     5.6x  +13.3%  +10.0%      136,564
+  1000    182  +11.05%    0.75    -47%     5.6x  +13.2%   +9.2%       44,226
+  1500    248  +11.26%    0.77    -47%     5.5x  +12.4%  +10.2%          358
+
+##################################################################################
+# UNIVERSE SIZE SWEEP -- fixed count 69, momentum-only, net tiered costs
+##################################################################################
+     N  #held     CAGR  Sharpe   maxDD  turn/yr   pre13  post13  margLiq£/day
+   200     69   +8.75%    0.66    -45%     4.6x   +8.7%   +8.8%    7,250,765
+   350     69  +10.61%    0.72    -47%     5.7x  +10.8%  +10.4%    1,885,857
+   500     69  +11.26%    0.71    -54%     6.1x  +12.0%  +10.7%      649,185
+   750     69  +10.81%    0.67    -54%     6.4x  +13.0%   +9.0%      136,564
+  1000     69  +10.05%    0.62    -57%     6.5x  +12.9%   +7.6%       44,226
+  1500     69  +10.01%    0.60    -59%     6.7x  +10.7%   +9.4%          358
+
+(marginal-liquidity = median trailing daily GBP turnover of the least-liquid eligible name;
+ it collapses as N widens -> the extra names are micro-caps the 80bps cost cap flatters.)

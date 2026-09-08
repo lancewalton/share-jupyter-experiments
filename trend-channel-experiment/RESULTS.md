@@ -591,3 +591,38 @@ month+ long hold, so an unlevered CFD book is net worse than shares; CFDs win on
 levered variant. Best tax route for a UK investor is usually owning the shares in an ISA/SIPP
 (no CGT/dividend tax). CFDs give NO incremental loss-offset over shares (share losses already
 offset gains); spread bets are tax-free on gains but losses aren't deductible.
+
+---
+
+## Three robustness/optimisation checks (2026-09-08)
+
+All three are parameter searches -> judged by plateaus and pre/post-2013 consistency, not the
+best in-sample cell (per the rigour bar).
+
+### 1. Is 12-1 optimal? Formation x skip sweep (`momentum_lookback_sweep.py`)
+Momentum-only tilt, net tiered costs. Formation length has a genuine PEAK at 12 months (Sharpe
+rises 0.28@L3 -> 0.73@L12, then falls to ~0.56-0.59 for L15/18/24). The skip is a flat plateau:
+at L=12, S=0/1/2 give 0.73/0.72/0.71 Sharpe (S=3 worse). Incumbent (12,1) is consistent pre/post
+-2013 (10.81%/10.38%). **Verdict: 12-1 is well-chosen; no re-tuning gain. S=0 marginally improves
+Sharpe/DD (0.73/-45%) but within noise.** Our data vindicates the academic default.
+
+### 2. Widen the universe, take a smaller fraction? (`momentum_universe_sweep.py`)
+Momentum-only, net tiered costs. Fixed fraction 0.2: N=350 10.6%/0.72 -> N=500 11.1%/0.73 ->
+N=750 11.5%/0.77. Fixed count 69 from wider pool: N=500 11.3%/0.71 but -54% DD, then DEGRADES
+(N=1000 0.62/-57%, post-13 7.6%). **The gains beyond ~500 are a mirage:** marginal-name liquidity
+collapses (£1.9M/day @350 -> £137k @750 -> £358/day @1500) where the 80bps cost cap is fiction and
+bad ticks dominate, and the improvement is concentrated PRE-2013 (post-13 flat-to-worse). The
+"smaller fraction of best from a wider pool" idea specifically degrades past 500 (chasing high-
+momentum micro-caps = lottery tickets). **Verdict: N=500 is a defensible modest widening (~+0.5pp,
+marginal name still ~£650k/day); beyond is untradeable/unbacktestable. Incumbent 350 stays safe.**
+
+### 3. Combine with volatility -- selection factor and weighting (`momentum_vol_overlay.py`)
+Trailing 12m monthly vol (causal). (A) low-vol as a SELECTION factor z(-vol): momentum+lowvol
+10.0%/0.75/-45% (defensive: higher Sharpe, lower CAGR); **mom+quality+lowvol 11.58%/0.84/-49%
+IMPROVES on mom+quality 11.38%/0.80/-47% on both CAGR and Sharpe, robust OOS (post-13 10.2->10.9).**
+Low-vol reaches the same 0.84 Sharpe as adding value BUT is currency-neutral (full coverage) and
+shallower DD (-49 vs value's -51) -- arguably a better third factor than value. (B) inverse-vol
+WEIGHTING (1/vol instead of equal): trades ~1pp CAGR for ~4pp shallower DD at unchanged Sharpe,
+but HURTS post-2013 (mom+quality 10.2->8.7) -- dominated by keeping equal-weight + portfolio vol-
+targeting. **Verdict: low-vol as a selection factor is a genuine modest refinement (0.80->0.84);
+inverse-vol weighting is not worth it.**

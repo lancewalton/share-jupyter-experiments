@@ -1,0 +1,17 @@
+Building panel + rasters...
+                                            CAGR Sharpe  maxDD   OOS split
+############################################################################################
+# (A) LOW-VOL as a SELECTION factor (equal-weight)
+############################################################################################
+  momentum (incumbent)                   +10.58%   0.72   -47%  pre +10.8%  post +10.4%
+  momentum + lowvol                      +10.02%   0.75   -45%  pre +10.3%  post  +9.8%
+  mom + quality (incumbent build)        +11.38%   0.80   -47%  pre +12.8%  post +10.2%
+  mom + quality + lowvol                 +11.58%   0.84   -49%  pre +12.3%  post +10.9%
+
+############################################################################################
+# (B) INVERSE-VOL WEIGHTING (same selection, weight by 1/vol instead of equal)
+############################################################################################
+  momentum, equal-weight                 +10.58%   0.72   -47%  pre +10.8%  post +10.4%
+  momentum, inverse-vol weight           +10.16%   0.74   -42%  pre +11.4%  post  +9.0%
+  mom + quality, equal-weight            +11.38%   0.80   -47%  pre +12.8%  post +10.2%
+  mom + quality, inverse-vol weight      +10.47%   0.80   -43%  pre +12.5%  post  +8.7%
