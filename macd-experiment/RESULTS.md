@@ -50,6 +50,39 @@ change *which* trades fire, not the net economics. Phase 2 (sweep + stability of
 standard form) is worth running to confirm no robust parameter plateau beats B&H
 before spending effort on the modifications; the honest prior is that none will.
 
-## Phase 2 — parameter sweep + stability
+## Phase 2 — parameter sweep, stability, permutation null
 
-*Not yet run.*
+**Verdict: no parameter set beats buy-and-hold, there is no plateau, and MACD on
+real data is statistically indistinguishable from MACD on shuffled noise. The
+standard MACD hypothesis is comprehensively falsified.**
+
+Swept fast ∈ {5,8,10,12,15,19,24} × slow ∈ {20,26,32,40,50,60,80} (signal = 9), net
+of 10 bps, over the 1206 ever-eligible names. Reproduce: `run_phase2_sweep.py`
+(→ `phase2_sweep_results.txt`, `phase2_sweep.png`).
+
+- **Sweep:** every one of the 48 valid combinations loses to equal-weight B&H, by
+  −34% to −37% CAGR. The heatmap is uniformly red. **0 of 48 beat B&H net.**
+- **Stability:** the least-bad point (19/80, −34.2%) is an isolated non-robust cell,
+  not a contiguous plateau — and still deeply negative.
+- **Permutation null (200 surrogates, per-name time-shuffle):** real 12/26/9 excess
+  CAGR **−35.5%** sits inside the null distribution (mean −34.9%, sd 2.2%,
+  95th pct −31.3%); **p = 0.62**. The real serial/trend structure adds *nothing* over
+  shuffled returns — the ~35% net loss is the structural cost of timing (cash-drag +
+  turnover), not a real signal blunted by costs.
+
+## Overall conclusion
+
+Standard MACD is dead for this use. It is not "a real edge killed by costs" — the
+permutation null shows there is no timing signal at all: shuffling away the trend
+structure changes nothing. This is the strongest form of the programme's prior
+("direction is a mirage").
+
+**Implication for the proposed modifications.** The trend-vs-flat gate, retrenchment,
+high/low sourcing, and separate exit params are all ways to *filter or reshape* the
+same crossover signal. The permutation null says that signal carries no timing
+information to begin with — so a filter can only change *which* no-information trades
+fire (hit-rate), never manufacture payoff, exactly as the programme's trend-line
+follow-ups found. Running them is very likely wasted effort. If any is worth a single
+cheap check, it is the volatility/ATR regime gate — but the prior, now doubly
+confirmed, is a clear "no".
+

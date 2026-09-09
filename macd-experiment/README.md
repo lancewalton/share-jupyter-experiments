@@ -157,11 +157,12 @@ is the cheap, decisive test: if standard MACD cannot clear buy-and-hold per
 hold-day *before* costs, and its payoff (not just hit-rate) does not respond to
 regime, the prior is confirmed and the sweep is unnecessary.
 
-### Phase 2 — parameter sweep + stability of the standard form
+### Phase 2 — parameter sweep + stability of the standard form ✓ done — see `RESULTS.md`
 
-Sweep fast/slow (and optionally signal) lengths. Judge by **plateau, not peak**;
-confirm on held-out time; check against a permutation null. Only if a robust
-plateau beats buy-and-hold net does the standard form warrant the modifications.
+**Result: 0 of 48 fast/slow combinations beat B&H net, no plateau, and a permutation
+null gives p = 0.62 — MACD on real data is indistinguishable from MACD on shuffled
+noise.** The standard hypothesis is comprehensively falsified: there is no timing
+signal to filter, so the modifications below are very unlikely to help.
 
 ### Later phases — the modifications (Lance's design ideas)
 
