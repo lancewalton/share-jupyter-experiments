@@ -61,6 +61,38 @@ def hysteresis_state(entry: pd.Series, exit_: pd.Series) -> pd.Series:
     return pd.Series(out, index=entry.index)
 
 
+def hysteresis_frame(entry: pd.DataFrame, exit_: pd.DataFrame) -> pd.DataFrame:
+    """Column-wise hysteresis over a panel (see ``hysteresis_state``)."""
+    e, x = entry.to_numpy(bool), exit_.to_numpy(bool)
+    out = np.empty_like(e)
+    held = np.zeros(e.shape[1], dtype=bool)
+    for t in range(e.shape[0]):
+        held = np.where(held, x[t], e[t])
+        out[t] = held
+    return pd.DataFrame(out, index=entry.index, columns=entry.columns)
+
+
+def retrench_entry(cross: pd.Series, window: int = 10) -> pd.Series:
+    """Ignore the first up-cross; enter on the *second* one within ``window`` days.
+
+    The README's "skip the initial signal, wait for a retrenchment, enter on the next
+    signal" rule. Consecutive up-crosses are always separated by a down-cross (the
+    retrenchment), so the essence is: skip the first breakout of an episode, take the
+    second if it lands within the window, else re-arm the late cross as a new first.
+    """
+    c = cross.to_numpy(bool)
+    entry = np.zeros(len(c), dtype=bool)
+    first_up: int | None = None
+    for t in range(1, len(c)):
+        if c[t] and not c[t - 1]:                 # up-cross
+            if first_up is not None and (t - first_up) <= window:
+                entry[t] = True
+                first_up = None
+            else:
+                first_up = t
+    return pd.Series(entry, index=cross.index)
+
+
 def vol_gate(
     returns: pd.DataFrame, window: int = 20, q: float = 0.5, q_window: int = 252
 ) -> pd.DataFrame:

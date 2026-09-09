@@ -1,0 +1,14 @@
+Loading panel and fixing the investable universe...
+universe: 1206 ever-eligible names; B&H CAGR +12.55%, Sharpe 0.65
+
+####################################################################################
+# SEPARATE EXIT PARAMS - entry fixed 12/26, concentrated, net 10bps
+####################################################################################
+  exit fast/slow  excessCAGR  Sharpe   hold-days  hit-rate  meanPayoff
+         12/26 *     -20.44%   -0.28   1,079,774     37.8%     +0.507%
+            6/13     -25.77%   -0.59     947,883     34.5%     +0.171%
+            5/20     -24.70%   -0.53     967,590     34.2%     +0.194%
+           19/40     -21.02%   -0.34   1,160,668     32.0%     +0.358%
+           24/52     -21.39%   -0.37   1,202,169     32.6%     +0.323%
+
+* baseline (exit params == entry params) reproduces Phase 1.

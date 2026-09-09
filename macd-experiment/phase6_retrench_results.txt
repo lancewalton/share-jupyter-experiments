@@ -1,0 +1,14 @@
+Loading panel and fixing the investable universe...
+universe: 1206 ever-eligible names; B&H CAGR +12.55%, Sharpe 0.65
+
+####################################################################################
+# RETRENCHMENT RE-ENTRY - skip first up-cross, enter 2nd within window (net 10bps)
+####################################################################################
+           variant  excessCAGR  Sharpe   hold-days  hit-rate  meanPayoff
+        baseline *     -20.44%   -0.28   1,079,774     37.8%     +0.507%
+      retrench w=5     -30.48%   -0.62      44,259     32.0%     -0.055%
+     retrench w=10     -26.77%   -0.51     118,889     34.3%     +0.468%
+     retrench w=20     -16.49%   -0.03     276,657     36.4%     +0.493%
+     retrench w=40     -13.14%   +0.09     463,426     37.6%     +0.537%
+
+* baseline enters on every up-cross (Phase 1).

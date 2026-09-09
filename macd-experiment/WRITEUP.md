@@ -27,14 +27,17 @@ permutation nulls, plateau-not-peak).
 - **The volatility-regime gate *hurts*.** Under the correct portfolio it drops excess
   CAGR −20% → −24% and Sharpe −0.28 → −0.40. Its "improvement" in an earlier draft was
   a construction artefact (see the correction below). (Phase 3)
-- **Low-for-long / high-for-short is the one modification that genuinely helps — and
-  still loses.** Entering on a low-price cross and exiting on a high-price cross cuts
-  whipsaws, lifting Sharpe −0.28 → **−0.07** at *unchanged* participation (both legs
-  real). But it still loses to B&H by **16%** with negative Sharpe: it bleeds less, it
-  does not create an edge. (Phase 4)
+- **No modification rescues it; the two that help share one mechanism.** Low-for-long /
+  high-for-short (Phase 4) lifts Sharpe −0.28 → −0.07 at unchanged participation;
+  retrenchment re-entry with a wide window (Phase 6) is the best variant anywhere —
+  Sharpe −0.28 → **+0.09**, the only positive reading — by skipping the first,
+  reversal-prone breakout. Separate exit parameters (Phase 5) don't help at all. Every
+  helpful variant still loses to B&H by 13–16%.
 
 **Bottom line: standard MACD and its modifications do not beat buy-and-hold on UK
-equities — confirmed four ways.** The one positive is diagnostic, not tradeable.
+equities — confirmed at every turn.** The two variants that reduce the loss do so the
+same way: by *avoiding the first breakout*, which the null shows is the most
+reversal-prone. You can make a direction bet lose less; you cannot make it win.
 
 ## The correction that mattered
 
@@ -95,12 +98,28 @@ stretches, not skill: it never reaches portfolio Sharpe or net return.
 computed from **low** prices (you only go long once even the intraday lows are trending
 up — a stricter confirmation), and exit on a cross from **high** prices (you hold
 through minor dips until even the highs roll over). Implemented as a hysteresis state
-machine with different entry and exit signals. This is the one modification that
-genuinely improves risk-adjusted performance — and, unlike the vol gate, it is *not* an
-artefact: participation is unchanged (~1.08M hold-days), yet Sharpe lifts −0.28 → −0.07
-and both legs contribute (~2% each). Fewer whipsaws, lower hit-rate (34.8%), similar
-payoff. But it still loses to buy-and-hold by 16% with negative Sharpe. It reduces
-MACD's self-inflicted whipsaw damage; it cannot overcome the anti-predictiveness.
+machine with different entry and exit signals. Unlike the vol gate this genuinely
+improves risk-adjusted performance and is *not* an artefact: participation is unchanged
+(~1.08M hold-days), yet Sharpe lifts −0.28 → −0.07 and both legs contribute (~2% each).
+Fewer whipsaws, lower hit-rate (34.8%), similar payoff. But it still loses to
+buy-and-hold by 16% with negative Sharpe.
+
+**Phase 5 — separate exit parameters (modification 3).** Let the exit MACD use its own
+lengths while the entry stays 12/26. Nothing helps: matching the exit to the entry is
+the least-bad choice. A faster exit (cut losers quicker) realises whipsaw losses sooner
+and craters payoff (−26%); a slower exit (hold winners longer) sits through the
+reversals (−21%). There is no exit-timing edge to find.
+
+**Phase 6 — ignore-first-signal / retrenchment re-entry (modification 4).** Skip the
+first up-cross of an episode and enter on the second within a window (exit unchanged).
+A tight window destroys it (w=5: −30%, too few, too selective). A *wide* window is the
+best variant of the whole experiment: w=40 lifts Sharpe −0.28 → **+0.09** — the only
+positive reading anywhere — and excess −20.4% → −13.1%, at unchanged hit-rate and
+payoff (so, again, not the participation artefact). The reason ties the whole study
+together: the crossovers are anti-predictive because the *first* breakout tends to
+reverse, so dropping it and waiting for a later one avoids the worst entries. But even
+this best case loses to buy-and-hold by 13% with a negligible Sharpe — least-bad, not a
+win.
 
 ## How it fits the programme
 
@@ -108,24 +127,24 @@ This is the programme's most sharply falsified negative. Earlier trend-following
 (`../swing-trading-trend-lines-experiment`, `../momentum-strategy`'s trend-channel
 provenance) found that direction timers lose to B&H and that filters move *hit-rate,
 not payoff*; MACD reproduces both and adds a stronger result — a **p = 1.000 null**
-showing the signal is actively worse than random. The only genuine improvement
-(low/high sourcing) reduces damage without creating an edge, exactly the pattern the
+showing the signal is actively worse than random. The two modifications that reduce the
+loss (low/high sourcing, wide-window retrenchment) both work by *avoiding the first,
+reversal-prone breakout* — never by adding predictive power — exactly the pattern the
 programme predicts: you can make a direction bet lose *less*, never win.
 
 ## Reproduce
 
-`run_phase1_baseline.py`, `run_phase2_sweep.py`, `run_phase3_volgate.py`,
-`run_phase4_hilo.py` (interpreter: `../heirarchical-adaptive-filter-experiment/bin/python3`).
-Pure functions in `macd/` (indicator, backtest, metrics, data, surrogate), 31 tests in
-`tests/`. Full numbers in `RESULTS.md` and the `*_results.txt` files.
+`run_phase1_baseline.py` … `run_phase6_retrench.py` (interpreter:
+`../heirarchical-adaptive-filter-experiment/bin/python3`). Pure functions in `macd/`
+(indicator, backtest, metrics, data, surrogate), 35 tests in `tests/`. Full numbers in
+`RESULTS.md` and the `*_results.txt` files.
 
 ## Not done
 
 The FX / minute-bar spread-bet track is deliberately deferred — intraday spread costs
 dominate any MACD edge (mirror of the quick-flip scalper's "dead both ways"), and the
-programme keeps FX/intraday findings separate from equities. Two untested equity
-modifications remain (retrenchment re-entry; separate exit parameters); both reshape
-the same anti-predictive crossover, so the prior is another "no".
+programme keeps FX/intraday findings separate from equities. All four proposed equity
+modifications have now been tested; none beats buy-and-hold.
 
 ---
 

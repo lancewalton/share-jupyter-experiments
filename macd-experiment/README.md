@@ -180,16 +180,20 @@ increment against the Phase 1/2 baseline and judged on **payoff, not hit-rate**:
     Under the correct concentrated portfolio the gate strictly *hurts* (excess CAGR
     −20% → −24%, Sharpe −0.28 → −0.40): it moves hit-rate but discards positions and
     reduces diversification. No risk-adjusted edge — the prior holds.
-- **Ignore-first-signal, re-enter-after-retrenchment.** Skip a small initial entry
-  signal, wait for a short retrenchment, then enter on the next signal. Parameters
-  for "small entry signal" and "period of retrenchment".
+- **Ignore-first-signal, re-enter-after-retrenchment — ✓ done, `run_phase6_retrench.py`,
+  see `RESULTS.md`.** Skip the first up-cross, enter on the second within a window. A
+  wide window (40d) is the **best variant of the whole experiment** — Sharpe −0.28 →
+  **+0.09** (the only positive Sharpe anywhere), excess −20% → −13%, at unchanged
+  hit-rate/payoff — because it drops the first, most reversal-prone breakout. Still
+  loses to B&H by 13%. Least-bad, not a win.
 - **Directional price sourcing — ✓ done, `run_phase4_hilo.py`, see `RESULTS.md`.**
   Enter on a low-price MACD cross, exit on a high-price one. The one modification that
   genuinely helps (Sharpe −0.28 → −0.07 at equal participation, both legs contribute)
   — fewer whipsaws — but still loses to B&H by 16% with negative Sharpe. Reduces the
   damage, no edge.
-- **Separate exit parameters.** Whether exit signals should use their own MACD
-  parameters, and whether the same-direction constraint should be relaxed on exit.
+- **Separate exit parameters — ✓ done, `run_phase5_exitparams.py`, see `RESULTS.md`.**
+  Exit MACD with its own lengths. No help: baseline (exit = entry) is least-bad; a
+  faster exit craters payoff, a slower one holds through reversals. No exit-timing edge.
 
 ### FX / spread-bet track
 

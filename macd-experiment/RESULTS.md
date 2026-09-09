@@ -146,6 +146,56 @@ reproduces the Phase 1 baseline exactly. Reproduce: `run_phase4_hilo.py`
   (A permutation null on this variant would confirm whether the residual is signal or
   noise; given it remains a large net loss, it does not change the decision.)
 
+## Phase 5 — separate exit parameters (third modification)
+
+**Verdict: no help. The baseline (exit params = entry params) is the least-bad; every
+alternative exit MACD loses more.** Prior holds.
+
+Entry fixed at 12/26; the exit uses its own MACD lengths, via the hysteresis machine.
+Concentrated book, net 10 bps. Reproduce: `run_phase5_exitparams.py`.
+
+| exit fast/slow | excess CAGR | Sharpe | hold-days | hit-rate | mean payoff |
+|---|---|---|---|---|---|
+| 12/26 (baseline) | **−20.44%** | **−0.28** | 1,079,774 | 37.8% | +0.507% |
+| 6/13 (faster) | −25.77% | −0.59 | 947,883 | 34.5% | +0.171% |
+| 5/20 (faster) | −24.70% | −0.53 | 967,590 | 34.2% | +0.194% |
+| 19/40 (slower) | −21.02% | −0.34 | 1,160,668 | 32.0% | +0.358% |
+| 24/52 (slower) | −21.39% | −0.37 | 1,202,169 | 32.6% | +0.323% |
+
+A faster exit (cut losers quicker) just realises whipsaw losses sooner and craters
+payoff; a slower exit (hold winners longer) holds through the reversals. Neither beats
+matching the exit to the entry — there is no exit-timing edge to exploit.
+
+## Phase 6 — retrenchment re-entry (fourth modification)
+
+**Verdict: the best-performing variant of the whole experiment — a wide retrenchment
+window reaches a barely-positive Sharpe (+0.09) — but it still loses to B&H by 13% and
+is not tradeable.** Consistent with the anti-predictiveness: skipping the first, most
+reversal-prone breakout avoids the worst trades.
+
+Skip the first MACD up-cross of an episode; enter on the second within `window` days
+(exit is the standard cross-down). Swept the window, concentrated book, net 10 bps.
+Reproduce: `run_phase6_retrench.py`.
+
+| variant | excess CAGR | Sharpe | hold-days | hit-rate | mean payoff |
+|---|---|---|---|---|---|
+| baseline (every up-cross) | −20.44% | −0.28 | 1,079,774 | 37.8% | +0.507% |
+| retrench w=5 | −30.48% | −0.62 | 44,259 | 32.0% | −0.055% |
+| retrench w=10 | −26.77% | −0.51 | 118,889 | 34.3% | +0.468% |
+| retrench w=20 | −16.49% | −0.03 | 276,657 | 36.4% | +0.493% |
+| **retrench w=40** | **−13.14%** | **+0.09** | 463,426 | 37.6% | +0.537% |
+
+- **A tight window destroys it** (w=5: −30%, few entries) — demanding a fast second
+  breakout keeps only rare, poor setups.
+- **A wide window helps** (w=40 best): excess −20.4% → −13.1%, Sharpe −0.28 → +0.09.
+  Crucially this is **not** the vol-gate participation artefact — hit-rate and payoff
+  are essentially unchanged from baseline; the rule simply drops the first up-cross of
+  each episode, which — given the crossovers are anti-predictive (Phase 2) — is exactly
+  the one most likely to reverse. Waiting for the second, later breakout sidesteps the
+  worst entries.
+- **Still not tradeable.** Sharpe +0.09 is negligible against B&H's +0.65, and it
+  loses 13% of CAGR. It is the least-bad way to run MACD, not a way to win.
+
 ## Overall conclusion
 
 Standard MACD is dead for this use, tested under the correct **concentrated**
@@ -156,16 +206,22 @@ does **worse than every shuffled surrogate** (p = 1.000). The trend it follows i
 random timing. This is the strongest form of the programme's prior ("direction is a
 mirage").
 
-**Modifications tested.** The volatility gate (Phase 3) *degrades* the concentrated
-book. Low-for-long / high-for-short sourcing (Phase 4) is the one variant that
-genuinely helps — fewer whipsaws lift Sharpe from −0.28 to −0.07 at equal
-participation — but it still loses to B&H by 16% with negative Sharpe: it reduces
-MACD's self-inflicted damage without creating an edge. The remaining ideas
-(retrenchment, separate exit params) reshape the same anti-predictive crossover and,
-per the null and the trend-line follow-ups, can only move *which* trades fire, never
-manufacture a positive net payoff. The prior — now confirmed four ways (loses gross,
-loses on every swept parameter, worse-than-noise null, and no modification rescues it)
-— is a firm "no". **Standard MACD and its modifications do not beat buy-and-hold on UK
+**All four modifications tested — none beats buy-and-hold.**
+
+- Volatility gate (Phase 3): *degrades* the concentrated book.
+- Low-for-long / high-for-short (Phase 4): helps (Sharpe −0.28 → −0.07 at equal
+  participation), still loses by 16%.
+- Separate exit params (Phase 5): no help; baseline is least-bad.
+- Retrenchment re-entry (Phase 6): the best variant (wide window) reaches Sharpe
+  +0.09 — the only positive Sharpe anywhere — but still loses by 13%.
+
+The two that help (low/high sourcing, wide retrenchment) do so the *same* way: by
+avoiding the first, most reversal-prone breakouts that the permutation null exposed as
+anti-predictive. That is the deep result — you can make a direction bet lose *less* by
+sidestepping its worst signals, but the residual carries no positive edge over holding
+the market. The prior is confirmed at every turn: it loses gross, loses on every swept
+parameter, is worse than a shuffled-returns null, and not one of the four modifications
+rescues it. **Standard MACD and its modifications do not beat buy-and-hold on UK
 equities.**
 
 **Methodology note.** The idle-cash version of the portfolio (whole-universe weights)

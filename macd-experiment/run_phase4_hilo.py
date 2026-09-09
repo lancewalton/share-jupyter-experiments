@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from macd.data import load_ohlc, top_n_mask
-from macd.indicator import macd_cross_state, long_state
+from macd.indicator import macd_cross_state, long_state, hysteresis_frame
 from macd.backtest import portfolio, extract_trades
 from macd.metrics import cagr, sharpe, hit_rate, mean_payoff
 
@@ -32,16 +32,6 @@ _lines: list[str] = []
 def say(s: str = "") -> None:
     print(s, flush=True)
     _lines.append(s)
-
-
-def hysteresis_frame(entry: pd.DataFrame, exit_: pd.DataFrame) -> pd.DataFrame:
-    e, x = entry.to_numpy(bool), exit_.to_numpy(bool)
-    out = np.empty_like(e)
-    held = np.zeros(e.shape[1], dtype=bool)
-    for t in range(e.shape[0]):
-        held = np.where(held, x[t], e[t])
-        out[t] = held
-    return pd.DataFrame(out, index=entry.index, columns=entry.columns)
 
 
 def trades_of(positions, returns, eligible) -> np.ndarray:
