@@ -1,7 +1,7 @@
 # Share market prediction experiments
 
 A quantitative research programme testing a single question: **can markets be
-predicted well enough to trade?** Thirteen experiments attack it from different
+predicted well enough to trade?** Fourteen experiments attack it from different
 angles — price/direction forecasting, volatility forecasting, cross-asset
 rotation, sentiment, FX, and specific trading strategies — under one discipline:
 *assume any good result is a bug until it survives walk-forward evaluation,
@@ -62,6 +62,7 @@ spec.
 | `fx-rotation-experiment` | FX value / momentum / carry |
 | `swing-trading-trend-lines-experiment` | A support/resistance trend-line breakout method |
 | `quick-flip-scalper-experiment` | An intraday opening-range strategy (fade, then follow) |
+| `macd-experiment` | Does MACD (the canonical trend-follower) beat buy-and-hold? No — loses gross and net, a permutation null shows it is *worse than random* (anti-predictive), and no modification rescues it |
 | `momentum-strategy` | **The programme's deployable strategy** (12-1 momentum + quality + low-vol, vol-targeted). Grew out of the trend-channel work (rising-channel timing vs selection, the drawdown-shape mechanism) which lives here as its provenance; now holds the spec, writeup, `NEXT_STEPS.md`, and all code/results |
 
 ### Follow-up studies
