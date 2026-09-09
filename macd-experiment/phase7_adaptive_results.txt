@@ -1,0 +1,20 @@
+Loading panel and fixing the investable universe...
+universe: 1206 names; OOS span 2000-11-24 -> 2026-09-07 (7454 days), re-tune every 126d on 756d trailing
+
+################################################################################
+# WALK-FORWARD ADAPTIVE MACD vs references (concentrated, net 10bps)
+################################################################################
+  buy-and-hold (EW)                  CAGR +12.08%  Sharpe +0.62  excess  +0.00%
+  fixed 12/26                        CAGR  -9.58%  Sharpe -0.35  excess -21.66%
+  WALK-FORWARD ADAPTIVE              CAGR  -5.68%  Sharpe -0.17  excess -17.75%
+  oracle (best-in-hindsight (19, 80)) CAGR  -5.68%  Sharpe -0.17  excess -17.76%
+
+  adaptation used 15 distinct param sets over 60 re-tunes, 23 switches
+  most-picked: (np.int64(24), np.int64(80))
+
+################################################################################
+# PERMUTATION NULL - the SAME adaptive scheme on shuffled returns (50)
+################################################################################
+real adaptive excess CAGR:  -17.75%
+null adaptive excess CAGR:  mean -13.62%  sd 2.72%  95th pct -9.46%
+p-value (null >= real): 0.960  -> no better than chasing noise

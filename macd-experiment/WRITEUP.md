@@ -34,10 +34,18 @@ permutation nulls, plateau-not-peak).
   reversal-prone breakout. Separate exit parameters (Phase 5) don't help at all. Every
   helpful variant still loses to B&H by 13–16%.
 
-**Bottom line: standard MACD and its modifications do not beat buy-and-hold on UK
-equities — confirmed at every turn.** The two variants that reduce the loss do so the
-same way: by *avoiding the first breakout*, which the null shows is the most
-reversal-prone. You can make a direction bet lose less; you cannot make it win.
+- **Re-tuning cannot fix it either.** Walk-forward re-optimisation (re-tune every 6
+  months on 3 trailing years) is genuine, effective adaptation — it matches the
+  hindsight oracle and beats fixed 12/26 — but still loses to B&H by **18%** and is
+  *worse than the same scheme run on shuffled returns* (**p = 0.96**). The whole
+  parameter surface loses, so tuning just finds the best cell of a losing game. (Phase 7)
+
+**Bottom line: standard MACD, its four modifications, and adaptive re-tuning do not beat
+buy-and-hold on UK equities — confirmed at every turn.** The variants that reduce the
+loss do so the same way: by *avoiding the first breakout*, which the null shows is the
+most reversal-prone. You can make a direction bet lose less; you cannot make it win —
+and you cannot tune your way off a losing surface. Re-tuning is precisely why the belief
+survives contact with reality: it always looks freshly re-justified, and it always loses.
 
 ## The correction that mattered
 
@@ -121,6 +129,20 @@ reverse, so dropping it and waiting for a later one avoids the worst entries. Bu
 this best case loses to buy-and-hold by 13% with a negligible Sharpe — least-bad, not a
 win.
 
+**Phase 7 — walk-forward adaptive re-tuning.** The steelman of the believers' habit of
+re-tuning when a strategy stops working: instead of doing it haphazardly, do it honestly
+— every 6 months, pick the fast/slow that made the most money over the trailing 3 years
+and trade it forward, out-of-sample, then roll. The result is the sharpest in the study.
+Re-tuning is *real, effective adaptation*: it beats fixed 12/26 by ~4% and lands exactly
+on the best-in-hindsight oracle — it genuinely finds the least-bad parameters. And yet
+it still loses to buy-and-hold by 18% with negative Sharpe, because the *entire*
+parameter surface loses: adaptation navigates to the best cell of a losing game. The
+permutation null seals it — the same adaptive scheme run on shuffled returns *beats* the
+real one (p = 0.96), so even after adaptation the real signal is worse than noise. This
+is the resolution of the puzzle that opened the study: re-tuning is exactly why the
+belief survives — it always produces a freshly-justified, oracle-matching backtest — and
+exactly why it never pays: you cannot tune your way off a surface that loses everywhere.
+
 ## How it fits the programme
 
 This is the programme's most sharply falsified negative. Earlier trend-following work
@@ -134,10 +156,10 @@ programme predicts: you can make a direction bet lose *less*, never win.
 
 ## Reproduce
 
-`run_phase1_baseline.py` … `run_phase6_retrench.py` (interpreter:
+`run_phase1_baseline.py` … `run_phase7_adaptive.py` (interpreter:
 `../heirarchical-adaptive-filter-experiment/bin/python3`). Pure functions in `macd/`
-(indicator, backtest, metrics, data, surrogate), 35 tests in `tests/`. Full numbers in
-`RESULTS.md` and the `*_results.txt` files.
+(indicator, backtest, metrics, data, surrogate, adaptive), 38 tests in `tests/`. Full
+numbers in `RESULTS.md` and the `*_results.txt` files.
 
 ## Not done
 

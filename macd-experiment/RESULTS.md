@@ -196,6 +196,47 @@ Reproduce: `run_phase6_retrench.py`.
 - **Still not tradeable.** Sharpe +0.09 is negligible against B&H's +0.65, and it
   loses 13% of CAGR. It is the least-bad way to run MACD, not a way to win.
 
+## Phase 7 — walk-forward adaptive MACD ("re-tuning until it works")
+
+**Verdict: re-tuning is real adaptation — it finds the least-bad parameters, matches
+the hindsight oracle, and beats fixed 12/26 — yet it still loses to B&H by 18% and is
+*worse than the same scheme run on shuffled noise* (p = 0.96). You cannot tune your way
+off a losing surface.**
+
+Every 6 months (126d), pick the fast/slow MACD with the best trailing-3-year (756d)
+return and trade it forward; roll. The stitched forward path is genuinely
+out-of-sample (2000-11 → 2026, 7,454 days). Concentrated book, net 10 bps. Reproduce:
+`run_phase7_adaptive.py`.
+
+| | CAGR | Sharpe | excess vs B&H |
+|---|---|---|---|
+| Buy-and-hold (EW) | +12.08% | +0.62 | +0.00% |
+| Fixed 12/26 | −9.58% | −0.35 | −21.66% |
+| **Walk-forward adaptive** | **−5.68%** | **−0.17** | **−17.75%** |
+| Oracle (best-in-hindsight, 19/80) | −5.68% | −0.17 | −17.76% |
+
+- **Re-tuning genuinely works — as adaptation.** It improves on fixed 12/26 by ~4% and
+  lands *on the hindsight oracle* (15 param sets over 60 re-tunes, 23 switches, mostly
+  the slow 24/80 corner). It is **not** merely a mirage that "always looks good
+  in-sample": its out-of-sample path really is the best you could have done with fixed
+  choices. So this is closer to the "real adaptation" hypothesis than the
+  "perpetual-hope machine" one.
+- **But it cannot make MACD win**, because the *entire* parameter surface loses to
+  buy-and-hold — the oracle ceiling itself is −17.8%. Adaptation navigates to the best
+  cell of a losing game; the best cell still loses. (And note it converges to a *stable*
+  least-bad corner, so it is mostly locating fixed good parameters, not exploiting
+  genuine non-stationarity — consistent with Phase 2's flat surface.)
+- **The permutation null settles it.** Running the *same adaptive scheme* on serially
+  shuffled returns gives a null mean of −13.6%; the real adaptive path (−17.75%) is
+  worse, with **p = 0.960** — adaptively re-tuning to *noise* beats adaptively
+  re-tuning to the *real* signal. The anti-predictiveness survives adaptation intact.
+
+So the honest answer to "what if re-tuning is the mechanism?": re-tuning is a real and
+effective adaptation *procedure*, but the thing it optimises has no winning region and a
+worse-than-noise signal, so it produces exactly the believer's experience — a system
+that always looks freshly re-justified and still quietly loses. Re-tuning explains why
+the belief survives; it does not make the strategy work.
+
 ## Overall conclusion
 
 Standard MACD is dead for this use, tested under the correct **concentrated**
@@ -219,10 +260,19 @@ The two that help (low/high sourcing, wide retrenchment) do so the *same* way: b
 avoiding the first, most reversal-prone breakouts that the permutation null exposed as
 anti-predictive. That is the deep result — you can make a direction bet lose *less* by
 sidestepping its worst signals, but the residual carries no positive edge over holding
-the market. The prior is confirmed at every turn: it loses gross, loses on every swept
-parameter, is worse than a shuffled-returns null, and not one of the four modifications
-rescues it. **Standard MACD and its modifications do not beat buy-and-hold on UK
-equities.**
+the market.
+
+**And re-tuning cannot fix it either (Phase 7).** Walk-forward re-optimisation is a
+real, effective adaptation — it matches the hindsight oracle and beats fixed
+parameters — but the whole surface loses, so it just finds the best cell of a losing
+game (−18% excess), and it is *worse than the same scheme on shuffled returns*
+(p = 0.96). Re-tuning is why the belief survives contact with reality, not why the
+strategy would work.
+
+The prior is confirmed at every turn: MACD loses gross, loses on every swept parameter,
+is worse than a shuffled-returns null, is not rescued by any of the four modifications,
+and cannot be rescued by adaptive re-tuning. **Standard MACD, its modifications, and its
+adaptive re-tuning do not beat buy-and-hold on UK equities.**
 
 **Methodology note.** The idle-cash version of the portfolio (whole-universe weights)
 inflated the loss and made the vol gate look helpful; both reversed once corrected.

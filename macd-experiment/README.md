@@ -195,6 +195,15 @@ increment against the Phase 1/2 baseline and judged on **payoff, not hit-rate**:
   Exit MACD with its own lengths. No help: baseline (exit = entry) is least-bad; a
   faster exit craters payoff, a slower one holds through reversals. No exit-timing edge.
 
+### Phase 7 — walk-forward adaptive re-tuning ✓ done — see `RESULTS.md`
+
+The honest version of "re-tune until it works": every 6 months pick the best-trailing
+fast/slow and trade it forward. **Re-tuning is real adaptation — it matches the
+hindsight oracle and beats fixed 12/26 — but still loses to B&H by 18% and is *worse
+than the same scheme on shuffled returns* (p = 0.96).** You cannot tune off a losing
+surface; re-tuning explains why the belief survives, not why the strategy would work.
+Run `run_phase7_adaptive.py`.
+
 ### FX / spread-bet track
 
 Repeat the phased plan on FX minute bars *only after* the FTSE track reports and
