@@ -1,0 +1,13 @@
+Loading OHLC panel and fixing the investable universe...
+universe: 1206 ever-eligible names; B&H CAGR +12.55%, Sharpe 0.65
+
+########################################################################################
+# LOW-FOR-LONG / HIGH-FOR-SHORT (12/26/9, concentrated, net 10bps)
+########################################################################################
+entry/exit                  excessCAGR  Sharpe   hold-days  hit-rate  meanPayoff
+close/close (baseline)         -20.44%   -0.28   1,079,774     37.8%     +0.507%
+LOW/HIGH (modification)        -16.33%   -0.07   1,081,463     34.8%     +0.457%
+low/close (entry only)         -18.35%   -0.17   1,063,744     34.0%     +0.447%
+close/high (exit only)         -18.12%   -0.16   1,096,622     34.9%     +0.471%
+
+Read: a helpful sourcing would push excess CAGR toward 0 vs the baseline.

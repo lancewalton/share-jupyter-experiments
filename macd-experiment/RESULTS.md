@@ -116,6 +116,36 @@ ever-eligible names, concentrated book. Reproduce: `run_phase3_volgate.py`
 So the modification does **not** rescue MACD; it degrades it. It confirms the
 mechanism — the filter steers hit-rate and participation, never risk-adjusted payoff.
 
+## Phase 4 — low-for-long / high-for-short sourcing (second modification)
+
+**Verdict: this is the one modification that genuinely improves MACD's risk-adjusted
+performance — and it is *not* the idle-cash artifact (participation is unchanged). But
+it still loses to B&H by 16% with negative Sharpe. It bleeds less; it does not create
+an edge.**
+
+Enter on a MACD cross computed from **low** prices (stricter uptrend confirmation),
+exit on a cross from **high** prices (hold through minor dips). All four entry/exit
+sourcings, concentrated book, net 10 bps. An integration check confirms close/close
+reproduces the Phase 1 baseline exactly. Reproduce: `run_phase4_hilo.py`
+(→ `phase4_hilo_results.txt`).
+
+| entry / exit | excess CAGR vs B&H | Sharpe | hold-days | hit-rate | mean payoff |
+|---|---|---|---|---|---|
+| close / close (baseline) | −20.44% | −0.28 | 1,079,774 | 37.8% | +0.507% |
+| **LOW / HIGH** | **−16.33%** | **−0.07** | 1,081,463 | 34.8% | +0.457% |
+| low / close (entry only) | −18.35% | −0.17 | 1,063,744 | 34.0% | +0.447% |
+| close / high (exit only) | −18.12% | −0.16 | 1,096,622 | 34.9% | +0.471% |
+
+- **Real, not an artifact.** Unlike the vol gate, hold-days are essentially unchanged
+  (~1.08M) — the improvement is not from trading less. Both legs contribute ~2%: the
+  low-entry filters false starts, the high-exit holds through whipsaws. Fewer whipsaws
+  lift Sharpe (−0.28 → −0.07) and cut hit-rate (37.8% → 34.8%) with similar payoff.
+- **Still not tradable.** Sharpe is negative and excess CAGR is −16% — it loses to
+  buy-and-hold by a wide margin. The sourcing reduces MACD's self-inflicted whipsaw
+  damage but cannot overcome the anti-predictiveness the permutation null exposed.
+  (A permutation null on this variant would confirm whether the residual is signal or
+  noise; given it remains a large net loss, it does not change the decision.)
+
 ## Overall conclusion
 
 Standard MACD is dead for this use, tested under the correct **concentrated**
@@ -127,11 +157,16 @@ random timing. This is the strongest form of the programme's prior ("direction i
 mirage").
 
 **Modifications tested.** The volatility gate (Phase 3) *degrades* the concentrated
-book. The remaining ideas — retrenchment, high/low sourcing, separate exit params —
-are all ways to *filter or reshape* the same crossover signal, which the null shows is
-worse than noise. A filter can only change *which* trades fire (hit-rate), never
-manufacture payoff — exactly as the programme's trend-line follow-ups found. Very
-likely wasted effort; the prior, now triple-confirmed, is a firm "no".
+book. Low-for-long / high-for-short sourcing (Phase 4) is the one variant that
+genuinely helps — fewer whipsaws lift Sharpe from −0.28 to −0.07 at equal
+participation — but it still loses to B&H by 16% with negative Sharpe: it reduces
+MACD's self-inflicted damage without creating an edge. The remaining ideas
+(retrenchment, separate exit params) reshape the same anti-predictive crossover and,
+per the null and the trend-line follow-ups, can only move *which* trades fire, never
+manufacture a positive net payoff. The prior — now confirmed four ways (loses gross,
+loses on every swept parameter, worse-than-noise null, and no modification rescues it)
+— is a firm "no". **Standard MACD and its modifications do not beat buy-and-hold on UK
+equities.**
 
 **Methodology note.** The idle-cash version of the portfolio (whole-universe weights)
 inflated the loss and made the vol gate look helpful; both reversed once corrected.

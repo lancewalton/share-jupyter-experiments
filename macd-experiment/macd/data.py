@@ -88,3 +88,45 @@ def load_panel(
     turn = df.pivot(index="date", columns="code", values="turnover").sort_index()
     turn = turn.reindex(columns=adj.columns).loc[adj.index]
     return price, returns, turn
+
+
+def load_ohlc(
+    min_obs: int = 750, start: str = "1998-01-01"
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Return (clean_close, clean_high, clean_low, returns, turnover) wide panels.
+
+    Highs and lows ride the same winsorised clean-close path via their intraday ratio
+    to the adjusted close (clean_high = clean_close * adj_high/adj_close), so absolute
+    bad ticks cannot whipsaw the MACD-on-highs / MACD-on-lows signals. Wicks are then
+    clamped to a sane band. Used by the low-for-long / high-for-short test.
+    """
+    df = pd.read_parquet(
+        OHLCV, columns=["date", "code", "high", "low", "close", "adjusted_close", "volume"]
+    )
+    df = df[df["date"] >= pd.Timestamp(start)]
+
+    fac = _ccy_factor()
+    df["turnover"] = df["close"] * df["volume"] * df["code"].map(fac).fillna(1.0)
+
+    adj = df.pivot(index="date", columns="code", values="adjusted_close").sort_index()
+    adj = adj.where(adj > 0)
+    keep = adj.notna().sum() >= min_obs
+    adj = adj.loc[:, keep]
+    cols, idx = adj.columns, adj.index
+
+    raw_close = df.pivot(index="date", columns="code", values="close").reindex(index=idx, columns=cols)
+    raw_high = df.pivot(index="date", columns="code", values="high").reindex(index=idx, columns=cols)
+    raw_low = df.pivot(index="date", columns="code", values="low").reindex(index=idx, columns=cols)
+
+    logret = winsorise_log_returns(np.log(adj).diff())
+    returns = np.expm1(logret).where(adj.notna())
+    clean_close = np.exp(logret.fillna(0.0).cumsum()).where(adj.notna())
+
+    ratio_high = (raw_high / raw_close.where(raw_close > 0))
+    ratio_low = (raw_low / raw_close.where(raw_close > 0))
+    clean_high = (clean_close * ratio_high).where(adj.notna())
+    clean_low = (clean_close * ratio_low).where(adj.notna())
+    clean_low, clean_high = clamp_wicks(clean_low, clean_high, clean_close)
+
+    turn = df.pivot(index="date", columns="code", values="turnover").reindex(index=idx, columns=cols)
+    return clean_close, clean_high, clean_low, returns, turn

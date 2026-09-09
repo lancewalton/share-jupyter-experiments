@@ -183,8 +183,11 @@ increment against the Phase 1/2 baseline and judged on **payoff, not hit-rate**:
 - **Ignore-first-signal, re-enter-after-retrenchment.** Skip a small initial entry
   signal, wait for a short retrenchment, then enter on the next signal. Parameters
   for "small entry signal" and "period of retrenchment".
-- **Directional price sourcing.** Use LOW prices for long signals and HIGH prices
-  for short signals (exit-signal treatment TBD).
+- **Directional price sourcing — ✓ done, `run_phase4_hilo.py`, see `RESULTS.md`.**
+  Enter on a low-price MACD cross, exit on a high-price one. The one modification that
+  genuinely helps (Sharpe −0.28 → −0.07 at equal participation, both legs contribute)
+  — fewer whipsaws — but still loses to B&H by 16% with negative Sharpe. Reduces the
+  damage, no edge.
 - **Separate exit parameters.** Whether exit signals should use their own MACD
   parameters, and whether the same-direction constraint should be relaxed on exit.
 
