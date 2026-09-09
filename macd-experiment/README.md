@@ -173,6 +173,10 @@ increment against the Phase 1/2 baseline and judged on **payoff, not hit-rate**:
   from the MACD EMAs by a threshold, or (b) a volatility / mean-|Δclose| / ATR
   threshold — the premise being that trending and flat regimes differ in these.
   Two extra parameters each.
+  - **(b) volatility gate — ✓ done, `run_phase3_volgate.py`, see `RESULTS.md`.**
+    Cuts the loss (−35% → −15% excess CAGR) but only by trading ~10× less; hit-rate
+    rises, per-trade payoff is flat, Sharpe stays −0.36, and it never approaches B&H.
+    No risk-adjusted edge — the prior holds.
 - **Ignore-first-signal, re-enter-after-retrenchment.** Skip a small initial entry
   signal, wait for a short retrenchment, then enter on the next signal. Parameters
   for "small entry signal" and "period of retrenchment".

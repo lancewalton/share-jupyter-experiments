@@ -22,6 +22,14 @@ def macd(
     return line, sig, hist
 
 
+def macd_cross_state(
+    close: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9
+) -> pd.Series:
+    """Raw (unshifted) long signal: MACD line above its signal line."""
+    line, sig, _ = macd(close, fast=fast, slow=slow, signal=signal)
+    return line > sig
+
+
 def long_state(
     close: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9
 ) -> pd.Series:
@@ -30,6 +38,37 @@ def long_state(
     A day's position is decided from the crossover observed on the *previous*
     close, so it never depends on the same day's price.
     """
-    line, sig, _ = macd(close, fast=fast, slow=slow, signal=signal)
-    desired = line > sig
-    return desired.shift(1, fill_value=False)
+    return macd_cross_state(close, fast=fast, slow=slow, signal=signal).shift(
+        1, fill_value=False
+    )
+
+
+def vol_gate(
+    returns: pd.DataFrame, window: int = 20, q: float = 0.5, q_window: int = 252
+) -> pd.DataFrame:
+    """Regime gate: True when trailing realised vol clears its own trailing q-quantile.
+
+    The premise (README) is that trending markets are more volatile than flat
+    consolidation, so requiring above-threshold volatility should skip false crosses
+    in quiet markets. The threshold is each name's own rolling q-quantile of vol, so
+    the gate is point-in-time and self-scaling. Closed until a threshold exists.
+    """
+    vol = returns.rolling(window).std()
+    thr = vol.rolling(q_window, min_periods=window).quantile(q)
+    return (vol >= thr) & thr.notna()
+
+
+def gated_long_state(
+    close: pd.DataFrame,
+    returns: pd.DataFrame,
+    fast: int = 12,
+    slow: int = 26,
+    signal: int = 9,
+    vol_window: int = 20,
+    vol_q: float = 0.5,
+    q_window: int = 252,
+) -> pd.DataFrame:
+    """MACD long signal AND the volatility-regime gate, lagged one day (causal)."""
+    desired = macd_cross_state(close, fast=fast, slow=slow, signal=signal)
+    gate = vol_gate(returns, window=vol_window, q=vol_q, q_window=q_window)
+    return (desired & gate).shift(1, fill_value=False)

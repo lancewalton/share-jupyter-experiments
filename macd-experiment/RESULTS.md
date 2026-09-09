@@ -70,6 +70,42 @@ of 10 bps, over the 1206 ever-eligible names. Reproduce: `run_phase2_sweep.py`
   shuffled returns — the ~35% net loss is the structural cost of timing (cash-drag +
   turnover), not a real signal blunted by costs.
 
+## Phase 3 — volatility-regime gate (first modification)
+
+**Verdict: the gate moves hit-rate and cuts participation, not risk-adjusted payoff.
+It reduces the loss but never approaches beating B&H, and adds no Sharpe.** Prior holds.
+
+Gate MACD long entries to days where each name's trailing-20d realised vol clears its
+own trailing q-quantile (point-in-time). Swept q at 12/26/9, net 10 bps, over the 1206
+ever-eligible names. Reproduce: `run_phase3_volgate.py` (→ `phase3_volgate_results.txt`).
+
+| gate q | excess CAGR vs B&H | Sharpe | hold-days | hit-rate | mean payoff | bps/hold-day |
+|---|---|---|---|---|---|---|
+| 0.00 (ungated) | −35.54% | −0.86 | 1,079,774 | 37.8% | +0.507% | +4.80 |
+| 0.30 | −16.81% | −0.42 | 228,458 | 44.8% | +0.553% | +7.42 |
+| 0.50 | −15.96% | −0.38 | 170,084 | 45.9% | +0.574% | +8.38 |
+| 0.70 | −15.08% | −0.36 | 109,578 | 47.3% | +0.516% | +8.49 |
+
+*Average market day (B&H, gross): +5.70 bps/day.*
+
+Reading it honestly:
+
+- **The headline number improves** (−35.5% → −15% excess CAGR) — but not by trading
+  *better*. **Mean payoff per trade is flat** (+0.51% → +0.57%) and **hold-days fall
+  ~10×**. The gate mostly makes the strategy *do less of a losing signal*.
+- **Hit-rate rises +9.5 pts** (37.8% → 47.3%) — the textbook "a filter moves how often
+  you win, not how much" signature.
+- **The one genuinely interesting bit:** gated hold-days out-earn the average market
+  day (+8.5 vs +5.7 bps/hold-day), where ungated MACD *under*-earns it (+4.8). So
+  high-vol-regime long days do carry higher gross return per day. **But it is risk
+  compensation, not skill:** Sharpe stays −0.36, and the strategy still loses to B&H by
+  15% because capturing those days means sitting in cash ~90% of the time — the forgone
+  market drift (cash-drag) plus turnover swamps the per-day edge.
+
+So the modification does **not** rescue MACD: no risk-adjusted edge, no path to beating
+buy-and-hold. It confirms the mechanism — timing steers participation and hit-rate; the
+market's drift punishes being out of it.
+
 ## Overall conclusion
 
 Standard MACD is dead for this use. It is not "a real edge killed by costs" — the

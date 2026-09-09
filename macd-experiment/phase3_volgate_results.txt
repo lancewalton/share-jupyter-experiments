@@ -1,0 +1,17 @@
+Loading panel and fixing the investable universe...
+universe: 1206 ever-eligible names; B&H CAGR +12.55%, Sharpe 0.65
+
+##################################################################################
+# VOL-REGIME GATE on 12/26/9 (net 10bps) - does it move net payoff or hit-rate?
+##################################################################################
+average market day (B&H, gross): +5.698 bps/day
+
+ gate q  excessCAGR  Sharpe  hold-days  hit-rate  meanPayoff  bps/holdday
+  0.00*     -35.54%   -0.86  1,079,774     37.8%     +0.507%      +4.800
+   0.30     -16.81%   -0.42    228,458     44.8%     +0.553%      +7.419
+   0.50     -15.96%   -0.38    170,084     45.9%     +0.574%      +8.375
+   0.70     -15.08%   -0.36    109,578     47.3%     +0.516%      +8.488
+
+* q=0.00 is the ungated Phase 1 baseline.
+Read: a gate that adds *timing skill* makes bps/hold-day exceed the average
+market day; a gate that merely trades less leaves it at or below the market.
