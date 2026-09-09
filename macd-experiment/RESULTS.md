@@ -237,6 +237,49 @@ worse-than-noise signal, so it produces exactly the believer's experience — a 
 that always looks freshly re-justified and still quietly loses. Re-tuning explains why
 the belief survives; it does not make the strategy work.
 
+## Cross-asset check — bonds (where trend should fare better)
+
+**Verdict: the prior is confirmed *directionally* — on bonds MACD is far less bad than
+on equities and is no longer anti-predictive — but it still does not beat buy-and-hold
+net, and the 2022 sell-off did not rescue it.**
+
+The programme's finding is that trend-following is drawdown-shape dependent: equity
+V-crashes whipsaw the exit (negative), while sustained bond sell-offs reward it
+(positive). So bonds are the natural place for MACD to look better. Same rig — standard
+12/26/9, concentrated book vs equal-weight B&H, net 10 bps — on 6 US bond ETFs (AGG,
+IEF, LQD, SHY, TIP, TLT), 2002–2026. Thin, highly correlated cross-section, so
+**indicative only**. (Closes assumed ~total-return; if price-only, the B&H bar is
+understated and MACD is flattered.) Reproduce: `run_bonds.py`.
+
+| | CAGR | Sharpe | maxDD | excess vs B&H |
+|---|---|---|---|---|
+| Buy-and-hold (EW) | +3.58% | +0.60 | −21.5% | +0.00% |
+| MACD gross | +2.68% | +0.50 | −23.8% | **−0.90%** |
+| MACD net 10 bps | −3.58% | −0.62 | −62.3% | −7.16% |
+
+- **Much less bad than equities.** Gross MACD nearly matches B&H (−0.9% excess, vs
+  −20% on equities); the sweep's best (24/80) is −4.1% (vs −17%); every combination is
+  −4% to −10% (vs −17% to −23%). Trend-following genuinely fares better on bonds —
+  exactly the prior.
+- **The anti-predictiveness disappears.** The permutation null gives **p = 0.66** (real
+  −7.16% vs null mean −6.82%) — statistically *indistinguishable from noise*, not
+  *worse* than it as on equities (p = 1.000). On bonds the trend structure is
+  neutral, not actively harmful. This is the clearest cross-asset confirmation of the
+  drawdown-shape mechanism.
+- **But it still loses to B&H.** 0 of 48 parameter sets beat it net; gross is slightly
+  below; net is −7% behind, and concentrating 6 correlated names blows maxDD out to
+  −62%. Costs and concentration eat the near-parity gross edge.
+- **2022 did not rescue it** (B&H −15.9% vs MACD net −18.8%). The naive story — "a
+  trend exit sidesteps the sustained sell-off" — failed because 2022 fell in choppy
+  steps, not a clean slide: MACD whipsawed in and out, each turn paying 10 bps, and the
+  churn cost more than the timing saved. The bond *trend premium* the programme found
+  elsewhere is a slower, cross-sectional selection effect, not something a fast
+  in/out crossover on a handful of correlated ETFs captures.
+
+So bonds move MACD from "worse than random and badly beaten" to "no worse than random
+and nearly at parity gross" — a real, prior-confirming improvement — but not to
+"beats buy-and-hold". Trend fares better here; it still does not win, net.
+
 ## Overall conclusion
 
 Standard MACD is dead for this use, tested under the correct **concentrated**
@@ -273,6 +316,11 @@ The prior is confirmed at every turn: MACD loses gross, loses on every swept par
 is worse than a shuffled-returns null, is not rescued by any of the four modifications,
 and cannot be rescued by adaptive re-tuning. **Standard MACD, its modifications, and its
 adaptive re-tuning do not beat buy-and-hold on UK equities.**
+
+**Cross-asset (bonds):** the drawdown-shape prior holds — on bonds MACD is far less bad
+(gross near-parity, null neutral at p = 0.66 rather than anti-predictive) — but it still
+loses to B&H net, and even the 2022 sell-off did not rescue it (choppy decline + churn).
+Trend fares better on bonds; it still does not win.
 
 **Methodology note.** The idle-cash version of the portfolio (whole-universe weights)
 inflated the loss and made the vol gate look helpful; both reversed once corrected.

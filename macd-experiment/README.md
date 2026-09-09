@@ -204,6 +204,15 @@ than the same scheme on shuffled returns* (p = 0.96).** You cannot tune off a lo
 surface; re-tuning explains why the belief survives, not why the strategy would work.
 Run `run_phase7_adaptive.py`.
 
+### Cross-asset check — bonds ✓ done — see `RESULTS.md`
+
+Where the programme's prior says trend should fare better (bonds trend; equity V-crashes
+whipsaw). Same rig on 6 US bond ETFs. **Confirmed directionally:** MACD is far less bad
+(gross near-parity, −0.9% excess vs −20% on equities) and the null moves from
+anti-predictive (p = 1.0) to neutral (p = 0.66) — but it still loses to B&H net, and
+even 2022 didn't rescue it (choppy sell-off + churn). Trend fares better; it doesn't win.
+Run `run_bonds.py`.
+
 ### FX / spread-bet track
 
 Repeat the phased plan on FX minute bars *only after* the FTSE track reports and

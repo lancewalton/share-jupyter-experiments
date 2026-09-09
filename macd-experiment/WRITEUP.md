@@ -40,6 +40,12 @@ permutation nulls, plateau-not-peak).
   *worse than the same scheme run on shuffled returns* (**p = 0.96**). The whole
   parameter surface loses, so tuning just finds the best cell of a losing game. (Phase 7)
 
+- **On bonds it fares better — as predicted — but still loses.** Where the programme
+  expects trend to work (sustained sell-offs, not V-crashes), gross MACD nearly matches
+  B&H and the null moves from worse-than-noise (p = 1.0) to neutral (p = 0.66). Costs +
+  concentration still leave it behind, and even 2022 didn't rescue it. Trend fares
+  better on bonds; it does not win. (Cross-asset check)
+
 **Bottom line: standard MACD, its four modifications, and adaptive re-tuning do not beat
 buy-and-hold on UK equities — confirmed at every turn.** The variants that reduce the
 loss do so the same way: by *avoiding the first breakout*, which the null shows is the
@@ -156,10 +162,28 @@ programme predicts: you can make a direction bet lose *less*, never win.
 
 ## Reproduce
 
-`run_phase1_baseline.py` … `run_phase7_adaptive.py` (interpreter:
-`../heirarchical-adaptive-filter-experiment/bin/python3`). Pure functions in `macd/`
-(indicator, backtest, metrics, data, surrogate, adaptive), 38 tests in `tests/`. Full
-numbers in `RESULTS.md` and the `*_results.txt` files.
+`run_phase1_baseline.py` … `run_phase7_adaptive.py`, and `run_bonds.py` for the
+cross-asset check (interpreter: `../heirarchical-adaptive-filter-experiment/bin/python3`).
+Pure functions in `macd/` (indicator, backtest, metrics, data, surrogate, adaptive), 38
+tests in `tests/`. Full numbers in `RESULTS.md` and the `*_results.txt` files.
+
+## Cross-asset check — bonds
+
+The programme's prior is that trend-following is drawdown-shape dependent — it loses on
+equity V-crashes (which whipsaw the exit) but should fare better on bonds (sustained
+sell-offs reward it). Running the same rig on 6 US bond ETFs (2002–2026, indicative)
+confirms the *direction* cleanly: gross MACD nearly matches B&H (−0.9% excess vs −20% on
+equities), every swept parameter is only −4% to −10% behind (vs −17% to −23%), and — the
+key tell — the permutation null moves from **p = 1.000** (worse than noise, equities) to
+**p = 0.66** (indistinguishable from noise, bonds). The trend structure stops being
+*anti*-predictive. But it still doesn't beat buy-and-hold net: costs and concentrating a
+handful of correlated ETFs (maxDD −62%) eat the near-parity gross edge, and — against the
+naive story — even 2022 hurt (B&H −15.9% vs MACD −18.8%), because the sell-off fell in
+choppy steps that whipsawed the crossover and paid a spread each time. The bond trend
+premium the programme found is a slow, cross-sectional selection effect, not something a
+fast in/out crossover harvests. Bonds move MACD from "badly beaten and worse than random"
+to "nearly at parity gross, neutral vs noise" — a real, prior-confirming improvement, but
+not a win.
 
 ## Not done
 
