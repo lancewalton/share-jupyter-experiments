@@ -75,7 +75,7 @@ def main() -> None:
             pos = gated_long_state(prices, returns, fast=12, slow=26, signal=9,
                                    vol_window=VOL_WINDOW, vol_q=q, q_window=Q_WINDOW)
             label = f"{q:.2f}"
-        strat = portfolio(pos, returns_masked, cost=COST)
+        strat = portfolio(pos, returns_masked, cost=COST, concentrate=True)
         exc = cagr(strat["strat"]) - cagr(bh)
         tr = trades_of(pos, returns, eligible)
         held = pos.astype(bool) & eligible

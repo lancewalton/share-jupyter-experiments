@@ -29,6 +29,20 @@ def winsorise_log_returns(logret: pd.DataFrame, cap: float = GLITCH_CAP) -> pd.D
     return logret.clip(lower=-cap, upper=cap)
 
 
+def clamp_wicks(
+    adj_low: pd.DataFrame, adj_high: pd.DataFrame, adj_close: pd.DataFrame
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Clamp adjusted low/high wicks to a sane band around the adjusted close.
+
+    A low below half the close, or a high above twice it, is a bad tick; clamp it to
+    that bound. Also enforce low <= close <= high so the MACD-on-lows / MACD-on-highs
+    signals never see a spike.
+    """
+    lo = adj_low.clip(lower=0.5 * adj_close, upper=adj_close)
+    hi = adj_high.clip(lower=adj_close, upper=2.0 * adj_close)
+    return lo, hi
+
+
 def top_n_mask(liquidity: pd.DataFrame, n: int) -> pd.DataFrame:
     """Boolean frame: True for the n most-liquid names each day (NaN never eligible)."""
     rank = liquidity.rank(axis=1, ascending=False, method="first")

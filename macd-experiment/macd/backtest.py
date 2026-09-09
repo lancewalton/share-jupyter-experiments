@@ -12,27 +12,32 @@ import pandas as pd
 
 
 def portfolio(
-    positions: pd.DataFrame, returns: pd.DataFrame, cost: float = 0.0
+    positions: pd.DataFrame,
+    returns: pd.DataFrame,
+    cost: float = 0.0,
+    concentrate: bool = False,
 ) -> dict:
-    """Equal-weight the eligible cross-section each day; MACD timing vs buy-and-hold.
+    """Portfolio return of the MACD book each day, vs equal-weight buy-and-hold.
 
-    A name is eligible on a day when it has a return (it is listed and liquid).
-    Buy-and-hold is always invested; the strategy is invested only where its
-    position is True, sitting in cash otherwise. Both weight eligible names equally,
-    so they share one benchmark. A turnover cost is charged when a name's invested
-    state changes.
+    A name is eligible on a day when it has a return (listed and liquid). The book
+    holds only names whose position is True. With ``concentrate`` the capital is
+    equal-weighted across just the currently-long names (fully invested; cash only
+    when none signal) — the portfolio approach, so idle names never dilute the book.
+    Without it, weights are 1/(eligible count), leaving cash in the non-signalling
+    names. Buy-and-hold weights the whole eligible universe equally. Turnover cost is
+    charged on the change in each name's actual weight.
     """
     eligible = returns.notna()
-    n_elig = eligible.sum(axis=1).replace(0, np.nan)
-    weight = 1.0 / n_elig
-
-    invested = (positions.astype(bool) & eligible)
+    invested = positions.astype(bool) & eligible
     inv = invested.astype(float)
-    turnover = inv.diff()
-    turnover.iloc[0] = inv.iloc[0]
 
-    name_pnl = inv * returns.fillna(0.0) - turnover.abs() * cost
-    strat = name_pnl.sum(axis=1) * weight
+    denom = inv.sum(axis=1) if concentrate else eligible.sum(axis=1).astype(float)
+    denom = denom.replace(0, np.nan)
+    weights = inv.div(denom, axis=0).fillna(0.0)
+
+    turnover = weights.diff()
+    turnover.iloc[0] = weights.iloc[0]
+    strat = (weights * returns.fillna(0.0)).sum(axis=1) - turnover.abs().sum(axis=1) * cost
     bnh = returns.mean(axis=1)
 
     return {

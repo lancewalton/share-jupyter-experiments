@@ -70,8 +70,8 @@ def main() -> None:
         f"({prices.index.min().date()} -> {prices.index.max().date()}); "
         f"investable universe top-{UNIVERSE_N} by turnover\n")
 
-    gross = portfolio(positions, returns, cost=0.0)
-    net = portfolio(positions, returns, cost=COST)
+    gross = portfolio(positions, returns, cost=0.0, concentrate=True)
+    net = portfolio(positions, returns, cost=COST, concentrate=True)
     invested_days = gross["hold_days"]
     gross_pnl = (positions.astype(bool) & returns.notna()).astype(float) * returns.fillna(0.0)
     per_hold_day = float(gross_pnl.to_numpy().sum() / invested_days)

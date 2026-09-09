@@ -1,5 +1,16 @@
 # MACD — results
 
+> **Portfolio construction (important).** The strategy is a **concentrated** book:
+> each day capital is equal-weighted across just the names currently signalling long
+> (fully invested; cash only when none signal), rebalanced daily. This is the
+> portfolio approach — capital flows into the qualifying names, it never sits idle —
+> and is the same lesson as the momentum work (`momentum_survivorship_free.py`
+> equal-weights the *selected* names, not the whole universe). The benchmark is the
+> whole eligible universe, equal-weight, always invested. *An earlier draft weighted
+> the strategy across the whole universe, leaving ~90% of capital in cash; that
+> penalised MACD for a cash-drag a real portfolio would not carry, and is corrected
+> throughout below (`concentrate=True` in `backtest.portfolio`).*
+
 ## Phase 1 — standard 12/26/9 MACD, long-only (FTSE / EODHD UK)
 
 **Verdict: standard MACD loses to buy-and-hold — even gross of costs, and on both
@@ -9,18 +20,17 @@ Setup: survivorship-free EODHD UK panel (active + delisted), names with ≥ 750
 observations, cleaned by capping daily log returns at |r| ≤ 0.6 (kills bad
 `adjusted_close` ticks). Investable universe = top-350 by trailing-1y turnover,
 refreshed point-in-time and lagged one day. Textbook MACD line (12/26) crossing its
-signal line (9); long while MACD > signal, else cash. Equal-weight across the
-eligible cross-section; benchmark is the same universe, always invested.
+signal line (9); long while MACD > signal, concentrated book as above.
 Reproduce: `run_phase1_baseline.py` (→ `phase1_baseline_results.txt`, `phase1_baseline.png`).
 
 | Full sample (1998–2026) | CAGR | Sharpe | maxDD |
 |---|---|---|---|
 | Buy-and-hold (equal-weight) | **+12.55%** | **+0.65** | −61.9% |
-| MACD timing, **gross** | +4.46% | +0.37 | −73.0% |
-| MACD timing, net 10 bps | −22.99% | −0.86 | −100% |
+| MACD timing, **gross** | +3.03% | +0.25 | −92.0% |
+| MACD timing, net 10 bps | −7.89% | −0.28 | −96.0% |
 
-Out-of-sample split is the same story: pre-2013 B&H +8.2% vs MACD net −18.3%;
-2013-on B&H +17.6% vs MACD net −27.8%.
+Out-of-sample split is the same story: pre-2013 B&H +8.2% vs MACD net −13.1%;
+2013-on B&H +17.6% vs MACD net −2.4% (Sharpe −0.01 — flat, still far below B&H).
 
 ### Why it fails (the mechanism, not just the number)
 
@@ -32,11 +42,12 @@ That is the textbook trend-following signature: a **low hit-rate with a positive
 payoff** — most trades are small losers, a few are large winners. So the per-trade
 edge is genuinely positive *gross*. It still loses because:
 
-1. **Cash-drag beats the timing.** Sitting out of the market between crossovers
-   forgoes more upside (UK equities drift up, +12.6%/yr equal-weight) than the exits
-   save on the way down. Being always-invested wins.
-2. **Costs bury it.** Even the +4.46% gross edge turns to −23% net at 10 bps of
-   turnover — the crossover churns too much.
+1. **The selected names under-earn the market.** MACD-long name-days earn +4.8 bps
+   gross vs the market's +5.7 bps/day — the names it picks as "trending up" do
+   *worse* per day than the average name. Even fully invested, that loses to B&H.
+2. **Concentration wrecks diversification.** Holding only the currently-trending
+   names is undiversified, so drawdowns blow out to −92% to −96% vs B&H's −62%.
+3. **Costs finish it.** +3.03% gross → −7.89% net at 10 bps — the crossover churns.
 
 This matches the programme's headline findings directly: **direction timing is beaten
 by buy-and-hold**, and the edge that exists is in *hit-rate/payoff shape*, not in
@@ -53,72 +64,77 @@ before spending effort on the modifications; the honest prior is that none will.
 ## Phase 2 — parameter sweep, stability, permutation null
 
 **Verdict: no parameter set beats buy-and-hold, there is no plateau, and MACD on
-real data is statistically indistinguishable from MACD on shuffled noise. The
-standard MACD hypothesis is comprehensively falsified.**
+real data is *worse* than MACD on shuffled noise (p = 1.000). The standard MACD
+hypothesis is comprehensively falsified — the trend it follows is anti-predictive.**
 
 Swept fast ∈ {5,8,10,12,15,19,24} × slow ∈ {20,26,32,40,50,60,80} (signal = 9), net
 of 10 bps, over the 1206 ever-eligible names. Reproduce: `run_phase2_sweep.py`
 (→ `phase2_sweep_results.txt`, `phase2_sweep.png`).
 
 - **Sweep:** every one of the 48 valid combinations loses to equal-weight B&H, by
-  −34% to −37% CAGR. The heatmap is uniformly red. **0 of 48 beat B&H net.**
-- **Stability:** the least-bad point (19/80, −34.2%) is an isolated non-robust cell,
+  −17% to −23% CAGR. The heatmap is uniformly red. **0 of 48 beat B&H net.**
+- **Stability:** the least-bad point (24/60, −17.0%) is an isolated non-robust cell,
   not a contiguous plateau — and still deeply negative.
 - **Permutation null (200 surrogates, per-name time-shuffle):** real 12/26/9 excess
-  CAGR **−35.5%** sits inside the null distribution (mean −34.9%, sd 2.2%,
-  95th pct −31.3%); **p = 0.62**. The real serial/trend structure adds *nothing* over
-  shuffled returns — the ~35% net loss is the structural cost of timing (cash-drag +
-  turnover), not a real signal blunted by costs.
+  CAGR **−20.4%** is *worse than the whole null distribution* (mean −13.8%, sd 2.3%,
+  95th pct −10.1%); **p = 1.000** — every surrogate beat the real strategy. So the
+  real trend structure is not merely uninformative, it is **actively worse than
+  random**: shuffling away the serial structure *improves* MACD. That is the
+  signature of short-horizon mean-reversion — the crossovers MACD chases tend to
+  reverse, so following them underperforms even random timing.
 
 ## Phase 3 — volatility-regime gate (first modification)
 
-**Verdict: the gate moves hit-rate and cuts participation, not risk-adjusted payoff.
-It reduces the loss but never approaches beating B&H, and adds no Sharpe.** Prior holds.
+**Verdict: under the correct concentrated portfolio the gate strictly *hurts* — it
+moves hit-rate but worsens net return and Sharpe. Prior holds, more firmly.**
 
 Gate MACD long entries to days where each name's trailing-20d realised vol clears its
 own trailing q-quantile (point-in-time). Swept q at 12/26/9, net 10 bps, over the 1206
-ever-eligible names. Reproduce: `run_phase3_volgate.py` (→ `phase3_volgate_results.txt`).
+ever-eligible names, concentrated book. Reproduce: `run_phase3_volgate.py`
+(→ `phase3_volgate_results.txt`).
 
 | gate q | excess CAGR vs B&H | Sharpe | hold-days | hit-rate | mean payoff | bps/hold-day |
 |---|---|---|---|---|---|---|
-| 0.00 (ungated) | −35.54% | −0.86 | 1,079,774 | 37.8% | +0.507% | +4.80 |
-| 0.30 | −16.81% | −0.42 | 228,458 | 44.8% | +0.553% | +7.42 |
-| 0.50 | −15.96% | −0.38 | 170,084 | 45.9% | +0.574% | +8.38 |
-| 0.70 | −15.08% | −0.36 | 109,578 | 47.3% | +0.516% | +8.49 |
+| 0.00 (ungated) | **−20.44%** | **−0.28** | 1,079,774 | 37.8% | +0.507% | +4.80 |
+| 0.30 | −21.47% | −0.30 | 228,458 | 44.8% | +0.553% | +7.42 |
+| 0.50 | −23.18% | −0.37 | 170,084 | 45.9% | +0.574% | +8.38 |
+| 0.70 | −23.65% | −0.40 | 109,578 | 47.3% | +0.516% | +8.49 |
 
 *Average market day (B&H, gross): +5.70 bps/day.*
 
-Reading it honestly:
+- **The gate makes it worse, not better** (−20.4% → −23.7% excess CAGR; Sharpe
+  −0.28 → −0.40). An earlier draft showed the gate "helping" (−35% → −15%), but that
+  was entirely an artifact of the flawed idle-cash construction, where cutting
+  participation cut cash-drag. Once capital is properly concentrated, discarding
+  positions just reduces diversification and hurts.
+- **Hit-rate still rises +9.5 pts** (37.8% → 47.3%) with flat per-trade payoff — the
+  textbook "a filter moves how often you win, not how much".
+- **The tempting bit** — gated hold-days out-earn the average market day (+8.5 vs
+  +5.7 bps) — is risk compensation (you only hold during volatile stretches), not
+  skill: it does not survive into portfolio Sharpe or net return.
 
-- **The headline number improves** (−35.5% → −15% excess CAGR) — but not by trading
-  *better*. **Mean payoff per trade is flat** (+0.51% → +0.57%) and **hold-days fall
-  ~10×**. The gate mostly makes the strategy *do less of a losing signal*.
-- **Hit-rate rises +9.5 pts** (37.8% → 47.3%) — the textbook "a filter moves how often
-  you win, not how much" signature.
-- **The one genuinely interesting bit:** gated hold-days out-earn the average market
-  day (+8.5 vs +5.7 bps/hold-day), where ungated MACD *under*-earns it (+4.8). So
-  high-vol-regime long days do carry higher gross return per day. **But it is risk
-  compensation, not skill:** Sharpe stays −0.36, and the strategy still loses to B&H by
-  15% because capturing those days means sitting in cash ~90% of the time — the forgone
-  market drift (cash-drag) plus turnover swamps the per-day edge.
-
-So the modification does **not** rescue MACD: no risk-adjusted edge, no path to beating
-buy-and-hold. It confirms the mechanism — timing steers participation and hit-rate; the
-market's drift punishes being out of it.
+So the modification does **not** rescue MACD; it degrades it. It confirms the
+mechanism — the filter steers hit-rate and participation, never risk-adjusted payoff.
 
 ## Overall conclusion
 
-Standard MACD is dead for this use. It is not "a real edge killed by costs" — the
-permutation null shows there is no timing signal at all: shuffling away the trend
-structure changes nothing. This is the strongest form of the programme's prior
-("direction is a mirage").
+Standard MACD is dead for this use, tested under the correct **concentrated**
+portfolio (capital in the signalling names, not idle cash — the momentum-work lesson).
+It is not "a real edge killed by costs": the permutation null shows MACD on real data
+does **worse than every shuffled surrogate** (p = 1.000). The trend it follows is
+*anti-predictive* — short-horizon reversal means chasing crossovers underperforms even
+random timing. This is the strongest form of the programme's prior ("direction is a
+mirage").
 
-**Implication for the proposed modifications.** The trend-vs-flat gate, retrenchment,
-high/low sourcing, and separate exit params are all ways to *filter or reshape* the
-same crossover signal. The permutation null says that signal carries no timing
-information to begin with — so a filter can only change *which* no-information trades
-fire (hit-rate), never manufacture payoff, exactly as the programme's trend-line
-follow-ups found. Running them is very likely wasted effort. If any is worth a single
-cheap check, it is the volatility/ATR regime gate — but the prior, now doubly
-confirmed, is a clear "no".
+**Modifications tested.** The volatility gate (Phase 3) *degrades* the concentrated
+book. The remaining ideas — retrenchment, high/low sourcing, separate exit params —
+are all ways to *filter or reshape* the same crossover signal, which the null shows is
+worse than noise. A filter can only change *which* trades fire (hit-rate), never
+manufacture payoff — exactly as the programme's trend-line follow-ups found. Very
+likely wasted effort; the prior, now triple-confirmed, is a firm "no".
+
+**Methodology note.** The idle-cash version of the portfolio (whole-universe weights)
+inflated the loss and made the vol gate look helpful; both reversed once corrected.
+The lesson — benchmark a *concentrated* selection book, never one that parks capital
+in cash for non-signalling names — is recorded here to avoid repeating it.
 

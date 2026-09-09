@@ -6,29 +6,29 @@ universe: 1206 ever-eligible names; B&H CAGR +12.55%, Sharpe 0.65
 ##############################################################################
 excess CAGR vs B&H (%, positive = beats buy-and-hold):
       20    26    32    40    50    60    80
-5  -35.2 -35.1 -35.7 -36.1 -35.3 -36.8 -36.4
-8  -34.8 -36.5 -36.5 -36.0 -35.5 -35.3 -35.4
-10 -36.6 -35.9 -35.5 -35.1 -35.1 -35.0 -35.3
-12 -35.9 -35.5 -35.1 -35.2 -34.8 -35.2 -35.0
-15 -35.7 -35.0 -35.3 -35.0 -35.0 -35.0 -34.8
-19 -35.0 -35.2 -34.8 -34.7 -34.9 -34.9 -34.2
-24   NaN -34.4 -34.4 -34.8 -34.9 -34.4 -34.4
+5  -21.0 -21.8 -22.8 -23.1 -21.2 -21.9 -21.4
+8  -20.0 -22.5 -22.8 -21.3 -20.7 -20.2 -19.1
+10 -21.5 -21.7 -20.3 -19.6 -19.7 -19.5 -19.1
+12 -21.4 -20.4 -19.7 -20.2 -19.0 -19.1 -18.8
+15 -20.7 -19.7 -19.8 -19.4 -19.2 -19.1 -17.9
+19 -19.8 -19.7 -19.4 -18.8 -18.2 -17.9 -17.1
+24   NaN -19.1 -18.4 -18.1 -17.8 -17.0 -17.1
 
 best 5 (fast, slow) by excess CAGR:
-   19/80   excess -34.23%  Sharpe -0.83
-   24/80   excess -34.41%  Sharpe -0.85
-   24/32   excess -34.41%  Sharpe -0.83
-   24/60   excess -34.42%  Sharpe -0.84
-   24/26   excess -34.42%  Sharpe -0.83
+   24/60   excess -17.04%  Sharpe -0.12
+   19/80   excess -17.06%  Sharpe -0.12
+   24/80   excess -17.13%  Sharpe -0.13
+   24/50   excess -17.77%  Sharpe -0.16
+   15/80   excess -17.86%  Sharpe -0.17
 
 parameter sets beating B&H net: 0 of 48
 
-STABILITY around best 19/80 (excess -34.23%):
-  neighbourhood excess CAGR: min -35.02%  max -34.23%  mean -34.62%  (isolated peak / not robust)
+STABILITY around best 24/60 (excess -17.04%):
+  neighbourhood excess CAGR: min -18.17%  max -17.04%  mean -17.51%  (isolated peak / not robust)
 
 ##############################################################################
 # PERMUTATION NULL at standard 12/26/9 (200 surrogates)
 ##############################################################################
-real excess CAGR (12/26/9): -35.54%
-null excess CAGR: mean -34.92%  sd 2.23%  95th pct -31.28%
-p-value (null >= real): 0.620  -> no evidence of a real timing edge
+real excess CAGR (12/26/9): -20.44%
+null excess CAGR: mean -13.75%  sd 2.29%  95th pct -10.14%
+p-value (null >= real): 1.000  -> no evidence of a real timing edge

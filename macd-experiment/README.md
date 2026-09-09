@@ -141,10 +141,13 @@ point-in-time top-N-by-turnover universe). Tested in `tests/`.
 
 ### Phase 1 — standard MACD baseline (the first hypothesis) ✓ done — see `RESULTS.md`
 
-**Result: standard 12/26/9 MACD loses to buy-and-hold gross and net, on both halves
-of the sample — the programme's prior holds.** The per-trade edge is the classic
-trend-following shape (low hit-rate, positive payoff) but cash-drag and turnover cost
-sink the net. Run `run_phase1_baseline.py`.
+**Result: standard 12/26/9 MACD loses to buy-and-hold gross (+3.0% vs +12.6%) and net
+(−7.9%), on both halves of the sample — the programme's prior holds.** The per-trade
+edge is the classic trend-following shape (low hit-rate, positive payoff), but the
+names MACD selects under-earn the market per day (+4.8 vs +5.7 bps), concentration
+wrecks diversification (maxDD −92%), and turnover cost finishes it. Uses the
+**concentrated** portfolio (capital in the signalling names, not idle cash — the
+momentum-work lesson). Run `run_phase1_baseline.py`.
 
 
 Textbook **12/26/9** MACD, signal-line crossover, long-only on the FTSE universe,
@@ -160,9 +163,9 @@ regime, the prior is confirmed and the sweep is unnecessary.
 ### Phase 2 — parameter sweep + stability of the standard form ✓ done — see `RESULTS.md`
 
 **Result: 0 of 48 fast/slow combinations beat B&H net, no plateau, and a permutation
-null gives p = 0.62 — MACD on real data is indistinguishable from MACD on shuffled
-noise.** The standard hypothesis is comprehensively falsified: there is no timing
-signal to filter, so the modifications below are very unlikely to help.
+null gives p = 1.000 — MACD on real data is *worse* than MACD on shuffled noise.** The
+trend it follows is anti-predictive (short-horizon reversal); the standard hypothesis
+is comprehensively falsified, so the modifications below are very unlikely to help.
 
 ### Later phases — the modifications (Lance's design ideas)
 
@@ -174,9 +177,9 @@ increment against the Phase 1/2 baseline and judged on **payoff, not hit-rate**:
   threshold — the premise being that trending and flat regimes differ in these.
   Two extra parameters each.
   - **(b) volatility gate — ✓ done, `run_phase3_volgate.py`, see `RESULTS.md`.**
-    Cuts the loss (−35% → −15% excess CAGR) but only by trading ~10× less; hit-rate
-    rises, per-trade payoff is flat, Sharpe stays −0.36, and it never approaches B&H.
-    No risk-adjusted edge — the prior holds.
+    Under the correct concentrated portfolio the gate strictly *hurts* (excess CAGR
+    −20% → −24%, Sharpe −0.28 → −0.40): it moves hit-rate but discards positions and
+    reduces diversification. No risk-adjusted edge — the prior holds.
 - **Ignore-first-signal, re-enter-after-retrenchment.** Skip a small initial entry
   signal, wait for a short retrenchment, then enter on the next signal. Parameters
   for "small entry signal" and "period of retrenchment".

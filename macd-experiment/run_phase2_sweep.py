@@ -50,7 +50,7 @@ def price_from_returns(returns: pd.DataFrame) -> pd.DataFrame:
 
 def net_excess(prices, returns_masked, bh, fast, slow) -> tuple[float, float]:
     pos = long_state(prices, fast=fast, slow=slow, signal=SIGNAL)
-    strat = portfolio(pos, returns_masked, cost=COST)["strat"]
+    strat = portfolio(pos, returns_masked, cost=COST, concentrate=True)["strat"]
     return cagr(strat) - cagr(bh), sharpe(strat)
 
 
@@ -115,7 +115,8 @@ def main() -> None:
         sr = permute_within_columns(returns, RNG)
         srm = sr.where(eligible)
         ps = price_from_returns(sr)
-        strat = portfolio(long_state(ps, fast=12, slow=26, signal=SIGNAL), srm, cost=COST)["strat"]
+        strat = portfolio(long_state(ps, fast=12, slow=26, signal=SIGNAL), srm,
+                          cost=COST, concentrate=True)["strat"]
         null[k] = cagr(strat) - cagr(srm.mean(axis=1))
     p = float((null >= real_exc).mean())
     say(f"real excess CAGR (12/26/9): {100*real_exc:+.2f}%")

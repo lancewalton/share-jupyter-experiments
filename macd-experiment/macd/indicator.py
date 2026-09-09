@@ -6,6 +6,7 @@ trade rule holds a position whenever the MACD line is above its signal line.
 """
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 
@@ -41,6 +42,23 @@ def long_state(
     return macd_cross_state(close, fast=fast, slow=slow, signal=signal).shift(
         1, fill_value=False
     )
+
+
+def hysteresis_state(entry: pd.Series, exit_: pd.Series) -> pd.Series:
+    """Hold from when ``entry`` turns True until ``exit_`` turns False.
+
+    Enables asymmetric long-only rules (e.g. enter on a low-price MACD cross, exit on
+    a high-price one). When entry and exit are the same signal it reduces to that
+    signal exactly.
+    """
+    e = entry.to_numpy(dtype=bool)
+    x = exit_.to_numpy(dtype=bool)
+    out = np.empty(len(e), dtype=bool)
+    held = False
+    for i in range(len(e)):
+        held = x[i] if held else e[i]
+        out[i] = held
+    return pd.Series(out, index=entry.index)
 
 
 def vol_gate(

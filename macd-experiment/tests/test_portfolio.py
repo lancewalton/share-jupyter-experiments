@@ -40,6 +40,27 @@ def test_eligibility_ignores_names_with_no_data_that_day():
     assert abs(out["bnh"].iloc[1] - 0.06) < 1e-12          # both count later
 
 
+def test_concentrated_mode_puts_all_capital_in_the_signalling_names():
+    # A flat, B long -> concentrated book is 100% B (no idle cash), not 50/50
+    returns = _frame([[0.02, 0.04], [0.10, 0.10], [0.10, 0.10]])
+    positions = pd.DataFrame(
+        [[False, True], [False, True], [True, True]],
+        index=returns.index, columns=returns.columns,
+    )
+    out = portfolio(positions, returns, cost=0.0, concentrate=True)
+    # day0: only B long -> weight 1.0 on B -> 0.04
+    # day2: both long -> equal-weight -> mean(0.10,0.10)=0.10
+    assert abs(out["strat"].iloc[0] - 0.04) < 1e-12
+    assert abs(out["strat"].iloc[2] - 0.10) < 1e-12
+
+
+def test_concentrated_mode_sits_in_cash_when_nothing_signals():
+    returns = _frame([[0.05, 0.05], [0.05, 0.05]])
+    positions = pd.DataFrame(False, index=returns.index, columns=returns.columns)
+    out = portfolio(positions, returns, cost=0.0, concentrate=True)
+    assert out["strat"].iloc[0] == 0.0 and out["strat"].iloc[1] == 0.0
+
+
 def test_per_hold_day_counts_invested_name_days():
     returns = _frame([[0.05, 0.05], [0.05, 0.05]])
     positions = pd.DataFrame(
